@@ -5,20 +5,48 @@ import {
   ProConfigProvider,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Divider, message, Tabs, theme } from 'antd';
-import type { CSSProperties } from 'react';
+import { Button, message, Tabs, theme } from 'antd';
 import { useState } from 'react';
+import styled from 'styled-components';
 
 type LoginType = 'phone' | 'account';
 
-const LoginStyle: CSSProperties = {
-  backgroundColor: 'white',
-  height: '100vh',
+// Styled Components
+const LoginContainer = styled.div`
+  background-color: white;
+  height: 100vh;
+  overflow: hidden; /* 防止页面滚动 */
+  position: fixed; /* 固定定位 */
+  width: 100%;
+  top: 0;
+  left: 0;
+`;
+
+const StyledLoginFormPage = styled(LoginFormPage)`
+  background-attachment: fixed; /* 固定背景图 */
+  background-size: cover; /* 覆盖整个容器 */
+  background-position: center; /* 居中显示 */
+  background-repeat: no-repeat; /* 不重复 */
+`;
+
+const ActivityButton = styled(Button)`
+  border-radius: 20px;
+  width: 120px;
+`;
+
+const activityConfigStyle = (token: any) => {
+  return {
+    boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
+    color: token.colorTextHeading,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    backdropFilter: 'blur(4px)',
+  };
 };
 
-const Login = () => {
+const Login: React.FC = () => {
   const [loginType, setLoginType] = useState<LoginType>('account');
-  const { token } = theme.useToken();
+  const { token: styleToken } = theme.useToken();
 
   // 登录
   const handleConfirmSubmit = async (values: any) => {
@@ -29,62 +57,32 @@ const Login = () => {
   };
 
   return (
-    <div style={LoginStyle}>
-      <LoginFormPage
+    <LoginContainer>
+      <StyledLoginFormPage
         backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
         backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
-        title="杭州益美文化"
+        title="叮当智装"
         onFinish={handleConfirmSubmit}
         containerStyle={{
           backgroundColor: 'rgba(0, 0, 0,0.65)',
           backdropFilter: 'blur(4px)',
         }}
         activityConfig={{
-          style: {
-            boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
-            color: token.colorTextHeading,
-            borderRadius: 8,
-            backgroundColor: 'rgba(255,255,255,0.25)',
-            backdropFilter: 'blur(4px)',
-          },
+          style: activityConfigStyle(styleToken),
           title: '活动标题，可配置图片',
           subTitle: '活动介绍说明文字',
           action: (
-            <Button
+            <ActivityButton
               size="large"
               style={{
-                borderRadius: 20,
-                background: token.colorBgElevated,
-                color: token.colorPrimary,
-                width: 120,
+                background: styleToken.colorBgElevated,
+                color: styleToken.colorPrimary,
               }}
             >
               去看看
-            </Button>
+            </ActivityButton>
           ),
         }}
-        actions={
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-            }}
-          >
-            <Divider plain>
-              <span
-                style={{
-                  color: token.colorTextPlaceholder,
-                  fontWeight: 'normal',
-                  fontSize: 14,
-                }}
-              >
-                其他登录方式
-              </span>
-            </Divider>
-          </div>
-        }
       >
         <Tabs
           centered
@@ -100,45 +98,27 @@ const Login = () => {
               fieldProps={{
                 size: 'large',
                 prefix: (
-                  <UserOutlined
-                    style={{
-                      color: token.colorText,
-                    }}
-                  />
+                  <UserOutlined style={{ color: styleToken.colorText }} />
                 ),
               }}
               placeholder="请输入用户名"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入用户名!',
-                },
-              ]}
+              rules={[{ required: true }]}
             />
             <ProFormText.Password
               name="password"
               fieldProps={{
                 size: 'large',
                 prefix: (
-                  <LockOutlined
-                    style={{
-                      color: token.colorText,
-                    }}
-                  />
+                  <LockOutlined style={{ color: styleToken.colorText }} />
                 ),
               }}
               placeholder="请输入密码"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码！',
-                },
-              ]}
+              rules={[{ required: true }]}
             />
           </>
         )}
-      </LoginFormPage>
-    </div>
+      </StyledLoginFormPage>
+    </LoginContainer>
   );
 };
 
