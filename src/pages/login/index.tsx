@@ -11,7 +11,6 @@ import styled from 'styled-components';
 
 type LoginType = 'phone' | 'account';
 
-// Styled Components
 const LoginContainer = styled.div`
   background-color: white;
   height: 100vh;

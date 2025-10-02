@@ -1,5 +1,4 @@
 import Guide from '@/components/Guide';
-import { trim } from '@/utils/format';
 import { Button, Space } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -83,13 +82,15 @@ const HomePage: React.FC = () => {
         <StyledCard>
           <h3>这是一个使用 styled-components 创建的卡片</h3>
           <p>你可以看到渐变背景、圆角、阴影和悬停效果</p>
-          <p>用户名: {trim(name)}</p>
+          <p>用户名: {name}</p>
           <p>数据加载状态: {loading ? '加载中...' : '加载完成'}</p>
         </StyledCard>
 
         <div>
           <Space wrap>
-            <StyledButton onClick={() => alert('点击了 styled-components 按钮!')}>
+            <StyledButton
+              onClick={() => alert('点击了 styled-components 按钮!')}
+            >
               Styled Button
             </StyledButton>
             <StyledButton onClick={() => console.log('数据:', data)}>
@@ -100,22 +101,31 @@ const HomePage: React.FC = () => {
 
         <div style={{ marginTop: '16px' }}>
           <Space wrap>
-            <Button type="primary" onClick={() => alert('点击了 Ant Design 主按钮!')}>
+            <Button
+              type="primary"
+              onClick={() => alert('点击了 Ant Design 主按钮!')}
+            >
               Primary Button
             </Button>
             <Button onClick={() => alert('点击了 Ant Design 默认按钮!')}>
               Default Button
             </Button>
-            <Button type="dashed" onClick={() => alert('点击了 Ant Design 虚线按钮!')}>
+            <Button
+              type="dashed"
+              onClick={() => alert('点击了 Ant Design 虚线按钮!')}
+            >
               Dashed Button
             </Button>
-            <Button type="link" onClick={() => alert('点击了 Ant Design 链接按钮!')}>
+            <Button
+              type="link"
+              onClick={() => alert('点击了 Ant Design 链接按钮!')}
+            >
               Link Button
             </Button>
           </Space>
         </div>
 
-        <Guide name={trim(name)} />
+        <Guide name={name} />
       </StyledContainer>
     </PageContainer>
   );
