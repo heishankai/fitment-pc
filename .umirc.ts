@@ -1,4 +1,6 @@
 import { defineConfig } from '@umijs/max';
+import { theme } from './src/theme';
+import { routes } from './src/routers';
 
 export default defineConfig({
   antd: {},
@@ -9,26 +11,18 @@ export default defineConfig({
   layout: {
     title: '@umijs/max',
   },
-  routes: [
-    {
-      path: '/',
-      redirect: '/home',
-    },
-    {
-      name: '首页',
-      path: '/home',
-      component: './Home',
-    },
-    {
-      name: '权限演示',
-      path: '/access',
-      component: './Access',
-    },
-    {
-      name: ' CRUD 示例',
-      path: '/table',
-      component: './Table',
-    },
+  // 使用自定义主题配置
+  theme,
+  // 配置 Babel 插件支持 styled-components
+  extraBabelPlugins: [
+    [
+      'babel-plugin-styled-components',
+      {
+        displayName: true,
+        fileName: true,
+      },
+    ],
   ],
+  routes,
   npmClient: 'pnpm',
 });
