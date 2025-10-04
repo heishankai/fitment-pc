@@ -9,7 +9,7 @@ import {
 import { Button, Tabs, theme } from 'antd';
 import styled from 'styled-components';
 import Cookies from 'js-cookie';
-import { loginService } from './service';
+import { loginService, getUserInfoService } from './service';
 import storage from '@/utils/storage';
 
 type LoginType = 'phone' | 'account';
@@ -52,11 +52,15 @@ const Login: React.FC = () => {
 
   const { run: login, loading } = useRequest(loginService, {
     manual: true,
-    onSuccess: ({ success, data }) => {
+    onSuccess: async ({ success, data }) => {
       if (!success) return;
 
-      const { token, ...userInfo } = data;
+      // 设置token
+      const { token } = data;
       Cookies.set('token', token, { expires: 1 });
+
+      // 获取用户信息
+      const { data: userInfo } = await getUserInfoService();
       storage.set('ddzz_userInfo', userInfo);
 
       location.href = '/';

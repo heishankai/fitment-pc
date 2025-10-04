@@ -1,5 +1,4 @@
 import { defineConfig } from '@umijs/max';
-import { theme } from './src/theme';
 import { routes } from './src/routers';
 
 export default defineConfig({
@@ -22,7 +21,7 @@ export default defineConfig({
     title: 'hello',
   },
   // 使用自定义主题配置
-  theme,
+  // theme,
   // 配置 Babel 插件支持 styled-components
   extraBabelPlugins: [
     [

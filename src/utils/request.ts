@@ -104,42 +104,32 @@ class RequestUtil {
         if (error.response) {
           const { status, data } = error.response;
 
-          // 优先使用后端返回的错误信息
-          if (data && typeof data === 'object' && (data as any)?.message) {
-            errorMessage = (data as any).message;
-          } else {
-            // 如果没有后端错误信息，使用默认提示
-            switch (status) {
-              case 400:
-                errorMessage = '请求参数错误';
-                break;
-              case 401:
-                errorMessage = '未授权，请重新登录';
-                this.handleUnauthorized();
-                break;
-              case 403:
-                errorMessage = '拒绝访问';
-                break;
-              case 404:
-                errorMessage = '请求的资源不存在';
-                break;
-              case 500:
-                errorMessage = '服务器内部错误';
-                break;
-              case 502:
-                errorMessage = '网关错误';
-                break;
-              case 503:
-                errorMessage = '服务不可用';
-                break;
-              default:
-                errorMessage = `请求失败 (${status})`;
-            }
+          switch (status) {
+            case 400:
+              errorMessage = (data as any)?.message || '请求参数错误';
+              break;
+            case 401:
+              errorMessage = (data as any)?.message || '未授权，请重新登录';
+              this.handleUnauthorized();
+              break;
+            case 403:
+              errorMessage = (data as any)?.message || '拒绝访问';
+              break;
+            case 404:
+              errorMessage = (data as any)?.message || '请求的资源不存在';
+              break;
+            case 500:
+              errorMessage = (data as any)?.message || '服务器内部错误';
+              break;
+            case 502:
+              errorMessage = (data as any)?.message || '网关错误';
+              break;
+            case 503:
+              errorMessage = (data as any)?.message || '服务不可用';
+              break;
+            default:
+              errorMessage = (data as any)?.message || `请求失败 (${status})`;
           }
-        } else if (error.code === 'ECONNABORTED') {
-          errorMessage = '请求超时，请稍后重试';
-        } else if (error.message.includes('Network Error')) {
-          errorMessage = '网络连接失败，请检查网络设置';
         }
 
         if (config?.showError !== false) {
