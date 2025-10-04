@@ -5,14 +5,16 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { message } from 'antd';
+import { notification } from 'antd';
+import Cookies from 'js-cookie';
+import storage from './storage';
 
 // 响应数据类型定义
 export interface ApiResponse<T = any> {
   success: boolean;
   data: T;
-  errorMessage?: string;
-  errorCode?: string | number;
+  code: number;
+  message?: string | null;
 }
 
 // 请求配置类型
@@ -34,7 +36,6 @@ interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
 // 请求工具类
 class RequestUtil {
   private instance: AxiosInstance;
-  private loadingCount = 0;
 
   constructor() {
     this.instance = axios.create({
@@ -60,22 +61,9 @@ class RequestUtil {
           config.headers.Authorization = `Bearer ${token}`;
         }
 
-        // 显示加载状态
-        if (config.showLoading !== false) {
-          this.showLoading();
-        }
-
-        console.log('🚀 Request:', {
-          url: config.url,
-          method: config.method,
-          params: config.params,
-          data: config.data,
-        });
-
         return config;
       },
       (error) => {
-        this.hideLoading();
         console.error('❌ Request Error:', error);
         return Promise.reject(error);
       },
@@ -84,48 +72,31 @@ class RequestUtil {
     // 响应拦截器
     this.instance.interceptors.response.use(
       (response: AxiosResponse<ApiResponse>) => {
-        this.hideLoading();
-
-        console.log('✅ Response:', {
-          url: response.config.url,
-          status: response.status,
-          data: response.data,
-        });
-
         const { data } = response;
         const config = response.config as RequestConfig;
 
         // 处理业务逻辑错误
         if (data && typeof data === 'object' && 'success' in data) {
-          if (!data.success) {
-            const errorMessage = data.errorMessage || '请求失败';
+          if (!data?.success) {
+            const errorMessage = data?.message || '请求失败';
 
-            if (config.showError !== false) {
-              message.error(errorMessage);
+            if (config?.showError !== false) {
+              notification.error({
+                message: '请求失败',
+                description: errorMessage,
+                placement: 'topRight',
+                duration: 3,
+              });
             }
 
             return Promise.reject(new Error(errorMessage));
           }
-
-          // 显示成功消息
-          if (config.showSuccess && config.successMessage) {
-            message.success(config.successMessage);
-          }
         }
 
-        return response;
+        return data as any;
       },
       (error: AxiosError) => {
-        this.hideLoading();
-
         const config = error.config as RequestConfig;
-
-        console.error('❌ Response Error:', {
-          url: error.config?.url,
-          status: error.response?.status,
-          message: error.message,
-          data: error.response?.data,
-        });
 
         // 处理HTTP错误
         let errorMessage = '网络错误，请稍后重试';
@@ -133,31 +104,37 @@ class RequestUtil {
         if (error.response) {
           const { status, data } = error.response;
 
-          switch (status) {
-            case 400:
-              errorMessage = '请求参数错误';
-              break;
-            case 401:
-              errorMessage = '未授权，请重新登录';
-              this.handleUnauthorized();
-              break;
-            case 403:
-              errorMessage = '拒绝访问';
-              break;
-            case 404:
-              errorMessage = '请求的资源不存在';
-              break;
-            case 500:
-              errorMessage = '服务器内部错误';
-              break;
-            case 502:
-              errorMessage = '网关错误';
-              break;
-            case 503:
-              errorMessage = '服务不可用';
-              break;
-            default:
-              errorMessage = (data as any)?.message || `请求失败 (${status})`;
+          // 优先使用后端返回的错误信息
+          if (data && typeof data === 'object' && (data as any)?.message) {
+            errorMessage = (data as any).message;
+          } else {
+            // 如果没有后端错误信息，使用默认提示
+            switch (status) {
+              case 400:
+                errorMessage = '请求参数错误';
+                break;
+              case 401:
+                errorMessage = '未授权，请重新登录';
+                this.handleUnauthorized();
+                break;
+              case 403:
+                errorMessage = '拒绝访问';
+                break;
+              case 404:
+                errorMessage = '请求的资源不存在';
+                break;
+              case 500:
+                errorMessage = '服务器内部错误';
+                break;
+              case 502:
+                errorMessage = '网关错误';
+                break;
+              case 503:
+                errorMessage = '服务不可用';
+                break;
+              default:
+                errorMessage = `请求失败 (${status})`;
+            }
           }
         } else if (error.code === 'ECONNABORTED') {
           errorMessage = '请求超时，请稍后重试';
@@ -166,7 +143,12 @@ class RequestUtil {
         }
 
         if (config?.showError !== false) {
-          message.error(errorMessage);
+          notification.error({
+            message: '提示',
+            description: errorMessage,
+            placement: 'topRight',
+            duration: 3,
+          });
         }
 
         return Promise.reject(error);
@@ -176,41 +158,21 @@ class RequestUtil {
 
   // 获取token
   private getToken(): string | null {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    // 只从cookie获取token
+    return Cookies.get('token') || null;
   }
 
   // 处理未授权
   private handleUnauthorized() {
-    // 清除token
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-
+    // 清除cookie中的token
+    Cookies.remove('token');
+    storage.remove('ddzz_userInfo');
     // 跳转到登录页
     window.location.href = '/login';
   }
 
-  // 显示加载状态
-  private showLoading() {
-    this.loadingCount++;
-    if (this.loadingCount === 1) {
-      // 这里可以集成你的loading组件
-      console.log('🔄 Loading...');
-    }
-  }
-
-  // 隐藏加载状态
-  private hideLoading() {
-    this.loadingCount = Math.max(0, this.loadingCount - 1);
-    if (this.loadingCount === 0) {
-      console.log('✅ Loading complete');
-    }
-  }
-
   // GET请求
-  get<T = any>(
-    url: string,
-    config?: RequestConfig,
-  ): Promise<AxiosResponse<ApiResponse<T>>> {
+  get<T = any>(url: string, config?: RequestConfig): Promise<ApiResponse<T>> {
     return this.instance.get(url, config);
   }
 
@@ -219,7 +181,7 @@ class RequestUtil {
     url: string,
     data?: any,
     config?: RequestConfig,
-  ): Promise<AxiosResponse<ApiResponse<T>>> {
+  ): Promise<ApiResponse<T>> {
     return this.instance.post(url, data, config);
   }
 
@@ -228,7 +190,7 @@ class RequestUtil {
     url: string,
     data?: any,
     config?: RequestConfig,
-  ): Promise<AxiosResponse<ApiResponse<T>>> {
+  ): Promise<ApiResponse<T>> {
     return this.instance.put(url, data, config);
   }
 
@@ -236,7 +198,7 @@ class RequestUtil {
   delete<T = any>(
     url: string,
     config?: RequestConfig,
-  ): Promise<AxiosResponse<ApiResponse<T>>> {
+  ): Promise<ApiResponse<T>> {
     return this.instance.delete(url, config);
   }
 
@@ -245,7 +207,7 @@ class RequestUtil {
     url: string,
     data?: any,
     config?: RequestConfig,
-  ): Promise<AxiosResponse<ApiResponse<T>>> {
+  ): Promise<ApiResponse<T>> {
     return this.instance.patch(url, data, config);
   }
 
@@ -254,7 +216,7 @@ class RequestUtil {
     url: string,
     file: File | FormData,
     config?: RequestConfig,
-  ): Promise<AxiosResponse<ApiResponse<T>>> {
+  ): Promise<ApiResponse<T>> {
     const formData = file instanceof FormData ? file : new FormData();
     if (file instanceof File) {
       formData.append('file', file);
@@ -304,21 +266,15 @@ class RequestUtil {
   }
 
   // 设置认证token
-  setToken(
-    token: string,
-    storage: 'localStorage' | 'sessionStorage' = 'localStorage',
-  ) {
-    if (storage === 'localStorage') {
-      localStorage.setItem('token', token);
-    } else {
-      sessionStorage.setItem('token', token);
-    }
+  setToken(token: string, expires?: number) {
+    // 只使用cookie存储token
+    Cookies.set('token', token, { expires: expires || 1 });
   }
 
   // 清除认证token
   clearToken() {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
+    // 只清除cookie中的token
+    Cookies.remove('token');
   }
 
   // 获取axios实例（用于特殊需求）

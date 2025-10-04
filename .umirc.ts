@@ -3,7 +3,17 @@ import { theme } from './src/theme';
 import { routes } from './src/routers';
 
 export default defineConfig({
-  antd: {},
+  antd: {
+    theme: {
+      token: {
+        colorPrimary: '#ff69b4',
+        colorSuccess: '#0bb20c',
+        colorWarning: '#f58003',
+        colorError: '#f5222d',
+        colorInfo: '#0b84f4',
+      },
+    },
+  },
   access: {},
   model: {},
   initialState: {},
