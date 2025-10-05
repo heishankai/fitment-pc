@@ -19,6 +19,7 @@ import {
 } from '@ant-design/icons';
 // components
 import CollectCard from './components/CollectCard';
+import BrandTitle from '@/components/BrandTitle';
 // service
 import { getAllUserService } from './service';
 // utils
@@ -190,14 +191,12 @@ const Home: React.FC = () => {
   return (
     <PageContainer
       title={
-        <Space align="center">
-          <BarChartOutlined
-            style={{ color: token.colorPrimary, fontSize: 24 }}
-          />
-          <Title level={3} style={{ margin: 0, color: token.colorText }}>
-            叮当智装仪表盘
-          </Title>
-        </Space>
+        <BrandTitle
+          title="仪表盘"
+          subtitle="智能装修管理平台"
+          icon={<BarChartOutlined style={{ color: 'white', fontSize: 20 }} />}
+          variant="page"
+        />
       }
       style={{
         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',

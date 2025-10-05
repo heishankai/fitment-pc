@@ -90,3 +90,48 @@ div {
   font-weight: 600;
   letter-spacing: 0.3px;
 }
+
+/* 动画效果 */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* 标题悬停效果 */
+.title-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.title-hover-effect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(24, 144, 255, 15%);
+}
