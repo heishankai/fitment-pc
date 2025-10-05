@@ -2,8 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import storage from './storage';
 import { notification } from 'antd';
+import { clearLoginData } from './index';
 
 const request = axios.create({
   baseURL: 'http://localhost:3000',
@@ -94,10 +94,3 @@ request.interceptors.response.use(
 );
 
 export default request;
-
-// 清除登录数据
-const clearLoginData = () => {
-  Cookies.remove('token');
-  storage.remove('ddzz_userInfo');
-  window.location.href = '/login';
-};

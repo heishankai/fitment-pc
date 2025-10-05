@@ -20,7 +20,7 @@ export const routes = [
     component: './Access',
   },
   {
-    name: ' CRUD 示例',
+    name: 'CRUD 示例',
     path: '/table',
     component: './Table',
   },

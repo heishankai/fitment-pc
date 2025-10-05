@@ -32,6 +32,8 @@ export default defineConfig({
       },
     ],
   ],
+  // 修复 esbuild 冲突
+  // esbuildMinifyIIFE: true,
   routes,
   npmClient: 'pnpm',
 });

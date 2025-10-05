@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 
-const index = () => {
+const Table = () => {
   return (
-    <div>index</div>
-  )
-}
+    <PageContainer title="仪表盘">
+      <ProTable />
+    </PageContainer>
+  );
+};
 
-export default index
+export default Table;
