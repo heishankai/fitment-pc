@@ -10,7 +10,7 @@ export const routes = [
     layout: false,
   },
   {
-    // name: '今日数据',
+    name: '今日数据',
     path: '/home',
     component: './Home',
   },

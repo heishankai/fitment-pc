@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { ApiResponse } from '@/utils/request';
+import { ApiResponse } from '@/types';
 
 // 用户数据类型定义
 export interface UserData {
@@ -17,7 +17,9 @@ export const loginService = (data: any): Promise<ApiResponse<UserData>> => {
   return request.post('/admin/login', data);
 };
 
-
+/**
+ * 获取用户信息
+ */
 export const getUserInfoService = (): Promise<ApiResponse<UserData>> => {
   return request.get('/admin/users/info');
 };
