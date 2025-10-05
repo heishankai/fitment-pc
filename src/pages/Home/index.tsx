@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme, Row, Col, Tag, Typography, Divider, Empty } from 'antd';
+import { theme, Row, Col, Tag, Divider, Empty } from 'antd';
 import { LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 // components
@@ -10,8 +10,6 @@ import CollectCard from './components/CollectCard';
 import { getAllUserService } from './service';
 // utils
 import { useEcharts } from '@/hooks';
-
-const { Title, Text } = Typography;
 
 // Styled Components
 const StyledPageContainer = styled(PageContainer)`
@@ -73,33 +71,6 @@ const EmptyContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const QuickActionCard = styled.div<{ bgGradient: string }>`
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: none;
-  background: ${(props) => props.bgGradient};
-  color: white;
-  padding: 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  height: 100%;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const QuickActionTitle = styled(Title)`
-  color: white !important;
-  margin-bottom: 16px !important;
-`;
-
-const QuickActionText = styled(Text)`
-  color: rgba(255, 255, 255, 0.8) !important;
 `;
 
 const Home: React.FC = () => {
@@ -320,36 +291,6 @@ const Home: React.FC = () => {
               <ChartContainer ref={pieContainerRef} />
             )}
           </ChartCard>
-        </Col>
-      </Row>
-
-      {/* 快速操作区域 */}
-      <Row gutter={[24, 24]} style={{ marginTop: 32 }}>
-        <Col xs={24} sm={12} md={8}>
-          <QuickActionCard bgGradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-            <QuickActionTitle level={4}>快速创建订单</QuickActionTitle>
-            <QuickActionText>
-              一键创建新的装修订单，开始您的装修之旅
-            </QuickActionText>
-          </QuickActionCard>
-        </Col>
-
-        <Col xs={24} sm={12} md={8}>
-          <QuickActionCard bgGradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
-            <QuickActionTitle level={4}>查看项目进度</QuickActionTitle>
-            <QuickActionText>
-              实时跟踪您的装修项目进展，掌握每个细节
-            </QuickActionText>
-          </QuickActionCard>
-        </Col>
-
-        <Col xs={24} sm={12} md={8}>
-          <QuickActionCard bgGradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
-            <QuickActionTitle level={4}>联系客服</QuickActionTitle>
-            <QuickActionText>
-              专业客服团队为您提供7x24小时贴心服务
-            </QuickActionText>
-          </QuickActionCard>
         </Col>
       </Row>
     </StyledPageContainer>
