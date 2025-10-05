@@ -1,31 +1,106 @@
 import React, { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { PageContainer } from '@ant-design/pro-components';
-import {
-  theme,
-  Card,
-  Row,
-  Col,
-  Tag,
-  Space,
-  Typography,
-  Divider,
-  Empty,
-} from 'antd';
-import {
-  LineChartOutlined,
-  BarChartOutlined,
-  PieChartOutlined,
-} from '@ant-design/icons';
+import { theme, Row, Col, Tag, Typography, Divider, Empty } from 'antd';
+import { LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
 // components
 import CollectCard from './components/CollectCard';
-import BrandTitle from '@/components/BrandTitle';
 // service
 import { getAllUserService } from './service';
 // utils
 import { useEcharts } from '@/hooks';
 
 const { Title, Text } = Typography;
+
+// Styled Components
+const StyledPageContainer = styled(PageContainer)`
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+`;
+
+const StyledDivider = styled(Divider)`
+  margin: 32px 0;
+`;
+
+const ChartCard = styled.div`
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+  background: white;
+  padding: 24px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+`;
+
+const ChartCardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+`;
+
+const ChartTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+
+  .anticon {
+    color: #1890ff;
+  }
+`;
+
+const ChartTag = styled(Tag)`
+  border-radius: 6px;
+  font-weight: 500;
+`;
+
+const ChartContainer = styled.div`
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+`;
+
+const EmptyContainer = styled.div`
+  width: 100%;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const QuickActionCard = styled.div<{ bgGradient: string }>`
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+  background: ${(props) => props.bgGradient};
+  color: white;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const QuickActionTitle = styled(Title)`
+  color: white !important;
+  margin-bottom: 16px !important;
+`;
+
+const QuickActionText = styled(Text)`
+  color: rgba(255, 255, 255, 0.8) !important;
+`;
 
 const Home: React.FC = () => {
   const { data, loading: statsLoading } = useRequest(getAllUserService);
@@ -189,196 +264,95 @@ const Home: React.FC = () => {
   const pieContainerRef = useEcharts(pieOption, statsLoading);
 
   return (
-    <PageContainer
-      title={
-        <BrandTitle
-          title="仪表盘"
-          subtitle="智能装修管理平台"
-          icon={<BarChartOutlined style={{ color: 'white', fontSize: 20 }} />}
-          variant="page"
-        />
-      }
-      style={{
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      }}
-    >
+    <StyledPageContainer>
       {/* 统计卡片 */}
       <CollectCard />
 
-      <Divider style={{ margin: '32px 0' }} />
+      <StyledDivider />
 
       {/* 图表区域 */}
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={16}>
-          <Card
-            title={
-              <Space>
+          <ChartCard>
+            <ChartCardHeader>
+              <ChartTitle>
                 <LineChartOutlined style={{ color: token.colorPrimary }} />
                 <span>订单走势图</span>
-              </Space>
-            }
-            extra={
-              <Tag color="blue" icon={<LineChartOutlined />}>
+              </ChartTitle>
+              <ChartTag color="blue" icon={<LineChartOutlined />}>
                 近一周
-              </Tag>
-            }
-            style={{
-              borderRadius: 12,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              border: 'none',
-            }}
-            bodyStyle={{ padding: '24px' }}
-          >
+              </ChartTag>
+            </ChartCardHeader>
             {isChartDataEmpty ? (
-              <div
-                style={{
-                  width: '100%',
-                  height: '400px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
+              <EmptyContainer>
                 <Empty
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description="暂无数据"
-                  style={{
-                    color: '#999',
-                  }}
+                  style={{ color: '#999' }}
                 />
-              </div>
+              </EmptyContainer>
             ) : (
-              <div
-                ref={containerRef}
-                style={{
-                  width: '100%',
-                  height: '400px',
-                  borderRadius: 8,
-                }}
-              />
+              <ChartContainer ref={containerRef} />
             )}
-          </Card>
+          </ChartCard>
         </Col>
 
         <Col xs={24} lg={8}>
-          <Card
-            title={
-              <Space>
+          <ChartCard style={{ height: '100%' }}>
+            <ChartCardHeader>
+              <ChartTitle>
                 <PieChartOutlined style={{ color: token.colorPrimary }} />
                 <span>订单状态分布</span>
-              </Space>
-            }
-            extra={
-              <Tag color="blue" icon={<PieChartOutlined />}>
+              </ChartTitle>
+              <ChartTag color="blue" icon={<PieChartOutlined />}>
                 近一周
-              </Tag>
-            }
-            style={{
-              borderRadius: 12,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              border: 'none',
-              height: '100%',
-            }}
-            bodyStyle={{ padding: '24px' }}
-          >
+              </ChartTag>
+            </ChartCardHeader>
             {isPieDataEmpty ? (
-              <div
-                style={{
-                  width: '100%',
-                  height: '400px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
+              <EmptyContainer>
                 <Empty
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description="暂无数据"
-                  style={{
-                    color: '#999',
-                  }}
+                  style={{ color: '#999' }}
                 />
-              </div>
+              </EmptyContainer>
             ) : (
-              <div
-                ref={pieContainerRef}
-                style={{
-                  width: '100%',
-                  height: '400px',
-                  borderRadius: 8,
-                }}
-              />
+              <ChartContainer ref={pieContainerRef} />
             )}
-          </Card>
+          </ChartCard>
         </Col>
       </Row>
 
       {/* 快速操作区域 */}
       <Row gutter={[24, 24]} style={{ marginTop: 32 }}>
         <Col xs={24} sm={12} md={8}>
-          <Card
-            hoverable
-            style={{
-              borderRadius: 12,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              border: 'none',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
-            }}
-            bodyStyle={{ padding: '24px', textAlign: 'center' }}
-          >
-            <Title level={4} style={{ color: 'white', marginBottom: 16 }}>
-              快速创建订单
-            </Title>
-            <Text style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <QuickActionCard bgGradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+            <QuickActionTitle level={4}>快速创建订单</QuickActionTitle>
+            <QuickActionText>
               一键创建新的装修订单，开始您的装修之旅
-            </Text>
-          </Card>
+            </QuickActionText>
+          </QuickActionCard>
         </Col>
 
         <Col xs={24} sm={12} md={8}>
-          <Card
-            hoverable
-            style={{
-              borderRadius: 12,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              border: 'none',
-              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-              color: 'white',
-            }}
-            bodyStyle={{ padding: '24px', textAlign: 'center' }}
-          >
-            <Title level={4} style={{ color: 'white', marginBottom: 16 }}>
-              查看项目进度
-            </Title>
-            <Text style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <QuickActionCard bgGradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
+            <QuickActionTitle level={4}>查看项目进度</QuickActionTitle>
+            <QuickActionText>
               实时跟踪您的装修项目进展，掌握每个细节
-            </Text>
-          </Card>
+            </QuickActionText>
+          </QuickActionCard>
         </Col>
 
         <Col xs={24} sm={12} md={8}>
-          <Card
-            hoverable
-            style={{
-              borderRadius: 12,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              border: 'none',
-              background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-              color: 'white',
-            }}
-            bodyStyle={{ padding: '24px', textAlign: 'center' }}
-          >
-            <Title level={4} style={{ color: 'white', marginBottom: 16 }}>
-              联系客服
-            </Title>
-            <Text style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+          <QuickActionCard bgGradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
+            <QuickActionTitle level={4}>联系客服</QuickActionTitle>
+            <QuickActionText>
               专业客服团队为您提供7x24小时贴心服务
-            </Text>
-          </Card>
+            </QuickActionText>
+          </QuickActionCard>
         </Col>
       </Row>
-    </PageContainer>
+    </StyledPageContainer>
   );
 };
 

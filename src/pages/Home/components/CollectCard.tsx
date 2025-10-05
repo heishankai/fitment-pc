@@ -1,5 +1,6 @@
 import React from 'react';
-import { Row, Col, Card, Typography } from 'antd';
+import { Row, Col } from 'antd';
+import styled from 'styled-components';
 import {
   UserOutlined,
   DollarOutlined,
@@ -8,7 +9,100 @@ import {
   ArrowDownOutlined,
 } from '@ant-design/icons';
 
-const { Text } = Typography;
+// Styled Components
+const StyledCard = styled.div<{ bgGradient: string }>`
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: none;
+  background: ${(props) => props.bgGradient};
+  color: white;
+  overflow: hidden;
+  position: relative;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  }
+`;
+
+const CardContent = styled.div`
+  position: relative;
+  z-index: 2;
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const IconWrapper = styled.div`
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+
+  .anticon {
+    font-size: 24px;
+    color: white;
+  }
+`;
+
+const TrendWrapper = styled.div`
+  text-align: right;
+`;
+
+const TrendIndicator = styled.div<{ trend: 'up' | 'down' }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+
+  .anticon {
+    color: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
+    font-size: 12px;
+  }
+`;
+
+const TrendText = styled.span<{ trend: 'up' | 'down' }>`
+  color: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
+  font-size: 12px;
+  font-weight: 600;
+`;
+
+const CardTitle = styled.div`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+const CardValue = styled.div`
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-top: 8px;
+  line-height: 1.2;
+`;
+
+const DecorativeCircle = styled.div<{ position: 'top' | 'bottom' }>`
+  position: absolute;
+  ${(props) =>
+    props.position === 'top'
+      ? 'top: -20px; right: -20px;'
+      : 'bottom: -30px; left: -30px;'}
+  width: ${(props) => (props.position === 'top' ? '80px' : '100px')};
+  height: ${(props) => (props.position === 'top' ? '80px' : '100px')};
+  border-radius: 50%;
+  background: ${(props) =>
+    props.position === 'top'
+      ? 'rgba(255, 255, 255, 0.1)'
+      : 'rgba(255, 255, 255, 0.05)'};
+  z-index: 1;
+`;
 
 const CollectCard = () => {
   const cardData = [
@@ -17,7 +111,7 @@ const CollectCard = () => {
       value: 93,
       prefix: <UserOutlined />,
       suffix: '+12%',
-      trend: 'up',
+      trend: 'up' as const,
       color: '#52c41a',
       bgGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     },
@@ -26,7 +120,7 @@ const CollectCard = () => {
       value: 812800,
       prefix: <DollarOutlined />,
       suffix: '+8.2%',
-      trend: 'up',
+      trend: 'up' as const,
       color: '#1890ff',
       bgGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     },
@@ -35,7 +129,7 @@ const CollectCard = () => {
       value: 1128,
       prefix: <ShoppingCartOutlined />,
       suffix: '-2.1%',
-      trend: 'down',
+      trend: 'down' as const,
       color: '#fa8c16',
       bgGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     },
@@ -45,124 +139,32 @@ const CollectCard = () => {
     <Row gutter={[24, 24]}>
       {cardData.map((item, index) => (
         <Col xs={24} sm={12} lg={8} key={index}>
-          <Card
-            hoverable
-            style={{
-              borderRadius: 16,
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
-              border: 'none',
-              background: item.bgGradient,
-              color: 'white',
-              overflow: 'hidden',
-              position: 'relative',
-            }}
-            bodyStyle={{ padding: '24px' }}
-          >
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 16,
-                }}
-              >
-                <div
-                  style={{
-                    padding: '12px',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                  }}
-                >
-                  {React.cloneElement(item.prefix, {
-                    style: {
-                      fontSize: 24,
-                      color: 'white',
-                    },
-                  })}
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 4,
-                      marginBottom: 4,
-                    }}
-                  >
+          <StyledCard bgGradient={item.bgGradient}>
+            <CardContent>
+              <CardHeader>
+                <IconWrapper>{item.prefix}</IconWrapper>
+                <TrendWrapper>
+                  <TrendIndicator trend={item.trend}>
                     {item.trend === 'up' ? (
-                      <ArrowUpOutlined
-                        style={{ color: '#52c41a', fontSize: 12 }}
-                      />
+                      <ArrowUpOutlined />
                     ) : (
-                      <ArrowDownOutlined
-                        style={{ color: '#ff4d4f', fontSize: 12 }}
-                      />
+                      <ArrowDownOutlined />
                     )}
-                    <Text
-                      style={{
-                        color: item.trend === 'up' ? '#52c41a' : '#ff4d4f',
-                        fontSize: 12,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {item.suffix}
-                    </Text>
-                  </div>
-                </div>
-              </div>
+                    <TrendText trend={item.trend}>{item.suffix}</TrendText>
+                  </TrendIndicator>
+                </TrendWrapper>
+              </CardHeader>
 
               <div>
-                <Text
-                  style={{
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    fontSize: 14,
-                    fontWeight: 500,
-                  }}
-                >
-                  {item.title}
-                </Text>
-                <div
-                  style={{
-                    fontSize: 32,
-                    fontWeight: 700,
-                    color: 'white',
-                    marginTop: 8,
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {item.value.toLocaleString()}
-                </div>
+                <CardTitle>{item.title}</CardTitle>
+                <CardValue>{item.value.toLocaleString()}</CardValue>
               </div>
-            </div>
+            </CardContent>
 
             {/* 装饰性背景元素 */}
-            <div
-              style={{
-                position: 'absolute',
-                top: -20,
-                right: -20,
-                width: 80,
-                height: 80,
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.1)',
-                zIndex: 1,
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: -30,
-                left: -30,
-                width: 100,
-                height: 100,
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.05)',
-                zIndex: 1,
-              }}
-            />
-          </Card>
+            <DecorativeCircle position="top" />
+            <DecorativeCircle position="bottom" />
+          </StyledCard>
         </Col>
       ))}
     </Row>

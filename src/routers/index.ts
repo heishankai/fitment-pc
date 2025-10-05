@@ -15,11 +15,6 @@ export const routes = [
     component: 'home',
   },
   {
-    name: '权限演示',
-    path: '/access',
-    component: './Access',
-  },
-  {
     name: '配置管理',
     path: '/config',
     routes: [
