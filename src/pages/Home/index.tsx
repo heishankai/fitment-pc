@@ -22,11 +22,19 @@ const Home: React.FC = () => {
 
   const { token } = theme.useToken();
 
-  // Mock数据
+  // 柱状图数据
   const chartData = {
     x: ['10-01', '10-02', '10-03', '10-04', '10-05', '10-06', '10-07'],
     y: [120, 200, 150, 80, 70, 110, 130],
   };
+
+  // 饼图数据
+  const pieData = [
+    { value: 335, name: '已完成' },
+    { value: 310, name: '进行中' },
+    { value: 234, name: '待处理' },
+    { value: 135, name: '已取消' },
+  ];
 
   // 构建ECharts配置
   const chartOption = useMemo(() => {
@@ -115,14 +123,6 @@ const Home: React.FC = () => {
   }, [chartData, token.colorPrimary]);
 
   const containerRef = useEcharts(chartOption, statsLoading);
-
-  // 饼图数据
-  const pieData = [
-    { value: 335, name: '已完成' },
-    { value: 310, name: '进行中' },
-    { value: 234, name: '待处理' },
-    { value: 135, name: '已取消' },
-  ];
 
   // 饼图配置
   const pieOption = useMemo(() => {
