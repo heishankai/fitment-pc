@@ -59,19 +59,92 @@ const TrendWrapper = styled.div`
 const TrendIndicator = styled.div<{ trend: 'up' | 'down' }>`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   margin-bottom: 4px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: ${(props) =>
+    props.trend === 'up'
+      ? 'linear-gradient(135deg, rgba(82, 196, 26, 0.2) 0%, rgba(82, 196, 26, 0.1) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 77, 79, 0.2) 0%, rgba(255, 77, 79, 0.1) 100%)'};
+  border: 1px solid
+    ${(props) =>
+      props.trend === 'up'
+        ? 'rgba(82, 196, 26, 0.4)'
+        : 'rgba(255, 77, 79, 0.4)'};
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: ${(props) =>
+      props.trend === 'up'
+        ? 'linear-gradient(90deg, transparent, rgba(82, 196, 26, 0.3), transparent)'
+        : 'linear-gradient(90deg, transparent, rgba(255, 77, 79, 0.3), transparent)'};
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    transform: scale(1.08) translateY(-1px);
+    background: ${(props) =>
+      props.trend === 'up'
+        ? 'linear-gradient(135deg, rgba(82, 196, 26, 0.3) 0%, rgba(82, 196, 26, 0.2) 100%)'
+        : 'linear-gradient(135deg, rgba(255, 77, 79, 0.3) 0%, rgba(255, 77, 79, 0.2) 100%)'};
+    box-shadow: ${(props) =>
+      props.trend === 'up'
+        ? '0 4px 12px rgba(82, 196, 26, 0.3)'
+        : '0 4px 12px rgba(255, 77, 79, 0.3)'};
+
+    &::before {
+      left: 100%;
+    }
+  }
 
   .anticon {
     color: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
-    font-size: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
   }
 `;
 
 const TrendText = styled.span<{ trend: 'up' | 'down' }>`
   color: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.8px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
+    border-radius: 1px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    height: 3px;
+  }
 `;
 
 const CardTitle = styled.div`
