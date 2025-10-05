@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Row, Col } from 'antd';
 import styled from 'styled-components';
 import {
@@ -8,6 +8,30 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined,
 } from '@ant-design/icons';
+
+// 类型定义
+type TrendType = 'up' | 'down';
+
+interface CardData {
+  title: string;
+  value: number;
+  prefix: React.ReactNode;
+  suffix: string;
+  trend: TrendType;
+  color: string;
+  bgGradient: string;
+}
+
+// 常量定义
+const TREND_COLORS = {
+  up: '#52c41a',
+  down: '#ff4d4f',
+} as const;
+
+const TREND_ICONS = {
+  up: ArrowUpOutlined,
+  down: ArrowDownOutlined,
+} as const;
 
 // Styled Components
 const StyledCard = styled.div<{ bgGradient: string }>`
@@ -56,95 +80,41 @@ const TrendWrapper = styled.div`
   text-align: right;
 `;
 
-const TrendIndicator = styled.div<{ trend: 'up' | 'down' }>`
+// 通用样式
+const getTrendColor = (trend: TrendType) => TREND_COLORS[trend];
+
+const TrendIndicator = styled.div<{ trend: TrendType }>`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   margin-bottom: 4px;
-  padding: 6px 12px;
-  border-radius: 16px;
-  background: ${(props) =>
-    props.trend === 'up'
-      ? 'linear-gradient(135deg, rgba(82, 196, 26, 0.2) 0%, rgba(82, 196, 26, 0.1) 100%)'
-      : 'linear-gradient(135deg, rgba(255, 77, 79, 0.2) 0%, rgba(255, 77, 79, 0.1) 100%)'};
-  border: 1px solid
-    ${(props) =>
-      props.trend === 'up'
-        ? 'rgba(82, 196, 26, 0.4)'
-        : 'rgba(255, 77, 79, 0.4)'};
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid ${(props) => `${getTrendColor(props.trend)}4D`};
+  transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: ${(props) =>
-      props.trend === 'up'
-        ? 'linear-gradient(90deg, transparent, rgba(82, 196, 26, 0.3), transparent)'
-        : 'linear-gradient(90deg, transparent, rgba(255, 77, 79, 0.3), transparent)'};
-    transition: left 0.6s ease;
-  }
 
   &:hover {
-    transform: scale(1.08) translateY(-1px);
-    background: ${(props) =>
-      props.trend === 'up'
-        ? 'linear-gradient(135deg, rgba(82, 196, 26, 0.3) 0%, rgba(82, 196, 26, 0.2) 100%)'
-        : 'linear-gradient(135deg, rgba(255, 77, 79, 0.3) 0%, rgba(255, 77, 79, 0.2) 100%)'};
-    box-shadow: ${(props) =>
-      props.trend === 'up'
-        ? '0 4px 12px rgba(82, 196, 26, 0.3)'
-        : '0 4px 12px rgba(255, 77, 79, 0.3)'};
-
-    &::before {
-      left: 100%;
-    }
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 8px ${(props) => `${getTrendColor(props.trend)}33`};
   }
 
   .anticon {
-    color: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
-    font-size: 16px;
+    color: ${(props) => getTrendColor(props.trend)};
+    font-size: 12px;
     font-weight: bold;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 2;
+    transition: all 0.2s ease;
   }
 `;
 
-const TrendText = styled.span<{ trend: 'up' | 'down' }>`
-  color: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
-  font-size: 14px;
-  font-weight: 800;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  letter-spacing: 0.8px;
-  position: relative;
-  z-index: 2;
-  transition: all 0.3s ease;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: ${(props) => (props.trend === 'up' ? '#52c41a' : '#ff4d4f')};
-    border-radius: 1px;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-  }
-
-  &:hover::after {
-    opacity: 1;
-    height: 3px;
-  }
+const TrendText = styled.span<{ trend: TrendType }>`
+  color: ${(props) => getTrendColor(props.trend)};
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 `;
 
 const CardTitle = styled.div`
@@ -177,68 +147,82 @@ const DecorativeCircle = styled.div<{ position: 'top' | 'bottom' }>`
   z-index: 1;
 `;
 
-const CollectCard = () => {
-  const cardData = [
-    {
-      title: '今日新增用户',
-      value: 93,
-      prefix: <UserOutlined />,
-      suffix: '+12%',
-      trend: 'up' as const,
-      color: '#52c41a',
-      bgGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    },
-    {
-      title: '今日交易额',
-      value: 812800,
-      prefix: <DollarOutlined />,
-      suffix: '+8.2%',
-      trend: 'up' as const,
-      color: '#1890ff',
-      bgGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    },
-    {
-      title: '今日新增订单',
-      value: 1128,
-      prefix: <ShoppingCartOutlined />,
-      suffix: '-2.1%',
-      trend: 'down' as const,
-      color: '#fa8c16',
-      bgGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    },
-  ];
+// 卡片数据配置
+const CARD_DATA: CardData[] = [
+  {
+    title: '今日新增用户',
+    value: 93,
+    prefix: <UserOutlined />,
+    suffix: '+12%',
+    trend: 'up',
+    color: '#52c41a',
+    bgGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  },
+  {
+    title: '今日交易额',
+    value: 812800,
+    prefix: <DollarOutlined />,
+    suffix: '+8.2%',
+    trend: 'up',
+    color: '#1890ff',
+    bgGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  },
+  {
+    title: '今日新增订单',
+    value: 1128,
+    prefix: <ShoppingCartOutlined />,
+    suffix: '-2.1%',
+    trend: 'down',
+    color: '#fa8c16',
+    bgGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  },
+];
+
+// 趋势图标组件
+const TrendIcon: React.FC<{ trend: TrendType }> = ({ trend }) => {
+  const IconComponent = TREND_ICONS[trend];
+  return <IconComponent />;
+};
+
+// 单个卡片组件
+const CardItem: React.FC<{ data: CardData; index: number }> = ({
+  data,
+  index,
+}) => {
+  return (
+    <Col xs={24} sm={12} lg={8} key={index}>
+      <StyledCard bgGradient={data.bgGradient}>
+        <CardContent>
+          <CardHeader>
+            <IconWrapper>{data.prefix}</IconWrapper>
+            <TrendWrapper>
+              <TrendIndicator trend={data.trend}>
+                <TrendIcon trend={data.trend} />
+                <TrendText trend={data.trend}>{data.suffix}</TrendText>
+              </TrendIndicator>
+            </TrendWrapper>
+          </CardHeader>
+
+          <div>
+            <CardTitle>{data.title}</CardTitle>
+            <CardValue>{data.value.toLocaleString()}</CardValue>
+          </div>
+        </CardContent>
+
+        <DecorativeCircle position="top" />
+        <DecorativeCircle position="bottom" />
+      </StyledCard>
+    </Col>
+  );
+};
+
+const CollectCard: React.FC = () => {
+  const cardData = useMemo(() => CARD_DATA, []);
 
   return (
     <Row gutter={[24, 24]}>
       {cardData.map((item, index) => (
-        <Col xs={24} sm={12} lg={8} key={index}>
-          <StyledCard bgGradient={item.bgGradient}>
-            <CardContent>
-              <CardHeader>
-                <IconWrapper>{item.prefix}</IconWrapper>
-                <TrendWrapper>
-                  <TrendIndicator trend={item.trend}>
-                    {item.trend === 'up' ? (
-                      <ArrowUpOutlined />
-                    ) : (
-                      <ArrowDownOutlined />
-                    )}
-                    <TrendText trend={item.trend}>{item.suffix}</TrendText>
-                  </TrendIndicator>
-                </TrendWrapper>
-              </CardHeader>
-
-              <div>
-                <CardTitle>{item.title}</CardTitle>
-                <CardValue>{item.value.toLocaleString()}</CardValue>
-              </div>
-            </CardContent>
-
-            {/* 装饰性背景元素 */}
-            <DecorativeCircle position="top" />
-            <DecorativeCircle position="bottom" />
-          </StyledCard>
-        </Col>
+        <CardItem key={`card-${index}`} data={item} index={index} />
       ))}
     </Row>
   );
