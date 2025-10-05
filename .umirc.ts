@@ -5,7 +5,7 @@ export default defineConfig({
   antd: {
     theme: {
       token: {
-        colorPrimary: '#ff69b4',
+        colorPrimary: '#00cec9',
         colorSuccess: '#0bb20c',
         colorWarning: '#f58003',
         colorError: '#f5222d',

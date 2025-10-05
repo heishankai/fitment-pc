@@ -7,3 +7,6 @@ export const clearLoginData = () => {
   storage.remove('ddzz_userInfo');
   window.location.href = '/login';
 };
+
+// 导出字体样式工具
+export * from './typography';
