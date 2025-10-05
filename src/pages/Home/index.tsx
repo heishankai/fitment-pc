@@ -1,7 +1,17 @@
 import React, { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme, Card, Row, Col, Tag, Space, Typography, Divider } from 'antd';
+import {
+  theme,
+  Card,
+  Row,
+  Col,
+  Tag,
+  Space,
+  Typography,
+  Divider,
+  Empty,
+} from 'antd';
 import {
   LineChartOutlined,
   BarChartOutlined,
@@ -22,19 +32,23 @@ const Home: React.FC = () => {
 
   const { token } = theme.useToken();
 
-  // 柱状图数据
-  const chartData = {
+  // 柱状图数据 - 可以设置为空数组来测试空数据状态
+  const chartData: { x: string[]; y: number[] } = {
     x: ['10-01', '10-02', '10-03', '10-04', '10-05', '10-06', '10-07'],
     y: [120, 200, 150, 80, 70, 110, 130],
   };
 
-  // 饼图数据
-  const pieData = [
+  // 饼图数据 - 可以设置为空数组来测试空数据状态
+  const pieData: Array<{ value: number; name: string }> = [
     { value: 335, name: '已完成' },
     { value: 310, name: '进行中' },
     { value: 234, name: '待处理' },
     { value: 135, name: '已取消' },
   ];
+
+  // 检查数据是否为空
+  const isChartDataEmpty = !chartData.x?.length || !chartData.y?.length;
+  const isPieDataEmpty = !pieData?.length;
 
   // 构建ECharts配置
   const chartOption = useMemo(() => {
@@ -216,14 +230,34 @@ const Home: React.FC = () => {
             }}
             bodyStyle={{ padding: '24px' }}
           >
-            <div
-              ref={containerRef}
-              style={{
-                width: '100%',
-                height: '400px',
-                borderRadius: 8,
-              }}
-            />
+            {isChartDataEmpty ? (
+              <div
+                style={{
+                  width: '100%',
+                  height: '400px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="暂无数据"
+                  style={{
+                    color: '#999',
+                  }}
+                />
+              </div>
+            ) : (
+              <div
+                ref={containerRef}
+                style={{
+                  width: '100%',
+                  height: '400px',
+                  borderRadius: 8,
+                }}
+              />
+            )}
           </Card>
         </Col>
 
@@ -248,14 +282,34 @@ const Home: React.FC = () => {
             }}
             bodyStyle={{ padding: '24px' }}
           >
-            <div
-              ref={pieContainerRef}
-              style={{
-                width: '100%',
-                height: '400px',
-                borderRadius: 8,
-              }}
-            />
+            {isPieDataEmpty ? (
+              <div
+                style={{
+                  width: '100%',
+                  height: '400px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="暂无数据"
+                  style={{
+                    color: '#999',
+                  }}
+                />
+              </div>
+            ) : (
+              <div
+                ref={pieContainerRef}
+                style={{
+                  width: '100%',
+                  height: '400px',
+                  borderRadius: 8,
+                }}
+              />
+            )}
           </Card>
         </Col>
       </Row>
