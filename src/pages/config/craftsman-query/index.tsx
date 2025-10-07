@@ -2,14 +2,12 @@ import React, { useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
-import { Image } from 'antd';
 import { getCraftsmanListService } from './service';
 const Table = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
   return (
     <PageContainer>
-      <Image src="https://din-dang-zhi-zhuang.oss-cn-hangzhou.aliyuncs.com/uploads/1759739087831_ynhwdp_%E6%88%AA%E5%B1%8F2023-09-09%2000.33.49.png" />
       <ProTable
         actionRef={actionRef}
         formRef={tableFormRef}
