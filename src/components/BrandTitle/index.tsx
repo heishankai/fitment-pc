@@ -35,10 +35,6 @@ const TitleContainer = styled(Space)<{ $variant?: string }>`
     props.$variant === 'header'
       ? 'rgba(255, 255, 255, 0.15)'
       : 'linear-gradient(135deg, rgba(24, 144, 255, 0.1) 0%, rgba(0, 206, 201, 0.1) 100%)'};
-  border: ${(props) =>
-    props.$variant === 'header'
-      ? '1px solid rgba(255, 255, 255, 0.3)'
-      : '1px solid rgba(24, 144, 255, 0.2)'};
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   position: relative;

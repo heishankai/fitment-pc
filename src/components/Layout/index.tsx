@@ -18,7 +18,6 @@ const LAYOUT_ID = 'test-pro-layout';
 // Theme
 const theme = {
   colors: {
-    primary: '#1890ff',
     secondary: '#00cec9',
     white: '#ffffff',
     text: '#ffffff',
@@ -54,14 +53,14 @@ const HeaderContainer = styled.div`
 
   background: linear-gradient(
     135deg,
-    ${theme.colors.primary} 0%,
-    ${theme.colors.secondary} 100%
+    ${theme.colors.secondary} 0%,
+    rgba(0, 206, 201, 0.9) 50%,
+    rgba(0, 206, 201, 0.8) 100%
   );
   height: 100%;
   display: flex;
   align-items: center;
   padding: 0 ${theme.spacing.xl} 0 ${theme.spacing.lg};
-  box-shadow: ${theme.shadows.md};
   position: relative;
   z-index: 1;
 `;
