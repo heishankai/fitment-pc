@@ -20,7 +20,7 @@ const theme = {
   colors: {
     primary: '#00cec9',
     secondary: '#00b4d8',
-    tertiary: '#0077b6',
+    tertiary: '#0099cc',
     white: '#ffffff',
   },
   spacing: {
