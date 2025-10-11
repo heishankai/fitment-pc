@@ -20,7 +20,7 @@ const defaultProTableConfig: ProTableProps<any, any> = {
   sticky: true,
   manualRequest: true,
   search: {
-    span: 6,
+    span: 8,
     defaultColsNumber: 7,
     labelWidth: 70,
   },

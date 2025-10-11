@@ -2,7 +2,9 @@ import React, { useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
+// service
 import { getCraftsmanListService } from './service';
+
 const Table = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();

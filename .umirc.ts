@@ -10,6 +10,9 @@ export default defineConfig({
         colorWarning: '#f58003',
         colorError: '#f5222d',
         colorInfo: '#0b84f4',
+        colorLink: '#00cec9',
+        colorLinkHover: '#00b5b0',
+        colorLinkActive: '#009a96',
       },
     },
   },
@@ -20,9 +23,6 @@ export default defineConfig({
   layout: {
     title: 'hello',
   },
-  // 使用自定义主题配置
-  // theme,
-  // 配置 Babel 插件支持 styled-components
   extraBabelPlugins: [
     [
       'babel-plugin-styled-components',
@@ -32,8 +32,6 @@ export default defineConfig({
       },
     ],
   ],
-  // 修复 esbuild 冲突
-  // esbuildMinifyIIFE: true,
   routes,
   npmClient: 'pnpm',
 });

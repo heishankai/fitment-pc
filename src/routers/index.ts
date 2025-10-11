@@ -85,22 +85,32 @@ export const routes = [
         component: 'config/grab-order-config',
       },
       {
-        name: '工程管理查询',
+        name: '工程管理',
         path: 'project-query',
         component: 'config/project-query',
       },
       {
-        name: '工价/辅料管理查询',
+        name: '工价管理',
         path: 'price-query',
         component: 'config/price-query',
       },
       {
-        name: '工匠管理查询',
+        name: '辅料管理',
+        path: 'material-query',
+        component: 'config/material-query',
+      },
+      {
+        name: '案例管理',
+        path: 'case-query',
+        component: 'config/case-query',
+      },
+      {
+        name: '工匠管理',
         path: 'craftsman-query',
         component: 'config/craftsman-query',
       },
       {
-        name: '认证审核管理',
+        name: '认证审核',
         path: 'auth-audit-management',
         component: 'config/auth-audit-management',
       },

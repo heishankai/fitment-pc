@@ -5,8 +5,10 @@ import 'nprogress/nprogress.css';
 import { notification } from 'antd';
 import { clearLoginData } from './index';
 
+export const BASE_URL = 'http://localhost:3000';
+
 const request = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
