@@ -74,7 +74,7 @@ const OperateModal = (props: any, ref: any) => {
       open={visble}
       title={`${title === 'add' ? '新增' : '编辑'}装修案例`}
       form={form}
-      width="80%"
+      width="76%"
       layout="horizontal"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
