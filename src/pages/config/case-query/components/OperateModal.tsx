@@ -100,6 +100,17 @@ const OperateModal = (props: any, ref: any) => {
           />
         </Col>
         <Col span={8}>
+          <ProFormText
+            label="户型"
+            name="housing_type"
+            rules={[{ required: true }]}
+            fieldProps={{
+              maxLength: 20,
+              showCount: true,
+            }}
+          />
+        </Col>
+        <Col span={8}>
           <ProFormRadio.Group
             label="改造类型"
             name="remodel_type"

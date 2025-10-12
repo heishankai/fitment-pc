@@ -6,6 +6,7 @@ import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
 // components
 import OperateModal from './components/OperateModal';
+import { CitySelect } from '@/components';
 // service
 import { getCaseListService, deleteCaseService } from './service';
 
@@ -28,13 +29,13 @@ const CaseQuery = () => {
       <ProTable
         actionRef={actionRef}
         formRef={tableFormRef}
-        rowKey="id"
-        scroll={{ x: 900 }}
         {...getProTableConfig({
           request: async (params) => {
             return await getCaseListService(params);
           },
         })}
+        rowKey="id"
+        scroll={{ x: 1200 }}
         headerTitle={
           <Space>
             <Button
@@ -53,19 +54,37 @@ const CaseQuery = () => {
             dataIndex: 'housing_name',
             hideInTable: true,
           },
+          {
+            title: '城市',
+            dataIndex: 'city_code',
+            hideInTable: true,
+            renderFormItem: () => <CitySelect />,
+          },
+          {
+            title: '户型',
+            dataIndex: 'housing_type',
+            hideInTable: true,
+          },
           // table字段
           {
             title: '小区名称',
             dataIndex: 'housing_name',
             hideInSearch: true,
-            width: 100,
+            width: 120,
+            ellipsis: true,
+          },
+          {
+            title: '户型',
+            dataIndex: 'housing_type',
+            hideInSearch: true,
+            width: 150,
             ellipsis: true,
           },
           {
             title: '改造类型',
             dataIndex: 'remodel_type',
             hideInSearch: true,
-            width: 100,
+            width: 120,
             ellipsis: true,
             valueEnum: {
               1: '新房装修',
@@ -76,35 +95,35 @@ const CaseQuery = () => {
             title: '城市',
             dataIndex: 'city_name',
             hideInSearch: true,
-            width: 100,
+            width: 120,
             ellipsis: true,
           },
           {
             title: '平米数',
             dataIndex: 'square_number',
             hideInSearch: true,
-            width: 100,
+            width: 120,
             ellipsis: true,
           },
           {
             title: '施工费用',
             dataIndex: 'construction_cost',
             hideInSearch: true,
-            width: 100,
+            width: 120,
             ellipsis: true,
           },
           {
             title: '辅材费用',
             dataIndex: 'auxiliary_material_cost',
             hideInSearch: true,
-            width: 100,
+            width: 120,
             ellipsis: true,
           },
           {
             title: '房屋总费用',
             dataIndex: 'house_total_cost',
             hideInSearch: true,
-            width: 100,
+            width: 130,
             ellipsis: true,
             render: (text: any, record: any) => {
               return (
@@ -118,7 +137,7 @@ const CaseQuery = () => {
           {
             title: '操作',
             valueType: 'option',
-            width: 150,
+            width: 180,
             fixed: 'right',
             align: 'center',
             render: (text: any, record: any) => {

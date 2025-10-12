@@ -5,16 +5,26 @@ import type { FormInstance } from 'antd';
  */
 export const transformAddData = (data: any) => {
   if (!data) return {};
+  const {
+    construction_image,
+    drawingroom_image,
+    balcony_image,
+    master_bedroom_image,
+    secondary_bedroom_image,
+    bathroom_image,
+    city,
+    ...rest
+  } = data ?? {};
   return {
-    ...data,
-    city_name: data?.city?.label,
-    city_code: data?.city?.value,
-    construction_image: extractImageUrl(data?.construction_image),
-    drawingroom_image: extractImageUrl(data?.drawingroom_image),
-    balcony_image: extractImageUrl(data?.balcony_image),
-    master_bedroom_image: extractImageUrl(data?.master_bedroom_image),
-    secondary_bedroom_image: extractImageUrl(data?.secondary_bedroom_image),
-    bathroom_image: extractImageUrl(data?.bathroom_image),
+    ...rest,
+    city_name: city?.label,
+    city_code: city?.value,
+    construction_image: extractImageUrl(construction_image),
+    drawingroom_image: extractImageUrl(drawingroom_image),
+    balcony_image: extractImageUrl(balcony_image),
+    master_bedroom_image: extractImageUrl(master_bedroom_image),
+    secondary_bedroom_image: extractImageUrl(secondary_bedroom_image),
+    bathroom_image: extractImageUrl(bathroom_image),
   };
 };
 
