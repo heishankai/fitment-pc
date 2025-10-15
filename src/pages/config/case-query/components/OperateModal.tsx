@@ -12,6 +12,7 @@ import {
   ProFormDigit,
   ProFormUploadButton,
   DrawerForm,
+  ProFormSelect,
 } from '@ant-design/pro-components';
 // utils
 import { BASE_URL } from '@/utils/request';
@@ -101,13 +102,29 @@ const OperateModal = (props: any, ref: any) => {
           />
         </Col>
         <Col span={8}>
-          <ProFormText
+          <ProFormSelect
             label="户型"
             name="housing_type"
             rules={[{ required: true }]}
             fieldProps={{
-              maxLength: 20,
-              showCount: true,
+              options: [
+                {
+                  label: '一居室',
+                  value: '一居室',
+                },
+                {
+                  label: '两居室',
+                  value: '两居室',
+                },
+                {
+                  label: '三居室',
+                  value: '三居室',
+                },
+                {
+                  label: '四居室',
+                  value: '四居室',
+                },
+              ],
             }}
           />
         </Col>
