@@ -24,6 +24,7 @@ const { useWatch } = Form;
 
 const OperateModal = (props: any, ref: any) => {
   const { tableFormRef } = props ?? {};
+
   const [form] = Form.useForm();
   const [visble, { setTrue, setFalse }] = useBoolean(false);
   const [title, setTitle] = useState<'add' | 'edit'>('add');
@@ -205,7 +206,7 @@ const OperateModal = (props: any, ref: any) => {
               action: `${BASE_URL}/upload`,
               accept: 'image/*',
             }}
-            extra="最多上传4张"
+            extra="最多上传4张（上传的第一张会作为封面图哟）"
           />
         </Col>
         <Col span={12}>

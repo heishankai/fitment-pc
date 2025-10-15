@@ -5,6 +5,7 @@ import {
   DollarOutlined,
   SettingOutlined,
   ToolOutlined,
+  ClearOutlined,
 } from '@ant-design/icons';
 
 export const routes = [
@@ -92,7 +93,19 @@ export const routes = [
       {
         name: '工价管理',
         path: 'price-query',
-        component: 'config/price-query',
+        icon: 'ClearOutlined',
+        routes: [
+          {
+            name: '全屋装修配置',
+            path: 'whole-house-config',
+            component: 'config/price-query/whole-house-config',
+          },
+          {
+            name: '局部改造配置',
+            path: 'partial-renovation-config',
+            component: 'config/price-query/partial-renovation-config',
+          },
+        ],
       },
       {
         name: '辅料管理',
@@ -137,5 +150,6 @@ export const iconMap = {
   ShoppingCartOutlined,
   DollarOutlined,
   SettingOutlined,
+  ClearOutlined,
   ToolOutlined,
 };

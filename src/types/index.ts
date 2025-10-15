@@ -5,3 +5,5 @@ export interface ApiResponse<T = any> {
   code: number;
   message?: string | null;
 }
+
+export type DrawerTitleType = 'add' | 'edit' | 'detail';
