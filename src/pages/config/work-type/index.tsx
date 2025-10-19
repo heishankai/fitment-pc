@@ -1,23 +1,23 @@
 import React, { useRef } from 'react';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Space, Button, Popconfirm, message } from 'antd';
+import { Space, Button, Popconfirm, message, Image } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
-import { getProTableConfig } from '@/utils/proTable';
 // components
 import OperateModal from './components/OperateModal';
-import { CitySelect } from '@/components';
 // service
-import { getCaseListService, deleteCaseService } from './service';
+import { deleteWorkTypeService, getWorkTypeListService } from './service';
+// utils
+import { getProTableConfig } from '@/utils/proTable';
 
-const CaseQuery = () => {
+const WorkType = () => {
+  const operateModalRef = useRef<any>(null);
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
-  const operateModalRef = useRef<any>(null);
 
-  // 删除案例
+  // 删除类目
   const handleDelete = async (id: string | number) => {
-    const { success } = await deleteCaseService(id);
+    const { success } = await deleteWorkTypeService(id);
     if (success) {
       message.success('删除成功');
       tableFormRef.current?.submit();
@@ -31,11 +31,11 @@ const CaseQuery = () => {
         formRef={tableFormRef}
         {...getProTableConfig({
           request: async (params) => {
-            return await getCaseListService(params);
+            return await getWorkTypeListService(params);
           },
         })}
         rowKey="id"
-        scroll={{ x: 1200 }}
+        scroll={{ x: 900 }}
         headerTitle={
           <Space>
             <Button
@@ -43,94 +43,85 @@ const CaseQuery = () => {
               type="primary"
               onClick={() => operateModalRef.current.handleOpenModal('add')}
             >
-              新增
+              新增工种
             </Button>
           </Space>
         }
         columns={[
           // search字段
           {
-            title: '小区名称',
-            dataIndex: 'housing_name',
+            title: '工种名称',
+            dataIndex: 'work_title',
             hideInTable: true,
           },
+          // show
           {
-            title: '城市',
-            dataIndex: 'city_code',
-            hideInTable: true,
-            renderFormItem: () => <CitySelect />,
-          },
-          {
-            title: '户型',
-            dataIndex: 'housing_type',
-            hideInTable: true,
-          },
-          // table字段
-          {
-            title: '小区名称',
-            dataIndex: 'housing_name',
+            title: '工种名称',
+            dataIndex: 'work_title',
             hideInSearch: true,
             width: 120,
             ellipsis: true,
           },
           {
-            title: '户型',
-            dataIndex: 'housing_type',
+            title: '工种价格',
+            dataIndex: 'work_price',
+            hideInSearch: true,
+            width: 120,
+            ellipsis: true,
+          },
+          {
+            title: '计价说明',
+            dataIndex: 'pricing_description',
+            hideInSearch: true,
+            width: 120,
+            ellipsis: true,
+          },
+          {
+            title: '服务范围',
+            dataIndex: 'service_scope',
+            hideInSearch: true,
+            width: 120,
+            ellipsis: true,
+          },
+          {
+            title: '主图',
+            dataIndex: 'display_images',
             hideInSearch: true,
             width: 150,
-            ellipsis: true,
-          },
-          {
-            title: '改造类型',
-            dataIndex: 'remodel_type',
-            hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-            valueEnum: {
-              1: '新房装修',
-              2: '旧房改造',
+            render: (_: any, record: any) => {
+              return (
+                <Space>
+                  <Image
+                    width={40}
+                    height={40}
+                    src={record?.display_images?.[0]}
+                  />
+
+                  <span style={{ fontSize: '12px', color: '#666' }}>
+                    +{record?.display_images?.length - 1}
+                  </span>
+                </Space>
+              );
             },
           },
           {
-            title: '城市',
-            dataIndex: 'city_name',
+            title: '服务详情',
+            dataIndex: 'service_details',
             hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-          },
-          {
-            title: '平米数',
-            dataIndex: 'square_number',
-            hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-          },
-          {
-            title: '施工费用',
-            dataIndex: 'construction_cost',
-            hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-          },
-          {
-            title: '辅材费用',
-            dataIndex: 'auxiliary_material_cost',
-            hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-          },
-          {
-            title: '房屋总费用',
-            dataIndex: 'house_total_cost',
-            hideInSearch: true,
-            width: 130,
-            ellipsis: true,
-            render: (text: any, record: any) => {
+            width: 150,
+            render: (_: any, record: any) => {
               return (
-                <span>
-                  {record?.auxiliary_material_cost + record?.construction_cost}
-                  元
-                </span>
+                <Space>
+                  <Image
+                    width={40}
+                    height={40}
+                    src={record?.service_details?.[0]}
+                  />
+
+                  <span style={{ fontSize: '12px', color: '#666' }}>
+                    +{record?.service_details?.length - 1}
+                  </span>
+                </Space>
               );
             },
           },
@@ -176,7 +167,7 @@ const CaseQuery = () => {
                   </Button>
                   <Popconfirm
                     title="确认删除"
-                    description={`确定要删除案例吗？`}
+                    description={`确定要删除类目吗？`}
                     onConfirm={() => handleDelete(record?.id)}
                   >
                     <Button type="link" icon={<DeleteOutlined />}>
@@ -194,4 +185,4 @@ const CaseQuery = () => {
   );
 };
 
-export default CaseQuery;
+export default WorkType;

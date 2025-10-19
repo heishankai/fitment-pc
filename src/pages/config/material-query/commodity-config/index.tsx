@@ -1,29 +1,33 @@
 import React, { useRef } from 'react';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import {
+  ProTable,
+  ProFormInstance,
+  ActionType,
+} from '@ant-design/pro-components';
 import { Space, Button, Popconfirm, message } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
+// utils
 import { getProTableConfig } from '@/utils/proTable';
+// service
+import { getCommodityListService, deleteCommodityService } from './service';
 // components
 import OperateModal from './components/OperateModal';
-import { CitySelect } from '@/components';
-// service
-import { getCaseListService, deleteCaseService } from './service';
+import CategorySelect from '@/components/CategorySelect';
 
-const CaseQuery = () => {
+const CommodityConfig = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
-  const operateModalRef = useRef<any>(null);
+  const operateModalRef = useRef<any>();
 
-  // 删除案例
+  // 删除商品
   const handleDelete = async (id: string | number) => {
-    const { success } = await deleteCaseService(id);
+    const { success } = await deleteCommodityService(id);
     if (success) {
       message.success('删除成功');
       tableFormRef.current?.submit();
     }
   };
-
   return (
     <PageContainer>
       <ProTable
@@ -31,11 +35,11 @@ const CaseQuery = () => {
         formRef={tableFormRef}
         {...getProTableConfig({
           request: async (params) => {
-            return await getCaseListService(params);
+            return await getCommodityListService(params);
           },
         })}
         rowKey="id"
-        scroll={{ x: 1200 }}
+        scroll={{ x: 900 }}
         headerTitle={
           <Space>
             <Button
@@ -43,95 +47,71 @@ const CaseQuery = () => {
               type="primary"
               onClick={() => operateModalRef.current.handleOpenModal('add')}
             >
-              新增
+              新增商品
             </Button>
           </Space>
         }
         columns={[
           // search字段
           {
-            title: '小区名称',
-            dataIndex: 'housing_name',
+            title: '所属类目',
+            dataIndex: 'category_id',
             hideInTable: true,
+            valueType: 'select',
+            renderFormItem: () => <CategorySelect />,
           },
           {
-            title: '城市',
-            dataIndex: 'city_code',
-            hideInTable: true,
-            renderFormItem: () => <CitySelect />,
-          },
-          {
-            title: '户型',
-            dataIndex: 'housing_type',
+            title: '商品名称',
+            dataIndex: 'commodity_name',
             hideInTable: true,
           },
           // table字段
           {
-            title: '小区名称',
-            dataIndex: 'housing_name',
-            hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-          },
-          {
-            title: '户型',
-            dataIndex: 'housing_type',
+            title: '所属类目',
+            dataIndex: 'category_name',
             hideInSearch: true,
             width: 150,
             ellipsis: true,
           },
           {
-            title: '改造类型',
-            dataIndex: 'remodel_type',
+            title: '商品名称',
+            dataIndex: 'commodity_name',
             hideInSearch: true,
-            width: 120,
+            width: 150,
             ellipsis: true,
-            valueEnum: {
-              1: '新房装修',
-              2: '旧房改造',
-            },
           },
           {
-            title: '城市',
-            dataIndex: 'city_name',
+            title: '商品价格',
+            dataIndex: 'commodity_price',
             hideInSearch: true,
             width: 120,
             ellipsis: true,
           },
           {
-            title: '平米数',
-            dataIndex: 'square_number',
+            title: '商品描述',
+            dataIndex: 'commodity_description',
             hideInSearch: true,
-            width: 120,
+            width: 150,
+            ellipsis: true,
+          },
+
+          {
+            title: '服务保障',
+            dataIndex: 'service_guarantee',
+            hideInSearch: true,
+            width: 150,
             ellipsis: true,
           },
           {
-            title: '施工费用',
-            dataIndex: 'construction_cost',
+            title: '商品封面',
+            dataIndex: 'commodity_cover',
             hideInSearch: true,
-            width: 120,
+            width: 100,
+            valueType: 'image',
             ellipsis: true,
-          },
-          {
-            title: '辅材费用',
-            dataIndex: 'auxiliary_material_cost',
-            hideInSearch: true,
-            width: 120,
-            ellipsis: true,
-          },
-          {
-            title: '房屋总费用',
-            dataIndex: 'house_total_cost',
-            hideInSearch: true,
-            width: 130,
-            ellipsis: true,
-            render: (text: any, record: any) => {
-              return (
-                <span>
-                  {record?.auxiliary_material_cost + record?.construction_cost}
-                  元
-                </span>
-              );
+            fieldProps: {
+              width: 50,
+              height: 50,
             },
           },
           {
@@ -176,7 +156,7 @@ const CaseQuery = () => {
                   </Button>
                   <Popconfirm
                     title="确认删除"
-                    description={`确定要删除案例吗？`}
+                    description={`确定要删除商品吗？`}
                     onConfirm={() => handleDelete(record?.id)}
                   >
                     <Button type="link" icon={<DeleteOutlined />}>
@@ -194,4 +174,4 @@ const CaseQuery = () => {
   );
 };
 
-export default CaseQuery;
+export default CommodityConfig;

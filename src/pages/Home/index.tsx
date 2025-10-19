@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme, Row, Col, Tag, Divider, Empty, Image } from 'antd';
+import { theme, Row, Col, Tag, Divider, Empty } from 'antd';
 import { LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 // components
@@ -293,7 +293,6 @@ const Home: React.FC = () => {
           </ChartCard>
         </Col>
       </Row>
-      <Image src="https://din-dang-zhi-zhuang.oss-cn-hangzhou.aliyuncs.com/uploads/1759739087831_ynhwdp_%E6%88%AA%E5%B1%8F2023-09-09%2000.33.49.png" />
     </StyledPageContainer>
   );
 };
