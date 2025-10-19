@@ -1,7 +1,7 @@
 {
   "name": "fitment-pc",
   "private": true,
-  "author": "kli59 <kli59@mail.yst.com.cn>",
+  "author": "",
   "engines": {
     "node": "20.19.5",
     "pnpm": "7.33.3"
