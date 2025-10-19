@@ -1,9 +1,15 @@
 {
+  "name": "fitment-pc",
   "private": true,
   "author": "kli59 <kli59@mail.yst.com.cn>",
+  "engines": {
+    "node": "20.19.5",
+    "pnpm": "7.33.3"
+  },
   "scripts": {
     "dev": "max dev",
     "build": "max build",
+    "build:prod": "max build",
     "format": "prettier --cache --write .",
     "prepare": "husky",
     "postinstall": "max setup",

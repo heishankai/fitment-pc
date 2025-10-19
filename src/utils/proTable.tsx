@@ -23,6 +23,7 @@ const defaultProTableConfig: ProTableProps<any, any> = {
     span: 8,
     defaultColsNumber: 7,
     labelWidth: 70,
+    collapsed: false,
   },
 };
 

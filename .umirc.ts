@@ -1,5 +1,8 @@
 import { defineConfig } from '@umijs/max';
 import { routes } from './src/routers';
+import packageJSON from './package.json';
+
+export const PROJECT_NAME = packageJSON.name;
 
 export default defineConfig({
   antd: {
@@ -23,6 +26,9 @@ export default defineConfig({
   layout: {
     title: 'hello',
   },
+  base: `/${PROJECT_NAME}/`,
+  outputPath: PROJECT_NAME,
+  publicPath: `/${PROJECT_NAME}/`,
   extraBabelPlugins: [
     [
       'babel-plugin-styled-components',
@@ -34,4 +40,10 @@ export default defineConfig({
   ],
   routes,
   npmClient: 'pnpm',
+  define: {
+    'process.env.API_BASE_URL':
+      process.env.NODE_ENV === 'production'
+        ? 'https://zjiangyun.cn'
+        : 'http://localhost:3000',
+  },
 });
