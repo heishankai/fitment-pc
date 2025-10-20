@@ -5,7 +5,7 @@ import 'nprogress/nprogress.css';
 import { notification } from 'antd';
 import { clearLoginData } from './index';
 
-export const BASE_URL = process.env.API_BASE_URL 
+export const BASE_URL = process.env.API_BASE_URL + '/api';
 
 const request = axios.create({
   baseURL: BASE_URL,
@@ -79,7 +79,7 @@ request.interceptors.response.use(
 
       switch (status) {
         case 401:
-          clearLoginData();
+          clearLoginData(true);
           break;
         default:
           notification.error({

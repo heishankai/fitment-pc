@@ -2,10 +2,14 @@ import Cookies from 'js-cookie';
 import storage from './storage';
 
 // 清除登录数据
-export const clearLoginData = () => {
+export const clearLoginData = (shouldRedirect = false) => {
   Cookies.remove('token');
   storage.remove('ddzz_userInfo');
-  window.location.href = '/login';
+
+  // 如果需要跳转，则跳转到登录页面
+  if (shouldRedirect) {
+    window.location.href = './login';
+  }
 };
 
 // 导出字体样式工具
