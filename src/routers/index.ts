@@ -85,6 +85,11 @@ export const routes = [
         component: 'config/grab-order-config',
       },
       {
+        name: '轮播图管理',
+        path: 'swiper-config',
+        component: 'config/swiper-config',
+      },
+      {
         name: '工程管理',
         path: 'project-query',
         component: 'config/project-query',
