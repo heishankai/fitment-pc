@@ -133,6 +133,23 @@ export const routes = [
     ],
   },
   {
+    name:'客服系统',
+    path: '/customer-service',
+    icon: 'CustomerServiceOutlined',
+    routes: [
+      {
+        name: '业主聊天页面',
+        path: 'client-chat-page',
+        component: 'customer-service/client-chat',
+      },
+      {
+        name: '工匠聊天页面',
+        path: 'craftsman-chat-page',
+        component: 'customer-service/craftsman-chat',
+      },
+    ],
+  },
+  {
     name: '系统设置',
     path: '/system',
     icon: 'ToolOutlined',

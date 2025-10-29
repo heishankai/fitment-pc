@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket 测试</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  </head>
+  <body></body>
+</html>
+
+<script>
+  const socket = io('http://localhost:3000/wst', {
+    transports: ['websocket', 'polling'],
+  });
+
+  socket.on('connect', () => {
+    console.log('连接成功...');
+
+    socket.emit('findAllWst', (res) => {
+      console.log('-------findAllWst', res);
+    });
+
+    socket.emit(
+      'createWst',
+      {
+        username: '李凯',
+        meg: '来消息了',
+      },
+      (res) => {
+        console.log('-------createWst', res);
+      },
+    );
+
+    // 获取指定名称的消息内容，可以用来区别不同的聊天房间
+    socket.on('likai', (data) => {
+      console.log(data);
+    });
+  });
+
+  socket.on('connect_error', (error) => {
+    console.error('连接错误:', error);
+  });
+
+  //   // 发送测试消息
+  //   socket.emit('findAllWst');
+  //   socket.emit('findOneWst', 1);
+</script>
