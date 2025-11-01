@@ -1,12 +1,13 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { useBoolean } from 'ahooks';
-import { Form, message, Row, Col } from 'antd';
+import { Form, message, Row, Col, Divider } from 'antd';
 import {
   ProFormText,
   ProFormUploadButton,
   ProFormDigit,
   ProFormTextArea,
   DrawerForm,
+  ProFormList,
 } from '@ant-design/pro-components';
 // utils
 import { BASE_URL } from '@/utils/request';
@@ -161,7 +162,7 @@ const OperateModal = (props: any, ref: any) => {
             extra="最多上传3张（第一张会作为封面图）"
           />
         </Col>
-        <Col span={12}>
+        {/* <Col span={12}>
           <ProFormUploadButton
             label="服务详情"
             name="service_details"
@@ -177,6 +178,58 @@ const OperateModal = (props: any, ref: any) => {
             }}
             extra="最多上传10张服务详情图片"
           />
+        </Col> */}
+      </Row>
+      <Divider orientation="left">服务详情</Divider>
+      <Row>
+        <Col span={24}>
+          <ProFormList
+            label=""
+            name="service_details"
+            wrapperCol={{ span: 24 }}
+            min={1}
+            initialValue={[{}]}
+            itemRender={({ listDom, action }) => (
+              <Row style={{ marginBlockEnd: 8 }}>
+                <Col span={23}>{listDom}</Col>
+                <Col span={1}>{action}</Col>
+              </Row>
+            )}
+          >
+            <Row gutter={16}>
+              <Col span={12}>
+                <ProFormTextArea
+                  label="服务说明"
+                  name="service_desc"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  fieldProps={{
+                    maxLength: 200,
+                    showCount: true,
+                    rows: 5,
+                    style: { resize: 'none' },
+                  }}
+                />
+              </Col>
+              <Col span={12}>
+                <ProFormUploadButton
+                  label="服务照片"
+                  name="service_image"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  rules={[{ required: true }]}
+                  max={1}
+                  fieldProps={{
+                    name: 'file',
+                    listType: 'picture-card',
+                    action: `${BASE_URL}/upload`,
+                    accept: 'image/*',
+                  }}
+                  extra="最多上传1张"
+                />
+              </Col>
+            </Row>
+          </ProFormList>
         </Col>
       </Row>
     </DrawerForm>

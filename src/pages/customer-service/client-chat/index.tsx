@@ -122,18 +122,30 @@ const ClientChat: React.FC = () => {
 
   const handleDeleteRoom = async (id: number) => {
     try {
-      await deleteRoom(id);
-      message.success('删除成功');
+      const res = await deleteRoom(id);
+      console.log('删除响应:', res);
 
+      // 如果删除的是当前选中的房间，清空选中状态
       if (selectedRoom === id) {
         setSelectedRoom(null);
         setMessages([]);
         selectedRoomRef.current = null;
       }
 
-      loadRooms();
-    } catch (error) {
-      message.error('删除失败');
+      // 立即从列表中移除该房间，提供即时反馈
+      setRooms((prev) => prev.filter((room) => room.id !== id));
+
+      message.success('删除成功');
+
+      // 然后再刷新列表以确保数据同步
+      setTimeout(() => {
+        loadRooms();
+      }, 100);
+    } catch (error: any) {
+      console.error('删除失败:', error);
+      message.error(
+        error?.response?.data?.message || error?.message || '删除失败',
+      );
     }
   };
 

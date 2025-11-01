@@ -9,7 +9,10 @@ export const transformAddData = (data: any) => {
   return {
     ...rest,
     display_images: extractImageUrl(display_images),
-    service_details: extractImageUrl(service_details),
+    service_details: (service_details || []).map((item: any) => {
+      const { service_image, ...rest } = item ?? {};
+      return { ...rest, service_image: extractImageUrl(service_image)?.join() };
+    }),
   };
 };
 
@@ -23,6 +26,12 @@ export const transformEditData = (record: any, form: FormInstance) => {
   form.setFieldsValue({
     ...restValues,
     display_images: handleImageForm(display_images),
-    service_details: handleImageForm(service_details),
+    service_details: (service_details || []).map((item: any) => {
+      const { service_image, ...rest } = item ?? {};
+      return {
+        ...rest,
+        service_image: handleImageForm(service_image?.split(',')),
+      };
+    }),
   });
 };
