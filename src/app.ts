@@ -3,6 +3,17 @@ import React from 'react';
 import { RunTimeLayoutConfig } from '@umijs/max';
 import Layout from './components/Layout';
 
+// 动态加载 socket.io
+if (
+  typeof window !== 'undefined' &&
+  typeof (window as any).io === 'undefined'
+) {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
+  script.async = true;
+  document.head.appendChild(script);
+}
+
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState(): Promise<{ name: string }> {

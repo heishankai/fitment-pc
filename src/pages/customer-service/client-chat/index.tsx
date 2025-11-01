@@ -1,7 +1,200 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { Empty, message } from 'antd';
+import request from '@/utils/request';
+import { getServiceRooms, getRoomMessages, deleteRoom } from './service';
+import { RoomList, MessageList, ChatHeader, ChatInput } from './components';
+import { useWebSocket } from './hooks/useWebSocket';
+import { ChatWrapper, ChatArea } from './styles';
+import storage from '@/utils/storage';
+import type { UploadProps } from 'antd';
 
-const index = () => {
-  return <div>微信用户聊天页面</div>;
+interface Message {
+  id: number;
+  chat_room_id?: number;
+  roomId?: number;
+  sender_type?: string;
+  senderType?: string;
+  message_type?: string;
+  messageType?: string;
+  content: string;
+  createdAt: string;
+}
+
+interface Room {
+  id: number;
+  wechat_user_id: number;
+  wechat_user: { id: number; nickname: string; avatar: string; phone?: string };
+  lastMessage?: { content: string };
+  unreadCount: number;
+}
+
+const ClientChat: React.FC = () => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState('');
+  const [sending, setSending] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const selectedRoomRef = useRef<number | null>(null);
+
+  const loadRooms = async () => {
+    try {
+      const res = await getServiceRooms();
+      setRooms(res?.data || res || []);
+    } catch (error) {
+      console.error('Failed to load rooms:', error);
+    }
+  };
+
+  const loadMessages = async (roomId: number) => {
+    setLoading(true);
+    try {
+      const res: any = await getRoomMessages(roomId, true);
+      const messagesData =
+        res?.data?.messages || res?.messages || res?.data || [];
+      setMessages(Array.isArray(messagesData) ? messagesData : []);
+    } catch (error) {
+      console.error('Failed to load messages:', error);
+      message.error('加载消息失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { sendMessage, joinRoom } = useWebSocket({
+    onNewMessage: (msg: Message) => {
+      if (
+        msg.roomId === selectedRoomRef.current ||
+        msg.chat_room_id === selectedRoomRef.current
+      ) {
+        setMessages((prev) => [...prev, msg]);
+      }
+      loadRooms();
+    },
+  });
+
+  const handleSelectRoom = async (id: number) => {
+    setSelectedRoom(id);
+    selectedRoomRef.current = id;
+    await loadMessages(id);
+    joinRoom(id);
+  };
+
+  const handleSend = () => {
+    const text = inputText.trim();
+    if (!text || !selectedRoom || sending) return;
+
+    setSending(true);
+    sendMessage(selectedRoom, text, 'text');
+    setInputText('');
+    setSending(false);
+  };
+
+  const handleImageUpload: UploadProps['customRequest'] = async ({
+    file,
+    onSuccess,
+    onError,
+  }) => {
+    if (!selectedRoom) return;
+
+    try {
+      setSending(true);
+      const form = new FormData();
+      form.append('file', file as File);
+      form.append('folder', 'chat');
+
+      const res: any = await request.post('/upload', form);
+      const url = res?.data?.url;
+
+      if (url) {
+        sendMessage(selectedRoom, url, 'image');
+        onSuccess?.(res);
+      } else {
+        throw new Error('上传失败');
+      }
+    } catch (e: any) {
+      onError?.(e);
+      message.error(e?.message || '上传失败');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleDeleteRoom = async (id: number) => {
+    try {
+      await deleteRoom(id);
+      message.success('删除成功');
+
+      if (selectedRoom === id) {
+        setSelectedRoom(null);
+        setMessages([]);
+        selectedRoomRef.current = null;
+      }
+
+      loadRooms();
+    } catch (error) {
+      message.error('删除失败');
+    }
+  };
+
+  useEffect(() => {
+    loadRooms();
+  }, []);
+
+  const currentRoom = rooms.find((r) => r.id === selectedRoom);
+
+  // 获取当前登录用户信息
+  const currentUserInfo = useMemo(() => {
+    try {
+      return storage.get('ddzz_userInfo') || { avatar: '', username: '客服' };
+    } catch (error) {
+      console.error('Failed to get user info:', error);
+      return { avatar: '', username: '客服' };
+    }
+  }, []);
+
+  return (
+    <ChatWrapper>
+      <RoomList
+        rooms={rooms}
+        selectedRoom={selectedRoom}
+        onSelectRoom={handleSelectRoom}
+        onDeleteRoom={handleDeleteRoom}
+      />
+
+      <ChatArea>
+        {selectedRoom && currentRoom ? (
+          <>
+            <ChatHeader
+              avatar={currentRoom.wechat_user.avatar}
+              nickname={currentRoom.wechat_user.nickname}
+              status="在线"
+              phone={currentRoom.wechat_user.phone}
+            />
+            <MessageList
+              messages={messages}
+              loading={loading}
+              currentUserType="service"
+              currentUserAvatar={currentUserInfo.avatar}
+              currentUserNickname={currentUserInfo.username}
+              otherUserAvatar={currentRoom.wechat_user.avatar}
+              otherUserNickname={currentRoom.wechat_user.nickname}
+            />
+            <ChatInput
+              value={inputText}
+              onChange={setInputText}
+              onSend={handleSend}
+              onImageUpload={handleImageUpload}
+              sending={sending}
+              disabled={!selectedRoom}
+            />
+          </>
+        ) : (
+          <Empty description="请选择聊天房间" style={{ marginTop: 120 }} />
+        )}
+      </ChatArea>
+    </ChatWrapper>
+  );
 };
 
-export default index;
+export default ClientChat;

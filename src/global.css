@@ -1,31 +1,11 @@
-/* 全局样式文件 */
-.ant-pro-layout-content {
-  padding: 0 !important;
-}
+/* 全局样式文件 - 优化后的版本 */
 
-.ant-pro-layout-content > div {
-  padding: 0 !important;
-}
-
-/* 如果上面的选择器不够具体，可以尝试更具体的选择器 */
-.ant-pro-layout .ant-pro-layout-content {
-  padding: 0 !important;
-}
-
-/* 或者使用更具体的选择器 */
-.ant-pro-layout-content.ant-pro-layout-content {
-  padding: 0 !important;
-}
-
-/* 最强力的选择器 */
-.ant-pro-layout .ant-pro-layout-content,
+/* Layout 内容区域重置 */
 .ant-pro-layout-content,
+.ant-pro-layout .ant-pro-layout-content,
+.ant-pro-layout-content > div,
+.ant-pro-layout-mix .ant-pro-layout-content,
 [class*='ant-pro-layout-content'] {
-  padding: 0 !important;
-}
-
-/* 针对 mix 布局的特殊处理 */
-.ant-pro-layout-mix .ant-pro-layout-content {
   padding: 0 !important;
 }
 
