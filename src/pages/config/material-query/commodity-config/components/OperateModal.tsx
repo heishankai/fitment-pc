@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { useBoolean } from 'ahooks';
-import { Form, message, Row, Col } from 'antd';
+import { Form, message, Row, Col, Divider } from 'antd';
 import {
   ProFormText,
   ProFormUploadButton,
@@ -174,6 +174,7 @@ const OperateModal = (props: any, ref: any) => {
           />
         </Col>
       </Row>
+      <Divider orientation="left">商品详情</Divider>
       <Row>
         <Col span={24}>
           <ProFormList
