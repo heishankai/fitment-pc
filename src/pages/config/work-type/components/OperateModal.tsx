@@ -64,7 +64,7 @@ const OperateModal = (props: any, ref: any) => {
       open={visble}
       title={`${title === 'add' ? '新增' : '编辑'}工种`}
       form={form}
-      width="76%"
+      width="100%"
       layout="horizontal"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
@@ -162,23 +162,6 @@ const OperateModal = (props: any, ref: any) => {
             extra="最多上传3张（第一张会作为封面图）"
           />
         </Col>
-        {/* <Col span={12}>
-          <ProFormUploadButton
-            label="服务详情"
-            name="service_details"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 18 }}
-            rules={[{ required: true, message: '请上传服务详情图片' }]}
-            max={10}
-            fieldProps={{
-              name: 'file',
-              listType: 'picture-card',
-              action: `${BASE_URL}/upload`,
-              accept: 'image/*',
-            }}
-            extra="最多上传10张服务详情图片"
-          />
-        </Col> */}
       </Row>
       <Divider orientation="left">服务详情</Divider>
       <Row>
@@ -197,7 +180,19 @@ const OperateModal = (props: any, ref: any) => {
             )}
           >
             <Row gutter={16}>
-              <Col span={12}>
+              <Col span={8}>
+                <ProFormText
+                  label="服务标题"
+                  name="service_title"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  fieldProps={{
+                    maxLength: 50,
+                    showCount: true,
+                  }}
+                />
+              </Col>
+              <Col span={8}>
                 <ProFormTextArea
                   label="服务说明"
                   name="service_desc"
@@ -211,7 +206,7 @@ const OperateModal = (props: any, ref: any) => {
                   }}
                 />
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 <ProFormUploadButton
                   label="服务照片"
                   name="service_image"

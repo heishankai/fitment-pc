@@ -115,7 +115,7 @@ const WorkType = () => {
                   <Image
                     width={40}
                     height={40}
-                    src={record?.service_details?.[0]}
+                    src={record?.service_details?.[0]?.service_image?.[0]}
                   />
 
                   <span style={{ fontSize: '12px', color: '#666' }}>

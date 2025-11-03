@@ -7,9 +7,9 @@ export const transformAddData = (data: any) => {
   if (!data) return {};
   const {
     commodity_cover,
-    commodity_detail_images,
     commodity_images,
     category,
+    commodity_details,
     ...rest
   } = data ?? {};
   return {
@@ -18,7 +18,10 @@ export const transformAddData = (data: any) => {
     category_name: category?.label,
     commodity_cover: extractImageUrl(commodity_cover),
     commodity_images: extractImageUrl(commodity_images),
-    commodity_detail_images: extractImageUrl(commodity_detail_images),
+    commodity_details: (commodity_details || []).map((item: any) => {
+      const { image, ...rest } = item ?? {};
+      return { ...rest, image: extractImageUrl(image) };
+    }),
   };
 };
 
@@ -29,7 +32,7 @@ export const transformEditData = (record: any, form: FormInstance) => {
   if (!record) return {};
   const {
     commodity_cover,
-    commodity_detail_images,
+    commodity_details,
     commodity_images,
     category_name,
     category_id,
@@ -44,6 +47,12 @@ export const transformEditData = (record: any, form: FormInstance) => {
     },
     commodity_cover: handleImageForm(commodity_cover),
     commodity_images: handleImageForm(commodity_images),
-    commodity_detail_images: handleImageForm(commodity_detail_images),
+    commodity_details: (commodity_details || []).map((item: any) => {
+      const { image, ...rest } = item ?? {};
+      return {
+        ...rest,
+        image: handleImageForm(image),
+      };
+    }),
   });
 };

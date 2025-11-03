@@ -4,9 +4,10 @@ import { Form, message, Row, Col } from 'antd';
 import {
   ProFormText,
   ProFormUploadButton,
-  ModalForm,
   ProFormDigit,
   ProFormTextArea,
+  ProFormList,
+  DrawerForm,
 } from '@ant-design/pro-components';
 // utils
 import { BASE_URL } from '@/utils/request';
@@ -63,20 +64,21 @@ const OperateModal = (props: any, ref: any) => {
     };
   });
   return (
-    <ModalForm
+    <DrawerForm
       open={visble}
       title={`${title === 'add' ? '新增' : '编辑'}商品`}
       form={form}
-      width="72%"
+      width="100%"
       layout="horizontal"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
-      modalProps={{
-        onCancel: setFalse,
+      drawerProps={{
+        onClose: setFalse,
         destroyOnClose: true,
         maskClosable: false,
       }}
       onFinish={handleFinish}
+      initialValues={{}}
     >
       <Row>
         <Col span={12}>
@@ -173,23 +175,69 @@ const OperateModal = (props: any, ref: any) => {
         </Col>
       </Row>
       <Row>
-        <Col span={12}>
-          <ProFormUploadButton
-            label="商品详情图"
-            name="commodity_detail_images"
-            rules={[{ required: true }]}
-            max={10}
-            fieldProps={{
-              name: 'file',
-              listType: 'picture-card',
-              action: `${BASE_URL}/upload`,
-              accept: 'image/*',
-            }}
-            extra="最多上传10张"
-          />
+        <Col span={24}>
+          <ProFormList
+            label=""
+            name="commodity_details"
+            wrapperCol={{ span: 24 }}
+            min={1}
+            initialValue={[{}]}
+            itemRender={({ listDom, action }) => (
+              <Row style={{ marginBlockEnd: 8 }}>
+                <Col span={23}>{listDom}</Col>
+                <Col span={1}>{action}</Col>
+              </Row>
+            )}
+          >
+            <Row gutter={16}>
+              <Col span={8}>
+                <ProFormText
+                  label="商品标题"
+                  name="title"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  fieldProps={{
+                    maxLength: 50,
+                    showCount: true,
+                  }}
+                />
+              </Col>
+              <Col span={8}>
+                <ProFormTextArea
+                  label="说明"
+                  name="desc"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  fieldProps={{
+                    maxLength: 200,
+                    showCount: true,
+                    rows: 5,
+                    style: { resize: 'none' },
+                  }}
+                />
+              </Col>
+              <Col span={8}>
+                <ProFormUploadButton
+                  label="商品图片"
+                  name="image"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  rules={[{ required: true }]}
+                  max={1}
+                  fieldProps={{
+                    name: 'file',
+                    listType: 'picture-card',
+                    action: `${BASE_URL}/upload`,
+                    accept: 'image/*',
+                  }}
+                  extra="最多上传1张"
+                />
+              </Col>
+            </Row>
+          </ProFormList>
         </Col>
       </Row>
-    </ModalForm>
+    </DrawerForm>
   );
 };
 

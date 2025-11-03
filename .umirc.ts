@@ -4,6 +4,12 @@ import packageJSON from './package.json';
 
 export const PROJECT_NAME = packageJSON.name;
 
+const API_BASE_URL_PROD = 'https://zjiangyun.cn/api';
+const API_BASE_URL_DEV = 'http://localhost:3000';
+
+const API_BASE_URL =
+  process.env.NODE_ENV === 'production' ? API_BASE_URL_PROD : API_BASE_URL_DEV;
+
 export default defineConfig({
   antd: {
     theme: {
@@ -41,9 +47,6 @@ export default defineConfig({
   routes,
   npmClient: 'pnpm',
   define: {
-    'process.env.API_BASE_URL':
-      process.env.NODE_ENV === 'production'
-        ? 'https://zjiangyun.cn/api'
-        : 'http://localhost:3000',
+    'process.env.API_BASE_URL': API_BASE_URL,
   },
 });
