@@ -96,8 +96,24 @@ export const routes = [
       },
       {
         name: '工种管理',
-        path: 'work-type',
-        component: 'config/work-type',
+        path: 'work',
+        routes: [
+          {
+            name: '工价管理',
+            path: 'work-type',
+            component: 'config/work/work-type',
+          },
+          {
+            name: '工种管理',
+            path: 'work-kind',
+            component: 'config/work/work-kind',
+          },
+          {
+            name: '工价单位管理',
+            path: 'labour-cost',
+            component: 'config/work/labour-cost',
+          },
+        ],
       },
       {
         name: '辅料管理',
@@ -133,7 +149,7 @@ export const routes = [
     ],
   },
   {
-    name:'客服系统',
+    name: '客服系统',
     path: '/customer-service',
     icon: 'CustomerServiceOutlined',
     routes: [

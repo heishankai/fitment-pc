@@ -43,27 +43,27 @@ const WorkType = () => {
               type="primary"
               onClick={() => operateModalRef.current.handleOpenModal('add')}
             >
-              新增工种
+              新增工价
             </Button>
           </Space>
         }
         columns={[
           // search字段
           {
-            title: '工种名称',
+            title: '工价名称',
             dataIndex: 'work_title',
             hideInTable: true,
           },
           // show
           {
-            title: '工种名称',
+            title: '工价名称',
             dataIndex: 'work_title',
             hideInSearch: true,
             width: 120,
             ellipsis: true,
           },
           {
-            title: '工种价格',
+            title: '工价价格',
             dataIndex: 'work_price',
             hideInSearch: true,
             width: 120,

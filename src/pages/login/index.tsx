@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRequest } from 'ahooks';
+import { history } from '@umijs/max';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginFormPage,
@@ -63,7 +64,7 @@ const Login: React.FC = () => {
       const { data: userInfo } = await getUserInfoService();
       storage.set('ddzz_userInfo', userInfo);
 
-      location.href = '/';
+      history.push('/home');
     },
   });
 

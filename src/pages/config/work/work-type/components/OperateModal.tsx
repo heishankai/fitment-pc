@@ -1,5 +1,5 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
-import { useBoolean } from 'ahooks';
+import { useBoolean, useRequest } from 'ahooks';
 import { Form, message, Row, Col, Divider } from 'antd';
 import {
   ProFormText,
@@ -8,12 +8,18 @@ import {
   ProFormTextArea,
   DrawerForm,
   ProFormList,
+  ProFormSelect,
 } from '@ant-design/pro-components';
 // utils
 import { BASE_URL } from '@/utils/request';
 import { transformAddData, transformEditData } from '../utils';
 // servicea
-import { createWorkTypeService, editWorkTypeService } from '../service';
+import {
+  createWorkTypeService,
+  editWorkTypeService,
+  getAllWorkKindService,
+  getAllLabourCostsService,
+} from '../service';
 
 const OperateModal = (props: any, ref: any) => {
   const { tableFormRef } = props ?? {};
@@ -22,6 +28,13 @@ const OperateModal = (props: any, ref: any) => {
   const [visble, { setTrue, setFalse }] = useBoolean(false);
   const [title, setTitle] = useState<'add' | 'edit'>('add');
   const [record, setRecord] = useState<any>(null);
+
+  const { data: workKindOptions, loading: workKindLoading } = useRequest(
+    getAllWorkKindService,
+  );
+  const { data: labourCostOptions, loading: labourCostLoading } = useRequest(
+    getAllLabourCostsService,
+  );
 
   // 打开弹框方法
   const handleOpenModal = (modalTitle: 'add' | 'edit', record?: any) => {
@@ -62,7 +75,7 @@ const OperateModal = (props: any, ref: any) => {
   return (
     <DrawerForm
       open={visble}
-      title={`${title === 'add' ? '新增' : '编辑'}工种`}
+      title={`${title === 'add' ? '新增' : '编辑'}工价`}
       form={form}
       width="100%"
       layout="horizontal"
@@ -77,12 +90,24 @@ const OperateModal = (props: any, ref: any) => {
       initialValues={{}}
     >
       <Row gutter={16}>
-        <Col span={12}>
+        <Col span={8}>
+          <ProFormSelect
+            label="工种"
+            name="work_kind"
+            rules={[{ required: true }]}
+            fieldProps={{
+              labelInValue: true,
+              showSearch: true,
+              loading: workKindLoading,
+              fieldNames: { label: 'work_kind_name', value: 'id' },
+            }}
+            options={workKindOptions?.data ?? []}
+          />
+        </Col>
+        <Col span={8}>
           <ProFormText
-            label="工种名称"
+            label="工价名称"
             name="work_title"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 18 }}
             rules={[{ required: true }]}
             fieldProps={{
               maxLength: 50,
@@ -91,12 +116,24 @@ const OperateModal = (props: any, ref: any) => {
             }}
           />
         </Col>
-        <Col span={12}>
+        <Col span={8}>
+          <ProFormSelect
+            label="单位"
+            name="labour_cost"
+            rules={[{ required: true }]}
+            fieldProps={{
+              showSearch: true,
+              labelInValue: true,
+              loading: labourCostLoading,
+              fieldNames: { label: 'labour_cost_name', value: 'id' },
+            }}
+            options={labourCostOptions?.data ?? []}
+          />
+        </Col>
+        <Col span={8}>
           <ProFormDigit
-            label="工种价格"
+            label="价格"
             name="work_price"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 18 }}
             rules={[{ required: true }]}
             fieldProps={{
               addonAfter: '元',
@@ -109,35 +146,31 @@ const OperateModal = (props: any, ref: any) => {
 
       {/* 文本说明 */}
       <Row gutter={16}>
-        <Col span={12}>
+        <Col span={8}>
           <ProFormTextArea
             label="计价说明"
             name="pricing_description"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 18 }}
             rules={[{ required: true }]}
             fieldProps={{
-              maxLength: 200,
+              maxLength: 800,
               showCount: true,
               rows: 5,
               style: { resize: 'none' },
-              placeholder: '请输入计价说明（200字以内）',
+              placeholder: '请输入计价说明（800字以内）',
             }}
           />
         </Col>
-        <Col span={12}>
+        <Col span={8}>
           <ProFormTextArea
             label="服务范围"
             name="service_scope"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 18 }}
             rules={[{ required: true }]}
             fieldProps={{
-              maxLength: 200,
+              maxLength: 800,
               showCount: true,
               rows: 5,
               style: { resize: 'none' },
-              placeholder: '请输入服务范围（200字以内）',
+              placeholder: '请输入服务范围（800字以内）',
             }}
           />
         </Col>
@@ -199,7 +232,7 @@ const OperateModal = (props: any, ref: any) => {
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   fieldProps={{
-                    maxLength: 200,
+                    maxLength: 800,
                     showCount: true,
                     rows: 5,
                     style: { resize: 'none' },

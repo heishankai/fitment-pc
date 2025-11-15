@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import storage from './storage';
+import { history } from '@umijs/max';
 
 // 清除登录数据
 export const clearLoginData = (shouldRedirect = false) => {
@@ -8,7 +9,7 @@ export const clearLoginData = (shouldRedirect = false) => {
 
   // 如果需要跳转，则跳转到登录页面
   if (shouldRedirect) {
-    window.location.href = './login';
+    history.push('/login');
   }
 };
 

@@ -121,7 +121,7 @@ const OperateModal = (props: any, ref: any) => {
             name="commodity_description"
             rules={[{ required: true }]}
             fieldProps={{
-              maxLength: 200,
+              maxLength: 800,
               showCount: true,
               rows: 5,
               style: { resize: 'none' },
@@ -134,7 +134,7 @@ const OperateModal = (props: any, ref: any) => {
             name="service_guarantee"
             rules={[{ required: true }]}
             fieldProps={{
-              maxLength: 200,
+              maxLength: 800,
               showCount: true,
               rows: 5,
               style: { resize: 'none' },
@@ -210,7 +210,7 @@ const OperateModal = (props: any, ref: any) => {
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   fieldProps={{
-                    maxLength: 200,
+                    maxLength: 800,
                     showCount: true,
                     rows: 5,
                     style: { resize: 'none' },
