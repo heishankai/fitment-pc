@@ -9,6 +9,7 @@ import {
   DrawerForm,
   ProFormList,
   ProFormSelect,
+  ProFormRadio,
 } from '@ant-design/pro-components';
 // utils
 import { BASE_URL } from '@/utils/request';
@@ -28,6 +29,7 @@ const OperateModal = (props: any, ref: any) => {
   const [visble, { setTrue, setFalse }] = useBoolean(false);
   const [title, setTitle] = useState<'add' | 'edit'>('add');
   const [record, setRecord] = useState<any>(null);
+  const is_set_minimum_price = Form.useWatch('is_set_minimum_price', form);
 
   const { data: workKindOptions, loading: workKindLoading } = useRequest(
     getAllWorkKindService,
@@ -142,6 +144,30 @@ const OperateModal = (props: any, ref: any) => {
             }}
           />
         </Col>
+        <Col span={8}>
+          <ProFormRadio.Group
+            label="是否设置最低价"
+            name="is_set_minimum_price"
+            fieldProps={{
+              defaultValue: '0',
+              options: [
+                { label: '是', value: '1' },
+                { label: '否', value: '0' },
+              ],
+              onChange: () => form.setFieldsValue({ minimum_price: undefined }),
+            }}
+          />
+        </Col>
+        {is_set_minimum_price === '1' && (
+          <Col span={8}>
+            <ProFormDigit
+              label="最低价格"
+              name="minimum_price"
+              rules={[{ required: true }]}
+              fieldProps={{ addonAfter: '元' }}
+            />
+          </Col>
+        )}
       </Row>
 
       {/* 文本说明 */}
