@@ -142,9 +142,14 @@ export const routes = [
         component: 'config/craftsman-query',
       },
       {
-        name: '认证审核',
-        path: 'auth-audit-management',
-        component: 'config/auth-audit-management',
+        name: '工匠实名认证审核',
+        path: 'is-verified',
+        component: 'config/is-verified',
+      },
+      {
+        name: '工匠技能认证审核',
+        path: 'auth-skill-management',
+        component: 'config/is-skill-verified',
       },
     ],
   },
