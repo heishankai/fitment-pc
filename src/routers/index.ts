@@ -151,6 +151,11 @@ export const routes = [
         path: 'auth-skill-management',
         component: 'config/is-skill-verified',
       },
+      {
+        name: '工匠个人主页审核',
+        path: 'home-page-audit',
+        component: 'config/home-page-audit',
+      },
     ],
   },
   {
