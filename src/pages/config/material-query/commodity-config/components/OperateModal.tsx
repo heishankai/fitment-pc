@@ -113,6 +113,17 @@ const OperateModal = (props: any, ref: any) => {
             }}
           />
         </Col>
+        <Col span={12}>
+          <ProFormText
+            label="单位"
+            name="commodity_unit"
+            rules={[{ required: true }]}
+            fieldProps={{
+              maxLength: 10,
+              showCount: true,
+            }}
+          />
+        </Col>
       </Row>
       <Row>
         <Col span={12}>

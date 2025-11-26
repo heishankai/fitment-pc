@@ -1,5 +1,217 @@
-const CraftsmanChat = () => {
-  return <div>工匠聊天页面</div>;
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { Empty, message } from 'antd';
+import request from '@/utils/request';
+import { getAdminRooms, getRoomMessages, deleteRoom } from './service';
+import { RoomList, MessageList, ChatHeader, ChatInput } from './components';
+import { useWebSocket } from './hooks/useWebSocket';
+import { ChatWrapper, ChatArea } from './styles';
+import storage from '@/utils/storage';
+import type { UploadProps } from 'antd';
+
+interface Message {
+  id: number;
+  chat_room_id?: number;
+  roomId?: number;
+  sender_type?: string;
+  senderType?: string;
+  message_type?: string;
+  messageType?: string;
+  content: string;
+  createdAt: string;
+}
+
+interface Room {
+  id: number;
+  craftsman_user_id: number;
+  craftsman_user: {
+    id: number;
+    nickname: string;
+    avatar: string;
+    phone?: string;
+  };
+  lastMessage?: { content: string };
+  unreadCount: number;
+}
+
+const CraftsmanChat: React.FC = () => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState('');
+  const [sending, setSending] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const selectedRoomRef = useRef<number | null>(null);
+
+  const loadRooms = async () => {
+    try {
+      const res = await getAdminRooms();
+      setRooms(res?.data || res || []);
+    } catch (error) {
+      console.error('Failed to load rooms:', error);
+    }
+  };
+
+  const loadMessages = async (roomId: number) => {
+    setLoading(true);
+    try {
+      const res: any = await getRoomMessages(roomId, true);
+      const messagesData =
+        res?.data?.messages || res?.messages || res?.data || [];
+      setMessages(Array.isArray(messagesData) ? messagesData : []);
+    } catch (error) {
+      console.error('Failed to load messages:', error);
+      message.error('加载消息失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { sendMessage, joinRoom } = useWebSocket({
+    onNewMessage: (msg: Message) => {
+      if (
+        msg.roomId === selectedRoomRef.current ||
+        msg.chat_room_id === selectedRoomRef.current
+      ) {
+        setMessages((prev) => [...prev, msg]);
+      }
+      loadRooms();
+    },
+  });
+
+  const handleSelectRoom = async (id: number) => {
+    setSelectedRoom(id);
+    selectedRoomRef.current = id;
+    await loadMessages(id);
+    joinRoom(id);
+  };
+
+  const handleSend = () => {
+    const text = inputText.trim();
+    if (!text || !selectedRoom || sending) return;
+
+    setSending(true);
+    sendMessage(selectedRoom, text, 'text');
+    setInputText('');
+    setSending(false);
+  };
+
+  const handleImageUpload: UploadProps['customRequest'] = async ({
+    file,
+    onSuccess,
+    onError,
+  }) => {
+    if (!selectedRoom) return;
+
+    try {
+      setSending(true);
+      const form = new FormData();
+      form.append('file', file as File);
+      form.append('folder', 'chat');
+
+      const res: any = await request.post('/upload', form);
+      const url = res?.data?.url;
+
+      if (url) {
+        sendMessage(selectedRoom, url, 'image');
+        onSuccess?.(res);
+      } else {
+        throw new Error('上传失败');
+      }
+    } catch (e: any) {
+      onError?.(e);
+      message.error(e?.message || '上传失败');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleDeleteRoom = async (id: number) => {
+    try {
+      const res = await deleteRoom(id);
+      console.log('删除响应:', res);
+
+      // 如果删除的是当前选中的房间，清空选中状态
+      if (selectedRoom === id) {
+        setSelectedRoom(null);
+        setMessages([]);
+        selectedRoomRef.current = null;
+      }
+
+      // 立即从列表中移除该房间，提供即时反馈
+      setRooms((prev) => prev.filter((room) => room.id !== id));
+
+      message.success('删除成功');
+
+      // 然后再刷新列表以确保数据同步
+      setTimeout(() => {
+        loadRooms();
+      }, 100);
+    } catch (error: any) {
+      console.error('删除失败:', error);
+      message.error(
+        error?.response?.data?.message || error?.message || '删除失败',
+      );
+    }
+  };
+
+  useEffect(() => {
+    loadRooms();
+  }, []);
+
+  const currentRoom = rooms.find((r) => r.id === selectedRoom);
+
+  // 获取当前登录用户信息
+  const currentUserInfo = useMemo(() => {
+    try {
+      return storage.get('ddzz_userInfo') || { avatar: '', username: '管理员' };
+    } catch (error) {
+      console.error('Failed to get user info:', error);
+      return { avatar: '', username: '管理员' };
+    }
+  }, []);
+
+  return (
+    <ChatWrapper>
+      <RoomList
+        rooms={rooms}
+        selectedRoom={selectedRoom}
+        onSelectRoom={handleSelectRoom}
+        onDeleteRoom={handleDeleteRoom}
+      />
+
+      <ChatArea>
+        {selectedRoom && currentRoom ? (
+          <>
+            <ChatHeader
+              avatar={currentRoom.craftsman_user.avatar}
+              nickname={currentRoom.craftsman_user.nickname}
+              status="在线"
+              phone={currentRoom.craftsman_user.phone}
+            />
+            <MessageList
+              messages={messages}
+              loading={loading}
+              currentUserType="admin"
+              currentUserAvatar={currentUserInfo.avatar}
+              currentUserNickname={currentUserInfo.username}
+              otherUserAvatar={currentRoom.craftsman_user.avatar}
+              otherUserNickname={currentRoom.craftsman_user.nickname}
+            />
+            <ChatInput
+              value={inputText}
+              onChange={setInputText}
+              onSend={handleSend}
+              onImageUpload={handleImageUpload}
+              sending={sending}
+              disabled={!selectedRoom}
+            />
+          </>
+        ) : (
+          <Empty description="请选择聊天房间" style={{ marginTop: 120 }} />
+        )}
+      </ChatArea>
+    </ChatWrapper>
+  );
 };
 
 export default CraftsmanChat;

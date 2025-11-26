@@ -164,12 +164,12 @@ export const routes = [
     icon: 'CustomerServiceOutlined',
     routes: [
       {
-        name: '业主聊天页面',
+        name: '业主聊天',
         path: 'client-chat-page',
         component: 'customer-service/client-chat',
       },
       {
-        name: '工匠聊天页面',
+        name: '工匠聊天',
         path: 'craftsman-chat-page',
         component: 'customer-service/craftsman-chat',
       },
@@ -184,6 +184,11 @@ export const routes = [
         name: '账号管理',
         path: 'account-permission',
         component: 'system/account-permission',
+      },
+      {
+        name: '平台公告',
+        path: 'platform-notice',
+        component: 'system/platform-notice',
       },
     ],
   },
