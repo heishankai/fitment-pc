@@ -57,13 +57,15 @@ const PieChart: React.FC<PieChartProps> = ({
   data = [],
   loading = false,
   title = '订单状态分布',
-  timeRange = '近一周',
+  timeRange = '本月订单统计',
 }) => {
   const { token } = theme.useToken();
   const isEmpty = !data?.length;
 
-  const pieOption = useMemo(
-    () => ({
+  const pieOption = useMemo(() => {
+    if (isEmpty) return null;
+
+    return {
       tooltip: {
         trigger: 'item',
         formatter: '{a} <br/>{b}: {c} ({d}%)',
@@ -98,9 +100,8 @@ const PieChart: React.FC<PieChartProps> = ({
           data: data,
         },
       ],
-    }),
-    [data],
-  );
+    };
+  }, [data.length, isEmpty]);
 
   const containerRef = useEcharts(pieOption, loading);
 
@@ -124,7 +125,7 @@ const PieChart: React.FC<PieChartProps> = ({
           />
         </EmptyContainer>
       ) : (
-        <ChartContainer ref={containerRef} />
+        <ChartContainer key={`pie-${data.length}`} ref={containerRef} />
       )}
     </Card>
   );

@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Row, Col } from 'antd';
 import styled from 'styled-components';
 import {
-  UserOutlined,
   DollarOutlined,
   ShoppingCartOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
+  WechatOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import { GradientCard } from '@/styles/styled';
 import { theme } from '@/styles/theme';
@@ -23,39 +24,44 @@ interface CardData {
   gradient: string;
 }
 
+interface CardDataFromAPI {
+  wechat_user_count: number;
+  craftsman_user_count: number;
+  order_count: number;
+  order_amount: number;
+  wechat_user_count_percentage: number;
+  craftsman_user_count_percentage: number;
+  order_count_percentage: number;
+  order_amount_percentage: number;
+  wechat_user_count_trend: TrendType;
+  craftsman_user_count_trend: TrendType;
+  order_count_trend: TrendType;
+  order_amount_trend: TrendType;
+}
+
+interface CollectCardProps {
+  cardData?: CardDataFromAPI;
+}
+
 // 常量
 const TREND_CONFIG = {
   up: { color: theme.colors.success, Icon: ArrowUpOutlined },
   down: { color: theme.colors.error, Icon: ArrowDownOutlined },
 } as const;
 
-// 卡片数据
-const CARD_DATA: CardData[] = [
-  {
-    title: '今日新增用户',
-    value: 93,
-    icon: UserOutlined,
-    suffix: '+12%',
-    trend: 'up',
-    gradient: theme.gradients.primary,
-  },
-  {
-    title: '今日交易额',
-    value: 812800,
-    icon: DollarOutlined,
-    suffix: '+8.2%',
-    trend: 'up',
-    gradient: theme.gradients.secondary,
-  },
-  {
-    title: '今日新增订单',
-    value: 1128,
-    icon: ShoppingCartOutlined,
-    suffix: '-2.1%',
-    trend: 'down',
-    gradient: theme.gradients.danger,
-  },
-];
+// 格式化百分比
+const formatPercentage = (percentage: number): string => {
+  const sign = percentage >= 0 ? '+' : '';
+  return `${sign}${percentage.toFixed(1)}%`;
+};
+
+// 格式化金额
+const formatAmount = (amount: number): string => {
+  return amount.toLocaleString('zh-CN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
 
 // Styled Components
 const CardContent = styled.div`
@@ -145,7 +151,7 @@ const StatCard: React.FC<{ data: CardData }> = ({ data }) => {
   const TrendIcon = TREND_CONFIG[data.trend].Icon;
 
   return (
-    <Col xs={24} sm={12} lg={8}>
+    <Col xs={24} sm={12} lg={6}>
       <GradientCard gradient={data.gradient}>
         <CardContent>
           <CardHeader>
@@ -159,7 +165,11 @@ const StatCard: React.FC<{ data: CardData }> = ({ data }) => {
           </CardHeader>
           <div>
             <CardTitle>{data.title}</CardTitle>
-            <CardValue>{data.value.toLocaleString()}</CardValue>
+            <CardValue>
+              {data.title === '订单金额'
+                ? `¥${formatAmount(data.value)}`
+                : data.value.toLocaleString()}
+            </CardValue>
           </div>
         </CardContent>
         <DecorativeCircle position="top" />
@@ -169,10 +179,55 @@ const StatCard: React.FC<{ data: CardData }> = ({ data }) => {
   );
 };
 
-const CollectCard: React.FC = () => {
+const CollectCard: React.FC<CollectCardProps> = ({ cardData }) => {
+  const cardList = useMemo<CardData[]>(() => {
+    if (!cardData) {
+      return [];
+    }
+
+    return [
+      {
+        title: '微信用户数',
+        value: cardData.wechat_user_count,
+        icon: WechatOutlined,
+        suffix: formatPercentage(cardData.wechat_user_count_percentage),
+        trend: cardData.wechat_user_count_trend,
+        gradient: theme.gradients.primary,
+      },
+      {
+        title: '工匠用户数',
+        value: cardData.craftsman_user_count,
+        icon: TeamOutlined,
+        suffix: formatPercentage(cardData.craftsman_user_count_percentage),
+        trend: cardData.craftsman_user_count_trend,
+        gradient: theme.gradients.secondary,
+      },
+      {
+        title: '订单数量',
+        value: cardData.order_count,
+        icon: ShoppingCartOutlined,
+        suffix: formatPercentage(cardData.order_count_percentage),
+        trend: cardData.order_count_trend,
+        gradient: theme.gradients.danger,
+      },
+      {
+        title: '订单金额',
+        value: cardData.order_amount,
+        icon: DollarOutlined,
+        suffix: formatPercentage(cardData.order_amount_percentage),
+        trend: cardData.order_amount_trend,
+        gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      },
+    ];
+  }, [cardData]);
+
+  if (!cardData) {
+    return null;
+  }
+
   return (
     <Row gutter={[24, 24]}>
-      {CARD_DATA.map((item, index) => (
+      {cardList.map((item, index) => (
         <StatCard key={index} data={item} />
       ))}
     </Row>

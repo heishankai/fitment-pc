@@ -20,7 +20,7 @@ export const routes = [
     icon: 'LoginOutlined',
   },
   {
-    name: '今日数据',
+    name: '本月数据',
     path: '/home',
     component: 'home',
     icon: 'HomeOutlined',
@@ -31,24 +31,9 @@ export const routes = [
     icon: 'ShoppingCartOutlined',
     routes: [
       {
-        name: '业主订单查询',
+        name: '订单查询',
         path: 'client-order-query',
         component: 'order/client-order-query',
-      },
-      {
-        name: '派单查询和操作',
-        path: 'dispatch-query-operation',
-        component: 'order/dispatch-query-operation',
-      },
-      {
-        name: '介入处理纠纷记录查询',
-        path: 'dispute-record-query',
-        component: 'order/dispute-record-query',
-      },
-      {
-        name: '呼叫录音查询',
-        path: 'call-record-query',
-        component: 'order/call-record-query',
       },
     ],
   },
@@ -57,11 +42,6 @@ export const routes = [
     path: '/fund',
     icon: 'DollarOutlined',
     routes: [
-      {
-        name: '业主付款记录',
-        path: 'client-payment-record',
-        component: 'fund/client-payment-record',
-      },
       {
         name: '提现审核',
         path: 'withdrawal-audit',
@@ -79,11 +59,6 @@ export const routes = [
     path: '/config',
     icon: 'SettingOutlined',
     routes: [
-      {
-        name: '抢单配置',
-        path: 'grab-order-config',
-        component: 'config/grab-order-config',
-      },
       {
         name: '轮播图管理',
         path: 'swiper-config',

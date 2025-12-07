@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from '@umijs/max';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
@@ -89,17 +90,22 @@ interface HeaderActionsProps {
   actions?: Action[];
 }
 
-const defaultActions: Action[] = [
-  { icon: '🔔', title: '通知', showStatus: true },
-  { icon: '⚙️', title: '设置' },
-];
+const HeaderActions: React.FC<HeaderActionsProps> = ({ actions }) => {
+  const navigate = useNavigate();
 
-const HeaderActions: React.FC<HeaderActionsProps> = ({
-  actions = defaultActions,
-}) => {
+  const handleNoticeClick = () => {
+    navigate('/system/platform-notice');
+  };
+
+  const defaultActions: Action[] = [
+    { icon: '🔔', title: '通知', showStatus: true, onClick: handleNoticeClick },
+  ];
+
+  const finalActions = actions || defaultActions;
+
   return (
     <>
-      {actions.map((action, index) => (
+      {finalActions.map((action, index) => (
         <ActionButton key={index} title={action.title} onClick={action.onClick}>
           {action.showStatus && <StatusIndicator />}
           {action.icon}

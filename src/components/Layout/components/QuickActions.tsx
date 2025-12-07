@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from '@umijs/max';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
@@ -46,18 +47,27 @@ interface QuickActionsProps {
   actions?: QuickAction[];
 }
 
-const defaultActions: QuickAction[] = [
-  { icon: '📋', title: '快捷订单' },
-  { icon: '📊', title: '数据统计' },
-  { icon: '❓', title: '帮助中心' },
-];
+const QuickActions: React.FC<QuickActionsProps> = ({ actions }) => {
+  const navigate = useNavigate();
 
-const QuickActions: React.FC<QuickActionsProps> = ({
-  actions = defaultActions,
-}) => {
+  const handleOrderClick = () => {
+    navigate('/order/client-order-query');
+  };
+
+  const handleStatisticsClick = () => {
+    navigate('/home');
+  };
+
+  const defaultActions: QuickAction[] = [
+    { icon: '📋', title: '快捷订单', onClick: handleOrderClick },
+    { icon: '📊', title: '数据统计', onClick: handleStatisticsClick },
+  ];
+
+  const finalActions = actions || defaultActions;
+
   return (
     <QuickActionsContainer>
-      {actions.map((action, index) => (
+      {finalActions.map((action, index) => (
         <QuickActionItem
           key={index}
           title={action.title}

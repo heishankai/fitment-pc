@@ -76,7 +76,7 @@ const Login: React.FC = () => {
     <LoginContainer>
       <StyledLoginFormPage
         backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
-        title="叮当智装"
+        title="叮当优+"
         onFinish={handleConfirmSubmit}
         loading={loading}
         containerStyle={{
