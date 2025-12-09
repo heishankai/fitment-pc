@@ -40,12 +40,33 @@ const CraftsmanChat: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchPhone, setSearchPhone] = useState<string>('');
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize] = useState<number>(10);
+  const [total, setTotal] = useState<number>(0);
   const selectedRoomRef = useRef<number | null>(null);
 
-  const loadRooms = async () => {
+  const loadRooms = async (phone?: string, currentPageIndex: number = 1) => {
     try {
-      const res = await getAdminRooms();
-      setRooms(res?.data || res || []);
+      const res: any = await getAdminRooms(phone, currentPageIndex, pageSize);
+      // 处理新的分页数据格式
+      if (res?.data?.data) {
+        // 新格式：{ success: true, data: { data: [], total, pageIndex, pageSize, pageTotal } }
+        setRooms(res.data.data || []);
+        setTotal(res.data.total || 0);
+        setPageIndex(res.data.pageIndex || 1);
+      } else if (res?.data && Array.isArray(res.data)) {
+        // 兼容旧格式：直接返回数组
+        setRooms(res.data);
+        setTotal(res.data.length);
+      } else if (Array.isArray(res)) {
+        // 兼容旧格式：直接返回数组
+        setRooms(res);
+        setTotal(res.length);
+      } else {
+        setRooms([]);
+        setTotal(0);
+      }
     } catch (error) {
       console.error('Failed to load rooms:', error);
     }
@@ -74,7 +95,7 @@ const CraftsmanChat: React.FC = () => {
       ) {
         setMessages((prev) => [...prev, msg]);
       }
-      loadRooms();
+      loadRooms(searchPhone, pageIndex);
     },
   });
 
@@ -145,7 +166,7 @@ const CraftsmanChat: React.FC = () => {
 
       // 然后再刷新列表以确保数据同步
       setTimeout(() => {
-        loadRooms();
+        loadRooms(searchPhone, pageIndex);
       }, 100);
     } catch (error: any) {
       console.error('删除失败:', error);
@@ -156,8 +177,21 @@ const CraftsmanChat: React.FC = () => {
   };
 
   useEffect(() => {
-    loadRooms();
-  }, []);
+    loadRooms(searchPhone, pageIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageIndex]);
+
+  // 搜索处理
+  const handleSearch = (phone: string) => {
+    setSearchPhone(phone);
+    setPageIndex(1);
+    loadRooms(phone, 1);
+  };
+
+  // 分页处理
+  const handlePageChange = (page: number) => {
+    setPageIndex(page);
+  };
 
   const currentRoom = rooms.find((r) => r.id === selectedRoom);
 
@@ -177,6 +211,12 @@ const CraftsmanChat: React.FC = () => {
         rooms={rooms}
         selectedRoom={selectedRoom}
         onSelectRoom={handleSelectRoom}
+        searchPhone={searchPhone}
+        onSearch={handleSearch}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        total={total}
+        onPageChange={handlePageChange}
         // onDeleteRoom={handleDeleteRoom}
       />
 

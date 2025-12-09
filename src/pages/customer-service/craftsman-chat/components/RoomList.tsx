@@ -1,5 +1,6 @@
 import React from 'react';
-import { Avatar, Empty } from 'antd';
+import { Avatar, Empty, Input, Pagination } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
@@ -17,6 +18,24 @@ const RoomHeader = styled.div`
   font-weight: 600;
   font-size: 16px;
   border-bottom: 1px solid #eee;
+  background: ${theme.colors.white};
+`;
+
+const SearchWrapper = styled.div`
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  border-bottom: 1px solid #eee;
+`;
+
+const RoomListContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+`;
+
+const PaginationWrapper = styled.div`
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
   background: ${theme.colors.white};
 `;
 
@@ -72,6 +91,12 @@ interface RoomListProps {
   rooms: Room[];
   selectedRoom: number | null;
   onSelectRoom: (id: number) => void;
+  searchPhone?: string;
+  onSearch?: (phone: string) => void;
+  pageIndex?: number;
+  pageSize?: number;
+  total?: number;
+  onPageChange?: (page: number) => void;
   // onDeleteRoom: (id: number) => void;
 }
 
@@ -79,6 +104,12 @@ const RoomList: React.FC<RoomListProps> = ({
   rooms,
   selectedRoom,
   onSelectRoom,
+  searchPhone = '',
+  onSearch,
+  pageIndex = 1,
+  pageSize = 10,
+  total = 0,
+  onPageChange,
   // onDeleteRoom,
 }) => {
   // const handleDelete = (id: number, e?: React.MouseEvent) => {
@@ -86,39 +117,71 @@ const RoomList: React.FC<RoomListProps> = ({
   //   onDeleteRoom(id);
   // };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (onSearch) {
+      onSearch(value);
+    }
+  };
+
   return (
     <RoomListContainer>
       <RoomHeader>工匠聊天列表</RoomHeader>
-      {rooms?.length === 0 ? (
-        <Empty style={{ marginTop: 60 }} description="暂无聊天" />
-      ) : (
-        (rooms || [])?.map((room) => (
-          <RoomItem
-            key={room.id}
-            active={selectedRoom === room.id}
-            onClick={() => onSelectRoom(room.id)}
-          >
-            <Avatar src={room.craftsman_user.avatar} size={48}>
-              {room.craftsman_user.nickname?.[0] || '工'}
-            </Avatar>
-            <RoomInfo>
-              <RoomName>{room.craftsman_user.nickname}</RoomName>
-              <RoomMsg>{room.lastMessage?.content || '暂无消息'}</RoomMsg>
-            </RoomInfo>
-            {/* <Popconfirm
-              title="确定删除？"
-              onConfirm={(e) => handleDelete(room.id, e)}
+      <SearchWrapper>
+        <Input
+          placeholder="搜索手机号"
+          prefix={<SearchOutlined />}
+          value={searchPhone}
+          onChange={handleSearchChange}
+          allowClear
+        />
+      </SearchWrapper>
+      <RoomListContent>
+        {rooms?.length === 0 ? (
+          <Empty style={{ marginTop: 60 }} description="暂无聊天" />
+        ) : (
+          (rooms || [])?.map((room) => (
+            <RoomItem
+              key={room.id}
+              active={selectedRoom === room.id}
+              onClick={() => onSelectRoom(room.id)}
             >
-              <Button
-                type="text"
-                danger
-                icon={<DeleteOutlined />}
-                size="small"
-                onClick={(e) => e.stopPropagation()}
-              />
-            </Popconfirm> */}
-          </RoomItem>
-        ))
+              <Avatar src={room.craftsman_user.avatar} size={48}>
+                {room.craftsman_user.nickname?.[0] || '工'}
+              </Avatar>
+              <RoomInfo>
+                <RoomName>{room.craftsman_user.nickname}</RoomName>
+                <RoomMsg>{room.lastMessage?.content || '暂无消息'}</RoomMsg>
+              </RoomInfo>
+              {/* <Popconfirm
+                title="确定删除？"
+                onConfirm={(e) => handleDelete(room.id, e)}
+              >
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  size="small"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </Popconfirm> */}
+            </RoomItem>
+          ))
+        )}
+      </RoomListContent>
+      {total > 0 && (
+        <PaginationWrapper>
+          <Pagination
+            current={pageIndex}
+            pageSize={pageSize}
+            total={total}
+            onChange={onPageChange}
+            showSizeChanger={false}
+            showQuickJumper
+            showTotal={(total) => `共 ${total} 条`}
+            size="small"
+          />
+        </PaginationWrapper>
       )}
     </RoomListContainer>
   );

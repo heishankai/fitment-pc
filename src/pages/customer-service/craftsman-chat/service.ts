@@ -2,9 +2,22 @@ import request from '@/utils/request';
 
 /**
  * 获取管理员的聊天房间列表
+ * @param phone 工匠用户手机号（可选，用于搜索）
+ * @param pageIndex 页码，默认1
+ * @param pageSize 每页数量，默认10
  */
-export const getAdminRooms = () => {
-  return request.get('/craftsman-chat/rooms');
+export const getAdminRooms = (
+  phone?: string,
+  pageIndex: number = 1,
+  pageSize: number = 10,
+) => {
+  return request.get('/craftsman-chat/rooms', {
+    params: {
+      ...(phone && { phone }),
+      pageIndex,
+      pageSize,
+    },
+  });
 };
 
 /**
