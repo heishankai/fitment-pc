@@ -65,11 +65,6 @@ export const routes = [
         component: 'config/swiper-config',
       },
       {
-        name: '工程管理',
-        path: 'project-query',
-        component: 'config/project-query',
-      },
-      {
         name: '工种管理',
         path: 'work',
         routes: [
