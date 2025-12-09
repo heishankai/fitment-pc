@@ -125,6 +125,7 @@ const CraftsmanChat: React.FC = () => {
     }
   };
 
+  // eslint-disable-next-line
   const handleDeleteRoom = async (id: number) => {
     try {
       const res = await deleteRoom(id);
@@ -176,7 +177,7 @@ const CraftsmanChat: React.FC = () => {
         rooms={rooms}
         selectedRoom={selectedRoom}
         onSelectRoom={handleSelectRoom}
-        onDeleteRoom={handleDeleteRoom}
+        // onDeleteRoom={handleDeleteRoom}
       />
 
       <ChatArea>

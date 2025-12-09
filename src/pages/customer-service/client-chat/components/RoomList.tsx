@@ -1,6 +1,5 @@
 import React from 'react';
-import { Avatar, Button, Empty, Popconfirm } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Avatar, Empty } from 'antd';
 import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
@@ -68,27 +67,27 @@ interface RoomListProps {
   rooms: Room[];
   selectedRoom: number | null;
   onSelectRoom: (id: number) => void;
-  onDeleteRoom: (id: number) => void;
+  // onDeleteRoom: (id: number) => void;
 }
 
 const RoomList: React.FC<RoomListProps> = ({
   rooms,
   selectedRoom,
   onSelectRoom,
-  onDeleteRoom,
+  // onDeleteRoom,
 }) => {
-  const handleDelete = (id: number, e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    onDeleteRoom(id);
-  };
+  // const handleDelete = (id: number, e?: React.MouseEvent) => {
+  //   e?.stopPropagation();
+  //   onDeleteRoom(id);
+  // };
 
   return (
     <RoomListContainer>
       <RoomHeader>聊天列表</RoomHeader>
-      {rooms.length === 0 ? (
+      {rooms?.length === 0 ? (
         <Empty style={{ marginTop: 60 }} description="暂无聊天" />
       ) : (
-        rooms.map((room) => (
+        (rooms || [])?.map((room) => (
           <RoomItem
             key={room.id}
             active={selectedRoom === room.id}
@@ -101,7 +100,7 @@ const RoomList: React.FC<RoomListProps> = ({
               <RoomName>{room.wechat_user.nickname}</RoomName>
               <RoomMsg>{room.lastMessage?.content || '暂无消息'}</RoomMsg>
             </RoomInfo>
-            <Popconfirm
+            {/* <Popconfirm
               title="确定删除？"
               onConfirm={(e) => handleDelete(room.id, e)}
             >
@@ -112,7 +111,7 @@ const RoomList: React.FC<RoomListProps> = ({
                 size="small"
                 onClick={(e) => e.stopPropagation()}
               />
-            </Popconfirm>
+            </Popconfirm> */}
           </RoomItem>
         ))
       )}
