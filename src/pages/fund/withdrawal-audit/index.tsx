@@ -1,15 +1,22 @@
 import React, { useRef } from 'react';
+import dayjs from 'dayjs';
+import { useRequest } from 'ahooks';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Space, Button, Popconfirm, message } from 'antd';
 import {
   CloseCircleOutlined,
   CheckCircleOutlined,
   EyeOutlined,
+  VerticalAlignBottomOutlined,
 } from '@ant-design/icons';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
 // service
-import { getWithdrawListService, auditWithdrawService } from './service';
+import {
+  getWithdrawListService,
+  auditWithdrawService,
+  exportWithdrawsService,
+} from './service';
 // components
 import { BankCardModal } from './components';
 
@@ -17,6 +24,11 @@ const WithdrawalAudit = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
   const bankCardModalRef = useRef<any>();
+
+  const { loading, run } = useRequest(exportWithdrawsService, {
+    manual: true,
+    onSuccess: () => message.success({ content: '导出成功' }),
+  });
 
   // 审核提现申请
   const handleAudit = async (id: number, status: number) => {
@@ -31,6 +43,25 @@ const WithdrawalAudit = () => {
     }
   };
 
+  // 导出提现申请列表
+  const handleExport = async () => {
+    const { apply_time, ...rest } =
+      await tableFormRef.current?.getFieldsValue();
+
+    const [startDate, endDate] = apply_time || [];
+
+    run({
+      ...rest,
+      apply_time:
+        startDate && endDate
+          ? [
+              dayjs(startDate).format('YYYY-MM-DD'),
+              dayjs(endDate).format('YYYY-MM-DD'),
+            ]
+          : undefined,
+    });
+  };
+
   return (
     <PageContainer>
       <ProTable
@@ -43,11 +74,28 @@ const WithdrawalAudit = () => {
         })}
         rowKey="id"
         scroll={{ x: 900 }}
+        headerTitle={
+          <Space>
+            <Button
+              type="primary"
+              loading={loading}
+              icon={<VerticalAlignBottomOutlined />}
+              onClick={handleExport}
+            >
+              导出
+            </Button>
+          </Space>
+        }
         columns={[
           // search
           {
             title: '工匠昵称',
             dataIndex: 'craftsman_user_name',
+            hideInTable: true,
+          },
+          {
+            title: '手机号码',
+            dataIndex: 'phone',
             hideInTable: true,
           },
           {
@@ -61,9 +109,18 @@ const WithdrawalAudit = () => {
               3: { text: '已拒绝' },
             },
           },
+          {
+            title: '申请时间',
+            dataIndex: 'apply_time',
+            hideInTable: true,
+            valueType: 'dateRange',
+            fieldProps: {
+              format: 'YYYY-MM-DD',
+            },
+          },
           // show
           {
-            title: '工匠名称',
+            title: '工匠昵称',
             dataIndex: 'nickname',
             hideInSearch: true,
             width: 140,
@@ -71,7 +128,7 @@ const WithdrawalAudit = () => {
             render: (_, record: any) => record?.craftsman_user?.nickname,
           },
           {
-            title: '工匠联系方式',
+            title: '手机号码',
             dataIndex: 'phone',
             hideInSearch: true,
             width: 140,

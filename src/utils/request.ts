@@ -68,6 +68,10 @@ request.interceptors.response.use(
      * 返回response.data
      */
     NProgress.done();
+    // 如果是 blob 响应，直接返回 response，由调用方处理
+    if (response.config.responseType === 'blob') {
+      return response;
+    }
     return response.data;
   },
   function (error) {
@@ -99,5 +103,51 @@ request.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+/**
+ * 导出文件（Excel等）
+ * @param url 请求地址
+ * @param data 请求参数
+ * @returns Promise<void>
+ */
+export const exportFile = async (url: string, data?: any): Promise<void> => {
+  try {
+    const response = await request.post(url, data || {}, {
+      responseType: 'blob', // 重要：设置响应类型为 blob
+    });
+
+    console.log(response, 'response');
+
+    const contentDisposition = response.headers['content-disposition'];
+
+    let filename = '导出文件.xlsx'; // 兜底默认值，正常情况下应该由后端返回
+
+    let filenameMatch = contentDisposition.match(
+      /filename\*=UTF-8''([^;\n]+)/i,
+    );
+
+    filename = decodeURIComponent(filenameMatch[1]);
+
+    // 创建 blob URL
+    const blob = new Blob([response.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    // 创建临时链接并触发下载
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+
+    // 清理
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error: any) {
+    console.error('导出失败:', error);
+    throw new Error(error?.response?.data?.message || '导出失败');
+  }
+};
 
 export default request;
