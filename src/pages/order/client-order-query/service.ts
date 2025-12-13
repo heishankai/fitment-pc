@@ -74,8 +74,36 @@ export const assignOrderService = async (data: {
  */
 export const payService = async (data: {
   order_id: number;
-  pay_type: 'work_prices' | 'sub_work_prices' | 'materials_list';
+  pay_type: 'work_prices' | 'sub_work_prices';
   subItem?: number;
 }): Promise<ApiResponse<any>> => {
   return await request.post('/order/confirm-payment', data);
+};
+
+/**
+ * 确认辅材支付
+ */
+export const payMaterialsService = async (data: {
+  order_id: number;
+  materials_id: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/materials/confirm-payment', data);
+};
+
+/**
+ * 根据订单ID获取施工进度
+ */
+export const getConstructionProgressByOrderId = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.get(`/construction-progress/order/${orderId}`);
+};
+
+/**
+ * 根据订单ID获取辅材列表
+ */
+export const getMaterialsByOrderId = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.get(`/materials/order/${orderId}`);
 };
