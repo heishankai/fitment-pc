@@ -36,8 +36,12 @@ const WorkPriceModal = (props: any, ref: any) => {
     refresh: workPriceRefresh,
   } = useRequest(getOrderByIdService, { manual: true });
 
-  const { order_type, parent_work_price_groups, total_service_fee_is_paid } =
-    workPriceData?.data ?? {};
+  const {
+    order_type,
+    parent_work_price_groups,
+    total_service_fee_is_paid,
+    is_assigned,
+  } = workPriceData?.data ?? {};
 
   // 打开弹窗方法
   const handleOpenModal = (rowData: any) => {
@@ -159,7 +163,7 @@ const WorkPriceModal = (props: any, ref: any) => {
               title: '工长工费',
               dataIndex: 'gangmaster_cost',
               valueType: 'money',
-              hideInTable: order_type !== 'gangmaster',
+              hideInDescriptions: order_type !== 'gangmaster',
             },
             {
               title: '平台服务费',
@@ -169,6 +173,7 @@ const WorkPriceModal = (props: any, ref: any) => {
             {
               title: '平台服务费是否支付',
               dataIndex: 'total_service_fee_is_paid',
+              hideInDescriptions: is_assigned === true,
               render: (_: any, record: any) => {
                 if (total_service_fee_is_paid) {
                   return <span style={{ color: '#52c41a' }}>是</span>;
@@ -298,10 +303,20 @@ const WorkPriceModal = (props: any, ref: any) => {
               },
             },
             {
-              title: '当前工匠id',
+              title: '分配工匠',
               dataIndex: 'assigned_craftsman_id',
-              width: 100,
+              width: 130,
               fixed: 'right',
+              render: (_: any, record: any) => {
+                if (!record?.assigned_craftsman_id) return '否';
+                const { nickname, phone } = record?.assigned_craftsman ?? {};
+                return (
+                  <div>
+                    <p>{nickname}</p>
+                    <p>{phone}</p>
+                  </div>
+                );
+              },
             },
             {
               title: '操作',

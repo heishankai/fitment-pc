@@ -280,12 +280,20 @@ const SubWorkPriceModal = (props: any, ref: any) => {
                   },
                 },
                 {
-                  title: '当前工匠',
+                  title: '分配工匠',
                   dataIndex: 'assigned_craftsman_id',
-                  width: 100,
+                  width: 130,
                   fixed: 'right',
                   render: (_: any, record: any) => {
-                    return <span>{record?.assigned_craftsman?.nickname}</span>;
+                    if (!record?.assigned_craftsman_id) return '否';
+                    const { nickname, phone } =
+                      record?.assigned_craftsman ?? {};
+                    return (
+                      <div>
+                        <p>{nickname}</p>
+                        <p>{phone}</p>
+                      </div>
+                    );
                   },
                 },
                 {
