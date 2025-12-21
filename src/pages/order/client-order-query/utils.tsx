@@ -76,7 +76,7 @@ export const mainPriceListColumns: ColumnsType<any> = [
     ),
   },
   {
-    title: '水电验收状态',
+    title: '验收状态',
     dataIndex: 'is_accepted',
     width: 120,
     render: (text: boolean | undefined) => {
@@ -89,14 +89,33 @@ export const mainPriceListColumns: ColumnsType<any> = [
     },
   },
   {
-    title: '泥瓦工验收状态',
-    dataIndex: 'is_accepted',
-    width: 130,
-    render: (text: boolean | undefined) => {
-      if (text === undefined) return '-';
+    title: '分配的工匠',
+    dataIndex: 'assigned_craftsman_id',
+    width: 200,
+    render: (craftsmanId: number | undefined, record: any) => {
+      if (!craftsmanId) return '-';
+      // 显示工匠信息（昵称和手机号）
+      if (record.assigned_craftsman) {
+        return (
+          <Tag color="blue">
+            {record.assigned_craftsman.nickname} (
+            {record.assigned_craftsman.phone})
+          </Tag>
+        );
+      }
+      // 向后兼容：如果没有工匠详细信息，只显示ID
+      return <Tag color="blue">已分配 (ID: {craftsmanId})</Tag>;
+    },
+  },
+  {
+    title: '支付状态',
+    dataIndex: 'is_paid',
+    width: 100,
+    render: (isPaid: boolean | undefined) => {
+      if (isPaid === undefined) return '-';
       return (
-        <Tag color={text ? 'success' : 'default'}>
-          {text ? '已验收' : '未验收'}
+        <Tag color={isPaid ? 'success' : 'default'}>
+          {isPaid ? '已支付' : '未支付'}
         </Tag>
       );
     },
@@ -176,5 +195,18 @@ export const subPriceListColumns: ColumnsType<any> = [
         {text === '1' ? '是' : '否'}
       </Tag>
     ),
+  },
+  {
+    title: '支付状态',
+    dataIndex: 'is_paid',
+    width: 100,
+    render: (isPaid: boolean | undefined) => {
+      if (isPaid === undefined) return '-';
+      return (
+        <Tag color={isPaid ? 'success' : 'default'}>
+          {isPaid ? '已支付' : '未支付'}
+        </Tag>
+      );
+    },
   },
 ];

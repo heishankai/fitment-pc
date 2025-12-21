@@ -13,6 +13,7 @@ export const transformAddData = (data: any) => {
     secondary_bedroom_image,
     bathroom_image,
     city,
+    kitchen_image,
     ...rest
   } = data ?? {};
   return {
@@ -25,6 +26,7 @@ export const transformAddData = (data: any) => {
     master_bedroom_image: extractImageUrl(master_bedroom_image),
     secondary_bedroom_image: extractImageUrl(secondary_bedroom_image),
     bathroom_image: extractImageUrl(bathroom_image),
+    kitchen_image: extractImageUrl(kitchen_image),
   };
 };
 
@@ -42,6 +44,7 @@ export const transformEditData = (record: any, form: FormInstance) => {
     bathroom_image,
     city_name,
     city_code,
+    kitchen_image,
     ...restValues
   } = record ?? {};
 
@@ -57,5 +60,6 @@ export const transformEditData = (record: any, form: FormInstance) => {
     master_bedroom_image: handleImageForm(master_bedroom_image),
     secondary_bedroom_image: handleImageForm(secondary_bedroom_image),
     bathroom_image: handleImageForm(bathroom_image),
+    kitchen_image: handleImageForm(kitchen_image),
   });
 };

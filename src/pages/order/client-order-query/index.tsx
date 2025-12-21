@@ -4,8 +4,6 @@ import type { MenuProps } from 'antd';
 import {
   DollarOutlined,
   ShoppingOutlined,
-  MoreOutlined,
-  UserAddOutlined,
   ScheduleOutlined,
   UserOutlined,
   TeamOutlined,
@@ -17,10 +15,10 @@ import { getProTableConfig } from '@/utils/proTable';
 import { getOrderListService, getAllWorkTypeService } from './service';
 import {
   WorkPriceModal,
+  SubWorkPriceModal,
   ConstructionProgressModal,
   WechatUserModal,
   CraftsmanUserModal,
-  AssignOrderModal,
   MaterialsListModal,
 } from './components';
 
@@ -28,10 +26,11 @@ const ClientOrderQuery = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
   const workPriceModalRef = useRef<any>();
+  const subWorkPriceModalRef = useRef<any>();
+
   const constructionProgressModalRef = useRef<any>();
   const wechatUserModalRef = useRef<any>();
   const craftsmanUserModalRef = useRef<any>();
-  const assignOrderModalRef = useRef<any>();
   const materialsListModalRef = useRef<any>();
 
   const { data: workTypeOptions, loading: workTypeLoading } = useRequest(
@@ -52,6 +51,38 @@ const ClientOrderQuery = () => {
         scroll={{ x: 900 }}
         columns={[
           // search字段
+          {
+            title: '订单编号',
+            dataIndex: 'order_no',
+            hideInTable: true,
+            valueType: 'text',
+          },
+          {
+            title: '订单类型',
+            dataIndex: 'order_type',
+            hideInTable: true,
+            width: 100,
+            ellipsis: true,
+            valueType: 'radio',
+            valueEnum: {
+              gangmaster: '工长单',
+              craftsman: '工匠单',
+            },
+          },
+          {
+            title: '订单状态',
+            dataIndex: 'order_status',
+            hideInTable: true,
+            valueType: 'select',
+            fieldProps: {
+              options: [
+                { label: '待接单', value: 1 },
+                { label: '已接单', value: 2 },
+                { label: '已完成', value: 3 },
+                { label: '已取消', value: 4 },
+              ],
+            },
+          },
           {
             title: '工种',
             dataIndex: 'work_kind_name',
@@ -87,15 +118,27 @@ const ClientOrderQuery = () => {
           },
           // show
           {
-            title: '工种',
-            dataIndex: 'work_kind_name',
+            title: '订单编号',
+            dataIndex: 'order_no',
+            hideInSearch: true,
+            width: 230,
+            ellipsis: true,
+            copyable: true,
+          },
+          {
+            title: '订单类型',
+            dataIndex: 'order_type',
             hideInSearch: true,
             width: 100,
             ellipsis: true,
+            valueEnum: {
+              gangmaster: '工长单',
+              craftsman: '工匠单',
+            },
           },
           {
-            title: '城市',
-            dataIndex: 'city',
+            title: '工种',
+            dataIndex: 'work_kind_name',
             hideInSearch: true,
             width: 100,
             ellipsis: true,
@@ -120,6 +163,20 @@ const ClientOrderQuery = () => {
           {
             title: '户型',
             dataIndex: 'roomType',
+            hideInSearch: true,
+            width: 100,
+            ellipsis: true,
+          },
+          {
+            title: '城市',
+            dataIndex: 'city',
+            hideInSearch: true,
+            width: 100,
+            ellipsis: true,
+          },
+          {
+            title: '平台服务费',
+            dataIndex: 'total_service_fee',
             hideInSearch: true,
             width: 100,
             ellipsis: true,
@@ -151,26 +208,11 @@ const ClientOrderQuery = () => {
           {
             title: '操作',
             valueType: 'option',
-            width: 280,
+            width: 290,
             fixed: 'right',
             align: 'left',
             render: (text: any, record: any) => {
-              // 只有待接单状态的订单才显示指派按钮
-              const canAssign = record?.order_status === 1;
-
               const moreMenuItems: MenuProps['items'] = [
-                ...(canAssign
-                  ? [
-                      {
-                        key: 'assign',
-                        label: '指派订单',
-                        icon: <UserAddOutlined />,
-                        onClick: () => {
-                          assignOrderModalRef.current?.handleOpenModal(record);
-                        },
-                      },
-                    ]
-                  : []),
                 {
                   key: 'constructionProgress',
                   label: '施工进度',
@@ -206,16 +248,30 @@ const ClientOrderQuery = () => {
                     key="workPrice"
                     icon={<DollarOutlined />}
                     style={{ padding: 0 }}
+                    size="small"
                     onClick={() => {
                       workPriceModalRef.current?.handleOpenModal(record);
                     }}
                   >
-                    查看工价
+                    工价
+                  </Button>
+                  <Button
+                    type="link"
+                    key="workPrice"
+                    icon={<DollarOutlined />}
+                    style={{ padding: 0 }}
+                    size="small"
+                    onClick={() => {
+                      subWorkPriceModalRef.current?.handleOpenModal(record);
+                    }}
+                  >
+                    子工价
                   </Button>
                   <Button
                     type="link"
                     key="materialsList"
                     icon={<ShoppingOutlined />}
+                    size="small"
                     style={{ padding: 0 }}
                     onClick={() => {
                       materialsListModalRef.current?.handleOpenModal(record);
@@ -229,7 +285,7 @@ const ClientOrderQuery = () => {
                   >
                     <Button
                       type="link"
-                      icon={<MoreOutlined />}
+                      size="small"
                       style={{ padding: 0 }}
                       onClick={(e) => e.preventDefault()}
                     >
@@ -242,21 +298,24 @@ const ClientOrderQuery = () => {
           },
         ]}
       />
+      {/* 工价弹窗 */}
       <WorkPriceModal ref={workPriceModalRef} tableFormRef={tableFormRef} />
+
+      {/* 子工价弹窗 */}
+      <SubWorkPriceModal
+        ref={subWorkPriceModalRef}
+        tableFormRef={tableFormRef}
+      />
+
+      {/* 辅材弹窗 */}
       <MaterialsListModal
         ref={materialsListModalRef}
         tableFormRef={tableFormRef}
       />
+
       <ConstructionProgressModal ref={constructionProgressModalRef} />
       <WechatUserModal ref={wechatUserModalRef} />
       <CraftsmanUserModal ref={craftsmanUserModalRef} />
-      <AssignOrderModal
-        ref={assignOrderModalRef}
-        onSuccess={() => {
-          // 指派成功后刷新列表
-          actionRef.current?.reload();
-        }}
-      />
     </PageContainer>
   );
 };

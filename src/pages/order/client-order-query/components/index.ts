@@ -4,3 +4,5 @@ export { default as WechatUserModal } from './WechatUserModal';
 export { default as CraftsmanUserModal } from './CraftsmanUserModal';
 export { default as AssignOrderModal } from './AssignOrderModal';
 export { default as MaterialsListModal } from './MaterialsListModal';
+export { default as SubWorkPriceModal } from './SubWorkPriceModal';
+export { default as BatchAssignCraftsmanModal } from './BatchAssignCraftsmanModal';

@@ -7,40 +7,7 @@ import type { ApiResponse } from '@/types';
 export const getOrderListService = async (
   data: any,
 ): Promise<ApiResponse<any>> => {
-  // 处理日期范围参数：格式化 date_range 数组中的日期
-  const params = { ...data };
-
-  if (
-    params.date_range &&
-    Array.isArray(params.date_range) &&
-    params.date_range.length === 2
-  ) {
-    // 格式化日期为 YYYY-MM-DD 格式
-    const formatDate = (date: any) => {
-      if (!date) return '';
-      // 如果是 moment 对象，使用 format 方法
-      if (date.format) {
-        return date.format('YYYY-MM-DD');
-      }
-      // 如果是 Date 对象，转换为字符串
-      if (date instanceof Date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      }
-      // 如果已经是字符串，直接返回
-      return String(date);
-    };
-
-    // 格式化 date_range 数组中的日期
-    params.date_range = [
-      formatDate(params.date_range[0]),
-      formatDate(params.date_range[1]),
-    ];
-  }
-
-  return await request.post('/order/query', params);
+  return await request.post('/order/query', data);
 };
 
 /**
@@ -81,13 +48,22 @@ export const payService = async (data: {
 };
 
 /**
- * 确认辅材支付
+ * 确认辅材支付（旧接口，保留兼容）
  */
 export const payMaterialsService = async (data: {
   order_id: number;
   materials_id: number;
 }): Promise<ApiResponse<any>> => {
   return await request.post('/materials/confirm-payment', data);
+};
+
+/**
+ * 确认单个辅材支付（更新支付状态）
+ */
+export const confirmMaterialPaymentService = async (
+  materialId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/materials/${materialId}/confirm-payment`);
 };
 
 /**
@@ -106,4 +82,73 @@ export const getMaterialsByOrderId = async (
   orderId: number,
 ): Promise<ApiResponse<any>> => {
   return await request.get(`/materials/order/${orderId}`);
+};
+
+/**
+ * 分配工匠给工价项（仅工长订单）
+ */
+export const assignCraftsmanService = async (data: {
+  orderId: number;
+  workPricesIndex?: number;
+  subWorkPricesIndex?: number;
+  pricesItemIndex: number;
+  craftsmanUserId: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/order/assign-craftsman', data);
+};
+
+/**
+ * 根据订单ID获取订单详情
+ */
+export const getOrderByIdService = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.get(`/order/${orderId}`);
+};
+
+/**
+ * 根据订单ID获取子工价列表
+ */
+export const getSubWorkPriceByOrderId = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.get(`/order/${orderId}/sub-groups`);
+};
+
+/**
+ * 确认单个工价项支付
+ */
+export const payPriceItemService = async (
+  workPriceItemId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/work-price-item/${workPriceItemId}/pay`);
+};
+
+/**
+ * 批量分配工匠给工价项
+ */
+export const batchAssignCraftsmanService = async (data: {
+  parent_order_id: number;
+  work_price_list: number[];
+  craftsman_id: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/order/assign-work-prices', data);
+};
+
+/**
+ * 支付平台服务费
+ */
+export const payPlatformServiceFeeService = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/order/${orderId}/service-fee/pay`);
+};
+
+/**
+ * 子工价支付平台服务费
+ */
+export const subPayPlatformServiceFeeService = async (data: {
+  work_price_item_id: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post(`/order/confirm-work-price-service-fee`, data);
 };

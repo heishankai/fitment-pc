@@ -76,7 +76,7 @@ const OperateModal = (props: any, ref: any) => {
       open={visble}
       title={`${title === 'add' ? '新增' : '编辑'}装修案例`}
       form={form}
-      width="76%"
+      width="85%"
       layout="horizontal"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 18 }}
@@ -284,6 +284,21 @@ const OperateModal = (props: any, ref: any) => {
               accept: 'image/*',
             }}
             extra="最多上传2张"
+          />
+        </Col>
+        <Col span={12}>
+          <ProFormUploadButton
+            label="厨房"
+            name="kitchen_image"
+            rules={[{ required: true }]}
+            max={4}
+            fieldProps={{
+              name: 'file',
+              listType: 'picture-card',
+              action: `${BASE_URL}/upload`,
+              accept: 'image/*',
+            }}
+            extra="最多上传4张"
           />
         </Col>
       </Row>
