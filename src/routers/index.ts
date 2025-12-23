@@ -126,6 +126,11 @@ export const routes = [
         path: 'home-page-audit',
         component: 'config/home-page-audit',
       },
+      {
+        name: '独立页面配置管理',
+        path: 'independent-page-config',
+        component: 'config/independent-page-config',
+      },
     ],
   },
   {
