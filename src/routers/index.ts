@@ -126,6 +126,16 @@ export const routes = [
         path: 'home-page-audit',
         component: 'config/home-page-audit',
       },
+      {
+        name: '业主管理',
+        path: 'wechat-user',
+        component: 'config/wechat-user',
+      },
+      {
+        name: '获取报价管理',
+        path: 'get-price',
+        component: 'config/get-price',
+      },
     ],
   },
   {

@@ -3,9 +3,17 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
 import { Space, Button, Popconfirm, message } from 'antd';
-import { CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
 // service
-import { getIsVerifiedListService, isVerifiedApproveService } from './service';
+import {
+  getIsVerifiedListService,
+  isVerifiedApproveService,
+  isVerifiedRejectService,
+} from './service';
 // components
 import DetailModal from './components/DetailModal';
 
@@ -19,6 +27,15 @@ const Table = () => {
     const { success } = await isVerifiedApproveService(userId);
     if (success) {
       message.success('认证通过');
+      tableFormRef.current?.submit();
+    }
+  };
+
+  // 确认认证不通过
+  const handleReject = async (userId: string | number) => {
+    const { success } = await isVerifiedRejectService(userId);
+    if (success) {
+      message.success('认证不通过');
       tableFormRef.current?.submit();
     }
   };
@@ -56,7 +73,33 @@ const Table = () => {
             dataIndex: 'card_name',
             hideInTable: true,
           },
+          {
+            title: '用户昵称',
+            dataIndex: 'nickname',
+            hideInTable: true,
+            valueType: 'text',
+          },
+          {
+            title: '手机号',
+            dataIndex: 'phone',
+            hideInTable: true,
+            valueType: 'text',
+          },
           // table字段
+          {
+            title: '用户名称',
+            dataIndex: 'nickname',
+            hideInSearch: true,
+            width: 150,
+            ellipsis: true,
+          },
+          {
+            title: '用户手机号',
+            dataIndex: 'phone',
+            hideInSearch: true,
+            width: 150,
+            ellipsis: true,
+          },
           {
             title: '证件名称',
             dataIndex: 'card_name',
@@ -149,6 +192,7 @@ const Table = () => {
                   <Button
                     type="link"
                     icon={<EyeOutlined />}
+                    style={{ padding: 0 }}
                     onClick={() =>
                       detailModalRef.current?.handleOpenModal(record)
                     }
@@ -160,8 +204,26 @@ const Table = () => {
                       title="确认通过认证吗？"
                       onConfirm={() => handleOk(userId)}
                     >
-                      <Button type="link" icon={<CheckCircleOutlined />}>
+                      <Button
+                        type="link"
+                        icon={<CheckCircleOutlined />}
+                        style={{ padding: 0 }}
+                      >
                         通过
+                      </Button>
+                    </Popconfirm>
+                  )}
+                  {isVerified && (
+                    <Popconfirm
+                      title="确认不通过认证吗？"
+                      onConfirm={() => handleReject(userId)}
+                    >
+                      <Button
+                        type="link"
+                        icon={<CloseCircleOutlined />}
+                        style={{ padding: 0 }}
+                      >
+                        不通过
                       </Button>
                     </Popconfirm>
                   )}

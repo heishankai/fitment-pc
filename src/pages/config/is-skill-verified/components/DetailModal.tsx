@@ -42,6 +42,14 @@ const DetailModal = (props: any, ref: any) => {
         }}
         columns={[
           {
+            title: '用户昵称',
+            dataIndex: 'nickname',
+          },
+          {
+            title: '手机号',
+            dataIndex: 'phone',
+          },
+          {
             title: '工种ID',
             dataIndex: 'workKindId',
           },

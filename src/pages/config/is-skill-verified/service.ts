@@ -20,6 +20,10 @@ export const isSkillVerifiedApproveService = async (
 };
 
 /**
- *
+ * 确认认证不通过
  */
-// work-kind
+export const isSkillVerifiedRejectService = async (
+  userId: any,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/is-skill-verified/reject/${userId}`);
+};
