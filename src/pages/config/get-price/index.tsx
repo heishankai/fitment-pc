@@ -4,15 +4,13 @@ import { Space, Button, Popconfirm, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
-// components
-import OperateModal from './components/OperateModal';
+
 // service
 import { getGetPriceListService, deleteGetPriceService } from './service';
 
 const GetPrice = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
-  const operateModalRef = useRef<any>(null);
 
   // 删除获取报价
   const handleDelete = async (id: string | number) => {
@@ -147,7 +145,6 @@ const GetPrice = () => {
           },
         ]}
       />
-      <OperateModal ref={operateModalRef} tableFormRef={tableFormRef} />
     </PageContainer>
   );
 };
