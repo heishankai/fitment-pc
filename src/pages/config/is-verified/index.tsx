@@ -182,11 +182,11 @@ const Table = () => {
           {
             title: '操作',
             valueType: 'option',
-            width: 220,
+            width: 250,
             fixed: 'right',
             align: 'center',
             render: (text: any, record: any) => {
-              const { isVerified, userId } = record ?? {};
+              const { userId } = record ?? {};
               return (
                 <Space>
                   <Button
@@ -199,34 +199,32 @@ const Table = () => {
                   >
                     查看详情
                   </Button>
-                  {!isVerified && (
-                    <Popconfirm
-                      title="确认通过认证吗？"
-                      onConfirm={() => handleOk(userId)}
+
+                  <Popconfirm
+                    title="确认通过认证吗？"
+                    onConfirm={() => handleOk(userId)}
+                  >
+                    <Button
+                      type="link"
+                      icon={<CheckCircleOutlined />}
+                      style={{ padding: 0 }}
                     >
-                      <Button
-                        type="link"
-                        icon={<CheckCircleOutlined />}
-                        style={{ padding: 0 }}
-                      >
-                        通过
-                      </Button>
-                    </Popconfirm>
-                  )}
-                  {isVerified && (
-                    <Popconfirm
-                      title="确认不通过认证吗？"
-                      onConfirm={() => handleReject(userId)}
+                      通过
+                    </Button>
+                  </Popconfirm>
+
+                  <Popconfirm
+                    title="确认不通过认证吗？"
+                    onConfirm={() => handleReject(userId)}
+                  >
+                    <Button
+                      type="link"
+                      icon={<CloseCircleOutlined />}
+                      style={{ padding: 0 }}
                     >
-                      <Button
-                        type="link"
-                        icon={<CloseCircleOutlined />}
-                        style={{ padding: 0 }}
-                      >
-                        不通过
-                      </Button>
-                    </Popconfirm>
-                  )}
+                      不通过
+                    </Button>
+                  </Popconfirm>
                 </Space>
               );
             },
