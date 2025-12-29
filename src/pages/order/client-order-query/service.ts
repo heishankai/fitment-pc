@@ -152,3 +152,33 @@ export const subPayPlatformServiceFeeService = async (data: {
 }): Promise<ApiResponse<any>> => {
   return await request.post(`/order/confirm-work-price-service-fee`, data);
 };
+
+/**
+ * 一键支付辅材
+ */
+export const allConfirmMaterialPaymentService = async (data: {
+  orderId: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post(`/materials/batch-payment`, data);
+};
+
+/**
+ * 创建订单
+ */
+export const createOrderService = async (data: {
+  area: number;
+  houseType: string;
+  roomType: number;
+  location: string;
+  craftsman_user_id: number;
+  wechat_user_id: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/order/admin', data);
+};
+
+/**
+ * 获取所有微信用户
+ */
+export const getAllWechatUsersService = async (): Promise<ApiResponse<any>> => {
+  return await request.get('/wechat/wechat-user');
+};

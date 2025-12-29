@@ -6,3 +6,4 @@ export { default as AssignOrderModal } from './AssignOrderModal';
 export { default as MaterialsListModal } from './MaterialsListModal';
 export { default as SubWorkPriceModal } from './SubWorkPriceModal';
 export { default as BatchAssignCraftsmanModal } from './BatchAssignCraftsmanModal';
+export { default as AddOrderModal } from './AddOrderModal';

@@ -86,7 +86,6 @@ const OperateModal = (props: any, ref: any) => {
         maskClosable: false,
       }}
       onFinish={handleFinish}
-      initialValues={{}}
     >
       <Divider orientation="left">基本信息</Divider>
       <Row>

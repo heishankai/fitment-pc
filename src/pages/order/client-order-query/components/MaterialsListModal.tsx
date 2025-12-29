@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { useBoolean, useRequest } from 'ahooks';
 import styled from 'styled-components';
 import {
@@ -16,6 +16,7 @@ import { PayCircleOutlined } from '@ant-design/icons';
 import {
   getMaterialsByOrderId,
   confirmMaterialPaymentService,
+  allConfirmMaterialPaymentService,
 } from '../service';
 
 const DrawerBody = styled(Drawer)`
@@ -26,6 +27,7 @@ const DrawerBody = styled(Drawer)`
 
 const MaterialsListModal = (props: any, ref: any) => {
   const [visible, { setTrue, setFalse }] = useBoolean(false);
+  const [rowData, setRowData] = useState<any>({});
 
   const {
     data: materialsData,
@@ -37,15 +39,28 @@ const MaterialsListModal = (props: any, ref: any) => {
   const { commodity_list = [], total_price = 0 } = materialsData?.data ?? {};
 
   // 打开弹窗方法
-  const handleOpenModal = (rowData: any) => {
+  const handleOpenModal = (row: any) => {
     setTrue();
-    getMaterialsRun(rowData?.id);
+    getMaterialsRun(row?.id);
+    setRowData({ ...row });
   };
 
   // 支付单个辅材
   const handleMaterialPay = async (record: any) => {
     const { id } = record ?? {};
     const { success } = await confirmMaterialPaymentService(id);
+
+    if (success) {
+      message.success('确认完成');
+      materialsRefresh();
+    }
+  };
+
+  // 一键支付
+  const handleCheckAllMaterials = async () => {
+    const { success } = await allConfirmMaterialPaymentService({
+      orderId: rowData?.id,
+    });
 
     if (success) {
       message.success('确认完成');
@@ -93,13 +108,25 @@ const MaterialsListModal = (props: any, ref: any) => {
         search={false}
         options={false}
         headerTitle={false}
+        toolBarRender={() => [
+          <Popconfirm
+            key="checkAllMaterials"
+            title="确认支付"
+            description={`确定已收到款项吗？`}
+            onConfirm={handleCheckAllMaterials}
+          >
+            <Button type="primary" icon={<PayCircleOutlined />}>
+              一键支付
+            </Button>
+          </Popconfirm>,
+        ]}
         dataSource={commodity_list}
         columns={[
           {
             title: '商品封面',
             dataIndex: 'commodity_cover',
             width: 100,
-            render: (covers: string[]) => {
+            render: (covers: any) => {
               if (!covers || covers.length === 0) return '-';
               return (
                 <Image

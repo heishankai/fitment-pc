@@ -7,6 +7,7 @@ import {
   ScheduleOutlined,
   UserOutlined,
   TeamOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -20,6 +21,7 @@ import {
   WechatUserModal,
   CraftsmanUserModal,
   MaterialsListModal,
+  AddOrderModal,
 } from './components';
 
 const ClientOrderQuery = () => {
@@ -27,7 +29,7 @@ const ClientOrderQuery = () => {
   const tableFormRef = useRef<ProFormInstance>();
   const workPriceModalRef = useRef<any>();
   const subWorkPriceModalRef = useRef<any>();
-
+  const addOrderModalRef = useRef<any>();
   const constructionProgressModalRef = useRef<any>();
   const wechatUserModalRef = useRef<any>();
   const craftsmanUserModalRef = useRef<any>();
@@ -49,6 +51,17 @@ const ClientOrderQuery = () => {
         })}
         rowKey="id"
         scroll={{ x: 900 }}
+        headerTitle={
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              addOrderModalRef?.current?.handleOpenModal?.('add');
+            }}
+          >
+            新增订单
+          </Button>
+        }
         columns={[
           // search字段
           {
@@ -240,7 +253,6 @@ const ClientOrderQuery = () => {
                   },
                 },
               ];
-
               return (
                 <Space size="small">
                   <Button
@@ -313,9 +325,17 @@ const ClientOrderQuery = () => {
         tableFormRef={tableFormRef}
       />
 
+      {/* 施工进度弹窗 */}
       <ConstructionProgressModal ref={constructionProgressModalRef} />
+
+      {/* 业主弹窗 */}
       <WechatUserModal ref={wechatUserModalRef} />
+
+      {/* 工匠弹窗 */}
       <CraftsmanUserModal ref={craftsmanUserModalRef} />
+
+      {/* 新增订单弹窗 */}
+      <AddOrderModal ref={addOrderModalRef} tableFormRef={tableFormRef} />
     </PageContainer>
   );
 };
