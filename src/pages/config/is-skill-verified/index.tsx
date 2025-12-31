@@ -3,11 +3,16 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
 import { Space, Button, Popconfirm, message } from 'antd';
-import { CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
 // service
 import {
   getIsSkillVerifiedListService,
   isSkillVerifiedApproveService,
+  isSkillVerifiedRejectService,
 } from './service';
 // components
 import DetailModal from './components/DetailModal';
@@ -21,12 +26,18 @@ const Table = () => {
   // 确认认证通过
   const handleOk = async (userId: string | number) => {
     const { success } = await isSkillVerifiedApproveService(userId);
-    if (success) {
-      message.success('认证通过');
-      tableFormRef.current?.submit();
-    }
+    if (!success) return;
+    message.success('操作成功');
+    tableFormRef.current?.submit();
   };
 
+  // 确认认证不通过
+  const handleReject = async (userId: string | number) => {
+    const { success } = await isSkillVerifiedRejectService(userId);
+    if (!success) return;
+    message.success('操作成功');
+    tableFormRef.current?.submit();
+  };
   return (
     <PageContainer>
       <ProTable
@@ -65,9 +76,35 @@ const Table = () => {
             hideInTable: true,
             renderFormItem: () => <WorkKindSelect />,
           },
+          {
+            title: '用户昵称',
+            dataIndex: 'nickname',
+            hideInTable: true,
+            valueType: 'text',
+          },
+          {
+            title: '手机号',
+            dataIndex: 'phone',
+            hideInTable: true,
+            valueType: 'text',
+          },
           // table字段
           {
-            title: '工种名称',
+            title: '用户名称',
+            dataIndex: 'nickname',
+            hideInSearch: true,
+            width: 150,
+            ellipsis: true,
+          },
+          {
+            title: '用户手机号',
+            dataIndex: 'phone',
+            hideInSearch: true,
+            width: 150,
+            ellipsis: true,
+          },
+          {
+            title: '认证工种',
             dataIndex: 'workKindName',
             hideInSearch: true,
             width: 150,
@@ -80,7 +117,7 @@ const Table = () => {
             width: 200,
             valueType: 'image',
             fieldProps: {
-              width: 150,
+              width: 100,
               height: 100,
             },
           },
@@ -128,32 +165,49 @@ const Table = () => {
           {
             title: '操作',
             valueType: 'option',
-            width: 220,
+            width: 250,
             fixed: 'right',
             align: 'center',
             render: (text: any, record: any) => {
-              const { isSkillVerified, userId } = record ?? {};
+              const { userId } = record ?? {};
               return (
                 <Space>
                   <Button
                     type="link"
                     icon={<EyeOutlined />}
+                    style={{ padding: 0 }}
                     onClick={() =>
                       detailModalRef.current?.handleOpenModal(record)
                     }
                   >
                     查看详情
                   </Button>
-                  {!isSkillVerified && (
-                    <Popconfirm
-                      title="确认通过认证吗？"
-                      onConfirm={() => handleOk(userId)}
+
+                  <Popconfirm
+                    title="确认通过认证吗？"
+                    onConfirm={() => handleOk(userId)}
+                  >
+                    <Button
+                      type="link"
+                      icon={<CheckCircleOutlined />}
+                      style={{ padding: 0 }}
                     >
-                      <Button type="link" icon={<CheckCircleOutlined />}>
-                        通过
-                      </Button>
-                    </Popconfirm>
-                  )}
+                      通过
+                    </Button>
+                  </Popconfirm>
+
+                  <Popconfirm
+                    title="确认不通过认证吗？"
+                    onConfirm={() => handleReject(userId)}
+                  >
+                    <Button
+                      type="link"
+                      icon={<CloseCircleOutlined />}
+                      style={{ padding: 0 }}
+                    >
+                      不通过
+                    </Button>
+                  </Popconfirm>
                 </Space>
               );
             },

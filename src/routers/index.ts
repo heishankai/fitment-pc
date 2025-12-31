@@ -131,6 +131,16 @@ export const routes = [
         path: 'independent-page-config',
         component: 'config/independent-page-config',
       },
+      {
+        name: '业主管理',
+        path: 'wechat-user',
+        component: 'config/wechat-user',
+      },
+      {
+        name: '获取报价管理',
+        path: 'get-price',
+        component: 'config/get-price',
+      },
     ],
   },
   {

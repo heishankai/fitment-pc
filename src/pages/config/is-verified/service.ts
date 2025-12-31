@@ -18,3 +18,12 @@ export const isVerifiedApproveService = async (
 ): Promise<ApiResponse<any>> => {
   return await request.put(`/is-verified/approve/${userId}`);
 };
+
+/**
+ * 确认认证不通过
+ */
+export const isVerifiedRejectService = async (
+  userId: any,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/is-verified/reject/${userId}`);
+};

@@ -36,6 +36,14 @@ const DetailModal = (props: any, ref: any) => {
         dataSource={record}
         columns={[
           {
+            title: '用户昵称',
+            dataIndex: 'nickname',
+          },
+          {
+            title: '手机号',
+            dataIndex: 'phone',
+          },
+          {
             title: '证件名称',
             dataIndex: 'card_name',
             span: 2,

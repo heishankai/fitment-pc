@@ -18,3 +18,12 @@ export const homePageAuditApproveService = async (
 ): Promise<ApiResponse<any>> => {
   return await request.put(`/home-page-audit/approve/${userId}`);
 };
+
+/**
+ * 确认审核不通过
+ */
+export const homePageAuditRejectService = async (
+  userId: any,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/home-page-audit/reject/${userId}`);
+};
