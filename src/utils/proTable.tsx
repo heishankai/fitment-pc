@@ -18,7 +18,7 @@ const defaultProTableConfig: ProTableProps<any, any> = {
   dateFormatter: 'string',
   defaultSize: 'small',
   sticky: true,
-  manualRequest: true,
+  manualRequest: false,
   search: {
     span: 8,
     defaultColsNumber: 7,

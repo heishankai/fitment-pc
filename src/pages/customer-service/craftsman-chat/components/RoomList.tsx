@@ -64,6 +64,50 @@ const RoomName = styled.div`
   margin-bottom: 6px;
   font-size: 15px;
   color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const UnreadBadge = styled.span`
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff4d4f;
+  flex-shrink: 0;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff4d4f;
+    transform: translate(-50%, -50%);
+    animation: ripple 2s ease-out infinite;
+  }
+
+  &::after {
+    animation-delay: 1s;
+  }
+
+  @keyframes ripple {
+    0% {
+      width: 10px;
+      height: 10px;
+      opacity: 0.4;
+    }
+    100% {
+      width: 20px;
+      height: 20px;
+      opacity: 0;
+    }
+  }
 `;
 
 const RoomMsg = styled.div`
@@ -85,6 +129,7 @@ interface Room {
   };
   lastMessage?: { content: string };
   unreadCount: number;
+  hasUnread?: boolean; // 是否有未读消息（红点提示）
 }
 
 interface RoomListProps {
@@ -150,7 +195,10 @@ const RoomList: React.FC<RoomListProps> = ({
                 {room.craftsman_user.nickname?.[0] || '工'}
               </Avatar>
               <RoomInfo>
-                <RoomName>{room.craftsman_user.nickname}</RoomName>
+                <RoomName>
+                  {room.craftsman_user.nickname}
+                  {room.hasUnread && <UnreadBadge />}
+                </RoomName>
                 <RoomMsg>{room.lastMessage?.content || '暂无消息'}</RoomMsg>
               </RoomInfo>
               {/* <Popconfirm

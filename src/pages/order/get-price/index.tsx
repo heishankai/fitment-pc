@@ -31,7 +31,6 @@ const GetPrice = () => {
             return await getGetPriceListService(params);
           },
         })}
-        manualRequest={false}
         rowKey="id"
         scroll={{ x: 1200 }}
         columns={[

@@ -36,31 +36,6 @@ const HeaderContainer = styled.div`
   }
 `;
 
-const MobileMenuButton = styled.div`
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: ${theme.borderRadius.md};
-  background: rgba(255, 255, 255, 0.08);
-  color: ${theme.colors.white};
-  cursor: pointer;
-  transition: ${theme.transitions.normal};
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-right: ${theme.spacing.sm};
-  font-size: 18px;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-1px);
-  }
-
-  @media (max-width: 768px) {
-    display: flex;
-  }
-`;
-
 const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
@@ -95,7 +70,6 @@ const HeaderRight = styled.div`
 interface HeaderProps {
   brandTitle: string;
   onBrandClick: () => void;
-  left?: React.ReactNode;
   center?: React.ReactNode;
   right?: React.ReactNode;
 }
@@ -103,15 +77,12 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({
   brandTitle,
   onBrandClick,
-  left,
   center,
   right,
 }) => {
   return (
     <HeaderContainer>
       <HeaderLeft>
-        <MobileMenuButton title="菜单">☰</MobileMenuButton>
-        {left}
         <BrandTitle title={brandTitle} onClick={onBrandClick} />
       </HeaderLeft>
       {center && <HeaderCenter>{center}</HeaderCenter>}

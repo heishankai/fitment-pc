@@ -51,6 +51,7 @@ const ClientOrderQuery = () => {
         })}
         rowKey="id"
         scroll={{ x: 900 }}
+        search={{ labelWidth: 88, defaultColsNumber: 8 }}
         headerTitle={
           <Button
             type="primary"
@@ -109,14 +110,14 @@ const ClientOrderQuery = () => {
             },
           },
           {
-            title: '工匠昵称',
-            dataIndex: 'craftsman_user_name',
+            title: '工匠手机号',
+            dataIndex: 'craftsman_user_phone',
             hideInTable: true,
             valueType: 'text',
           },
           {
-            title: '业主昵称',
-            dataIndex: 'wechat_user_name',
+            title: '业主手机号',
+            dataIndex: 'wechat_user_phone',
             valueType: 'text',
             hideInTable: true,
           },
@@ -134,7 +135,7 @@ const ClientOrderQuery = () => {
             title: '订单编号',
             dataIndex: 'order_no',
             hideInSearch: true,
-            width: 230,
+            width: 300,
             ellipsis: true,
             copyable: true,
           },
@@ -154,7 +155,30 @@ const ClientOrderQuery = () => {
             dataIndex: 'work_kind_name',
             hideInSearch: true,
             width: 100,
-            ellipsis: true,
+            render: (_, record: any) => {
+              const { workKindName } = record?.craftsman_user ?? {};
+              return workKindName;
+            },
+          },
+          {
+            title: '工匠手机号',
+            dataIndex: 'craftsman_user',
+            hideInSearch: true,
+            width: 130,
+            render: (_, record: any) => {
+              const { phone } = record?.craftsman_user ?? {};
+              return phone;
+            },
+          },
+          {
+            title: '业主手机号',
+            dataIndex: 'wechat_user',
+            hideInSearch: true,
+            width: 130,
+            render: (_, record: any) => {
+              const { phone } = record?.wechat_user ?? {};
+              return phone;
+            },
           },
           {
             title: '面积',
@@ -193,6 +217,7 @@ const ClientOrderQuery = () => {
             hideInSearch: true,
             width: 100,
             ellipsis: true,
+            valueType: 'money',
           },
           {
             title: '创建时间',
@@ -279,6 +304,7 @@ const ClientOrderQuery = () => {
                   >
                     子工价
                   </Button>
+
                   <Button
                     type="link"
                     key="materialsList"
@@ -291,6 +317,7 @@ const ClientOrderQuery = () => {
                   >
                     辅材清单
                   </Button>
+
                   <Dropdown
                     menu={{ items: moreMenuItems }}
                     trigger={['click', 'hover']}

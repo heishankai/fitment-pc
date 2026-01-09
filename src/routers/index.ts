@@ -35,6 +35,23 @@ export const routes = [
         path: 'client-order-query',
         component: 'order/client-order-query',
       },
+      {
+        name: '获取报价管理',
+        path: 'get-price',
+        component: 'order/get-price',
+      },
+    ],
+  },
+  {
+    name: '活动宣传配置',
+    path: '/promotion-config',
+    icon: 'PictureOutlined',
+    routes: [
+      {
+        name: '轮播图管理',
+        path: 'swiper-config',
+        component: 'promotion-config/swiper-config',
+      },
     ],
   },
   {
@@ -59,11 +76,6 @@ export const routes = [
     path: '/config',
     icon: 'SettingOutlined',
     routes: [
-      {
-        name: '轮播图管理',
-        path: 'swiper-config',
-        component: 'config/swiper-config',
-      },
       {
         name: '工种管理',
         path: 'work',
@@ -131,25 +143,20 @@ export const routes = [
         path: 'wechat-user',
         component: 'config/wechat-user',
       },
-      {
-        name: '获取报价管理',
-        path: 'get-price',
-        component: 'config/get-price',
-      },
     ],
   },
   {
-    name: '客服系统',
+    name: '客服中心',
     path: '/customer-service',
     icon: 'CustomerServiceOutlined',
     routes: [
       {
-        name: '业主聊天',
+        name: '业主消息',
         path: 'client-chat-page',
         component: 'customer-service/client-chat',
       },
       {
-        name: '工匠聊天',
+        name: '工匠消息',
         path: 'craftsman-chat-page',
         component: 'customer-service/craftsman-chat',
       },
