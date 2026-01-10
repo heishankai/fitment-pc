@@ -2,10 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from '@umijs/max';
 import styled from 'styled-components';
 import { Badge, Popover, List, Empty, Tabs, Button, Avatar } from 'antd';
-import { BellOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
-import { theme } from '@/styles/theme';
+import TipsButton from '@/components/TipsButton';
 import { useAdminNotification } from './hooks/useAdminNotification';
 import type { AdminNotification } from '../service';
 
@@ -193,32 +192,15 @@ const HeaderActions: React.FC = () => {
         </NotificationList>
       }
     >
-      <Badge
-        count={unreadCount}
-        size="small"
-        offset={[-6, 6]}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+      <TipsButton
+        badge={{
+          count: unreadCount,
+          size: 'small',
+          offset: [-6, 6],
         }}
       >
-        <Avatar
-          size="large"
-          style={{
-            backgroundColor: 'rgba(255,255,255,0.08)',
-            cursor: 'pointer',
-          }}
-          icon={
-            <BellOutlined
-              style={{
-                fontSize: 18,
-                color: theme.colors.primary,
-              }}
-            />
-          }
-        />
-      </Badge>
+        🔔
+      </TipsButton>
     </Popover>
   );
 };
