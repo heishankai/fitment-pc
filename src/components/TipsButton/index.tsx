@@ -61,6 +61,7 @@ const TipsButton: React.FC<TipsButtonProps> = ({
   onClick,
   title,
   badge,
+  ...rest
 }) => {
   return (
     <Badge
@@ -71,7 +72,7 @@ const TipsButton: React.FC<TipsButtonProps> = ({
       }}
       {...badge}
     >
-      <TipsButtonContainer onClick={onClick} title={title}>
+      <TipsButtonContainer onClick={onClick} title={title} {...rest}>
         {children}
       </TipsButtonContainer>
     </Badge>
