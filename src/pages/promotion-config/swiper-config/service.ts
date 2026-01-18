@@ -27,3 +27,12 @@ export const editSwiperService = async (
 ): Promise<ApiResponse<any>> => {
   return await request.put(`/swiper-config/${id}`, data);
 };
+
+/**
+ * 删除单个轮播图
+ */
+export const deleteSwiperService = async (
+  id: string | number,
+): Promise<ApiResponse<any>> => {
+  return await request.delete(`/swiper-config/${id}`);
+};

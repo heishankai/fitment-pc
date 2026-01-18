@@ -52,6 +52,16 @@ export const routes = [
         path: 'swiper-config',
         component: 'promotion-config/swiper-config',
       },
+      {
+        name: '欢迎页配置',
+        path: 'welcome-config',
+        component: 'promotion-config/welcome-config',
+      },
+      {
+        name: '活动管理',
+        path: 'activity-config',
+        component: 'promotion-config/activity-config',
+      },
     ],
   },
   {

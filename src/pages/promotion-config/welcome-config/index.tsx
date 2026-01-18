@@ -1,29 +1,16 @@
 import React, { useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProFormInstance } from '@ant-design/pro-components';
-import { Button, Space, Popconfirm, message } from 'antd';
-import { EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Space } from 'antd';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { getProTableConfig } from '@/utils/proTable';
-import { getSwiperListService, deleteSwiperService } from './service';
+import { getWelcomeListService } from './service';
 import OperateModal from './components/OperateModal';
 
-const SwiperConfig = () => {
+const WelcomeConfig = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
   const operateModalRef = useRef<any>(null);
-
-  // 删除单个轮播图
-  const handleDelete = async (id: string | number) => {
-    try {
-      const { success } = await deleteSwiperService(id);
-      if (success) {
-        message.success('删除成功');
-        actionRef.current?.reload();
-      }
-    } catch (error: any) {
-      message.error(error?.message || '删除失败');
-    }
-  };
 
   return (
     <PageContainer>
@@ -32,12 +19,19 @@ const SwiperConfig = () => {
         formRef={tableFormRef}
         {...getProTableConfig({
           request: async () => {
-            return await getSwiperListService();
+            const response = await getWelcomeListService();
+            // 将返回的对象转换为数组格式
+            const data = response?.data;
+            return {
+              ...response,
+              data: Array.isArray(data) ? data : data ? [data] : [],
+              total: Array.isArray(data) ? data.length : data ? 1 : 0,
+            };
           },
         })}
         search={false}
         rowKey="id"
-        scroll={{ x: 900 }}
+        scroll={{ x: 1200 }}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -45,14 +39,25 @@ const SwiperConfig = () => {
             icon={<PlusOutlined />}
             onClick={() => operateModalRef.current?.handleOpenModal('add')}
           >
-            新增轮播图
+            新增欢迎页配置
           </Button>,
         ]}
         columns={[
           {
-            title: '轮播图',
-            dataIndex: 'swiper_image',
-            width: 200,
+            title: 'Logo',
+            dataIndex: 'logo',
+            width: 150,
+            hideInSearch: true,
+            valueType: 'image',
+            fieldProps: {
+              width: 80,
+              height: 80,
+            },
+          },
+          {
+            title: '背景图片',
+            dataIndex: 'background_image',
+            width: 150,
             hideInSearch: true,
             valueType: 'image',
             fieldProps: {
@@ -65,17 +70,33 @@ const SwiperConfig = () => {
             dataIndex: 'title',
             ellipsis: true,
             hideInSearch: true,
+            width: 150,
           },
           {
-            title: '描述',
-            dataIndex: 'description',
+            title: '副标题',
+            dataIndex: 'subtitle',
             ellipsis: true,
             hideInSearch: true,
+            width: 200,
+          },
+          {
+            title: '倒计时（单位：秒）',
+            dataIndex: 'count_down',
+            hideInSearch: true,
+            width: 200,
+          },
+          {
+            title: '版权信息',
+            dataIndex: 'copyright',
+            ellipsis: true,
+            hideInSearch: true,
+            width: 200,
           },
           {
             title: '操作',
             valueType: 'option',
             width: 180,
+            fixed: 'right',
             render: (_, record) => (
               <Space>
                 <Button
@@ -88,22 +109,6 @@ const SwiperConfig = () => {
                 >
                   编辑
                 </Button>
-                <Popconfirm
-                  title="确定要删除这条轮播图吗？"
-                  description="此操作不可恢复，请谨慎操作"
-                  onConfirm={() => handleDelete(record.id)}
-                  okText="确定"
-                  cancelText="取消"
-                >
-                  <Button
-                    type="link"
-                    size="small"
-                    danger
-                    icon={<DeleteOutlined />}
-                  >
-                    删除
-                  </Button>
-                </Popconfirm>
               </Space>
             ),
           },
@@ -115,4 +120,4 @@ const SwiperConfig = () => {
   );
 };
 
-export default SwiperConfig;
+export default WelcomeConfig;
