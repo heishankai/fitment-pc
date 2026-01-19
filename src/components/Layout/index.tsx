@@ -11,7 +11,7 @@ import UserMenu from './components/UserMenu';
 // utils
 import storage from '@/utils/storage';
 
-const BRAND_TITLE = '叮当优+';
+const BRAND_TITLE = '智惠装';
 const SIDER_WIDTH = 240;
 const LAYOUT_ID = 'test-pro-layout';
 

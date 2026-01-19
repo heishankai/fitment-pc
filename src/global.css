@@ -115,3 +115,118 @@ div {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(24, 144, 255, 15%);
 }
+
+/* ==================== 滚动条样式美化 - 苹果风格 ==================== */
+
+/* WebKit 浏览器 (Chrome, Safari, Edge, Opera) */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(142, 142, 147, 40%);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 142, 147, 60%);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(142, 142, 147, 80%);
+  background-clip: padding-box;
+}
+
+/* 横向滚动条 */
+::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+
+/* Firefox 浏览器 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(142, 142, 147, 40%) transparent;
+}
+
+/* 特定元素的滚动条样式优化 */
+.ant-table-body,
+.ant-table-content,
+.ant-pro-table-list,
+.ant-pro-table,
+.ant-modal-body,
+.ant-drawer-body,
+.ant-select-dropdown,
+.ant-picker-dropdown,
+.ant-dropdown-menu {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(142, 142, 147, 40%) transparent;
+}
+
+.ant-table-body::-webkit-scrollbar,
+.ant-table-content::-webkit-scrollbar,
+.ant-pro-table-list::-webkit-scrollbar,
+.ant-pro-table::-webkit-scrollbar,
+.ant-modal-body::-webkit-scrollbar,
+.ant-drawer-body::-webkit-scrollbar,
+.ant-select-dropdown::-webkit-scrollbar,
+.ant-picker-dropdown::-webkit-scrollbar,
+.ant-dropdown-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb,
+.ant-table-content::-webkit-scrollbar-thumb,
+.ant-pro-table-list::-webkit-scrollbar-thumb,
+.ant-pro-table::-webkit-scrollbar-thumb,
+.ant-modal-body::-webkit-scrollbar-thumb,
+.ant-drawer-body::-webkit-scrollbar-thumb,
+.ant-select-dropdown::-webkit-scrollbar-thumb,
+.ant-picker-dropdown::-webkit-scrollbar-thumb,
+.ant-dropdown-menu::-webkit-scrollbar-thumb {
+  background: rgba(142, 142, 147, 40%);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb:hover,
+.ant-table-content::-webkit-scrollbar-thumb:hover,
+.ant-pro-table-list::-webkit-scrollbar-thumb:hover,
+.ant-pro-table::-webkit-scrollbar-thumb:hover,
+.ant-modal-body::-webkit-scrollbar-thumb:hover,
+.ant-drawer-body::-webkit-scrollbar-thumb:hover,
+.ant-select-dropdown::-webkit-scrollbar-thumb:hover,
+.ant-picker-dropdown::-webkit-scrollbar-thumb:hover,
+.ant-dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 142, 147, 60%);
+  background-clip: padding-box;
+}
+
+/* 确保滚动条在深色背景下也可见 */
+.ant-layout,
+.ant-layout-content {
+  scrollbar-color: rgba(142, 142, 147, 50%) transparent;
+}
+
+.ant-page-header-no-children {
+  height: 12px;
+}
+
+.ant-pro-page-container-children-container {
+  padding-inline: 12px;
+}
+
+.ant-table-row-level-1 {
+  background: rgba(0, 206, 201, 6%) !important;
+}

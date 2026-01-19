@@ -38,6 +38,14 @@ export const getRoomMessages = (roomId: number, getAll: boolean = true) => {
 };
 
 /**
+ * 标记房间消息为已读
+ * @param roomId 房间ID
+ */
+export const markRoomAsRead = (roomId: number) => {
+  return request.post(`/craftsman-chat/rooms/${roomId}/read`);
+};
+
+/**
  * 删除聊天房间
  */
 export const deleteRoom = (roomId: number) => {

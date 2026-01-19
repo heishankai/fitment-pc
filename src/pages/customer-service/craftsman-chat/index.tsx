@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Empty, message } from 'antd';
+import { useLocation } from '@umijs/max';
 import request from '@/utils/request';
 import { getAdminRooms, getRoomMessages, deleteRoom } from './service';
 import { RoomList, MessageList, ChatHeader, ChatInput } from './components';
@@ -31,9 +32,11 @@ interface Room {
   };
   lastMessage?: { content: string };
   unreadCount: number;
+  hasUnread?: boolean; // 是否有未读消息（红点提示）
 }
 
 const CraftsmanChat: React.FC = () => {
+  const location = useLocation();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -94,8 +97,12 @@ const CraftsmanChat: React.FC = () => {
         msg.chat_room_id === selectedRoomRef.current
       ) {
         setMessages((prev) => [...prev, msg]);
+        // 如果当前房间有消息，刷新房间列表以更新红点状态
+        loadRooms(searchPhone, pageIndex);
+      } else {
+        // 如果其他房间有新消息，刷新房间列表以显示红点
+        loadRooms(searchPhone, pageIndex);
       }
-      loadRooms(searchPhone, pageIndex);
     },
   });
 
@@ -104,6 +111,8 @@ const CraftsmanChat: React.FC = () => {
     selectedRoomRef.current = id;
     await loadMessages(id);
     joinRoom(id);
+    // 进入房间后，更新房间列表以清除红点（后端已自动标记为已读）
+    loadRooms(searchPhone, pageIndex);
   };
 
   const handleSend = () => {
@@ -180,6 +189,44 @@ const CraftsmanChat: React.FC = () => {
     loadRooms(searchPhone, pageIndex);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex]);
+
+  // 处理从通知跳转过来的房间ID
+  useEffect(() => {
+    const roomId = (location.state as any)?.roomId;
+    if (roomId) {
+      // 如果房间列表已加载，直接选中
+      if (rooms.length > 0) {
+        const roomExists = rooms.some((room) => room.id === roomId);
+        if (roomExists && selectedRoom !== roomId) {
+          handleSelectRoom(roomId);
+        } else if (!roomExists) {
+          // 如果房间不在当前页，重新加载第一页并选中
+          loadRooms(searchPhone, 1).then(() => {
+            setTimeout(() => {
+              const targetRoom = rooms.find((room) => room.id === roomId);
+              if (targetRoom) {
+                handleSelectRoom(roomId);
+              }
+            }, 500);
+          });
+        }
+      } else {
+        // 如果房间列表还未加载，等待加载完成后再选中
+        const checkRoom = setInterval(() => {
+          if (rooms.length > 0) {
+            const roomExists = rooms.some((room) => room.id === roomId);
+            if (roomExists && selectedRoom !== roomId) {
+              handleSelectRoom(roomId);
+              clearInterval(checkRoom);
+            }
+          }
+        }, 100);
+
+        return () => clearInterval(checkRoom);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rooms, location.state]);
 
   // 搜索处理
   const handleSearch = (phone: string) => {
