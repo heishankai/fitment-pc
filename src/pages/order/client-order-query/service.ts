@@ -163,6 +163,15 @@ export const allConfirmMaterialPaymentService = async (data: {
 };
 
 /**
+ * 一键验收辅材
+ */
+export const allConfirmMaterialAcceptService = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.post(`/materials/batch-accept-by-order/${orderId}`);
+};
+
+/**
  * 创建订单
  */
 export const createOrderService = async (data: {

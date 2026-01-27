@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from 'react';
 import { useBoolean, useRequest } from 'ahooks';
 import styled from 'styled-components';
 import { Drawer, Space, Button, Popconfirm, Card, message } from 'antd';
@@ -22,6 +27,7 @@ const SubWorkPriceModal = (props: any, ref: any) => {
   const [visible, { setTrue, setFalse }] = useBoolean(false);
   const [rowData, setRowData] = useState<any>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [subWorkPriceState, setSubWorkPriceState] = useState<any>(null);
 
   // 分配工匠弹窗
   const [
@@ -33,8 +39,14 @@ const SubWorkPriceModal = (props: any, ref: any) => {
     data: subWorkPriceData,
     loading: subWorkPriceLoading,
     run: getSubWorkPriceRun,
-    refresh: subWorkPriceRefresh,
   } = useRequest(getSubWorkPriceByOrderId, { manual: true });
+
+  // 初始化或更新状态
+  useEffect(() => {
+    if (subWorkPriceData?.data) {
+      setSubWorkPriceState(subWorkPriceData.data);
+    }
+  }, [subWorkPriceData?.data]);
 
   // 打开弹窗方法
   const handleOpenModal = (record: any) => {
@@ -47,30 +59,55 @@ const SubWorkPriceModal = (props: any, ref: any) => {
   // 打开分配工匠弹窗
   const handleOpenAssignModal = () => {
     if (!selectedRowKeys?.length) {
-      message.warning('请先选择要分配的行');
+      message.warning('请先选择要分配的工价');
       return;
     }
     setAssignModalTrue();
   };
 
   // 批量分配工匠成功回调
-  const handleAssignSuccess = () => {
+  const handleAssignSuccess = (selectedIds: any, craftsmanInfo: any) => {
     setSelectedRowKeys([]);
-    subWorkPriceRefresh();
+    // 直接更新状态，不刷新
+    setSubWorkPriceState((prev: any) =>
+      prev.map((group: any) => ({
+        ...group,
+        sub_work_price_groups: group.sub_work_price_groups.map((item: any) =>
+          selectedIds.includes(item.id)
+            ? {
+                ...item,
+                assigned_craftsman_id: craftsmanInfo?.id,
+                assigned_craftsman: {
+                  nickname: craftsmanInfo?.nickname,
+                  phone: craftsmanInfo?.phone,
+                },
+              }
+            : item,
+        ),
+      })),
+    );
   };
 
-  // 支付单个工价
+  // 支付单个工价 - 只更新单条数据状态
   const handleWorkPricePay = async (record: any) => {
     const { id } = record ?? {};
     const { success } = await payPriceItemService(id);
 
     if (success) {
       message.success('确认完成');
-      subWorkPriceRefresh();
+      // 直接更新状态
+      setSubWorkPriceState((prev: any) =>
+        prev.map((group: any) => ({
+          ...group,
+          sub_work_price_groups: group.sub_work_price_groups.map((item: any) =>
+            item.id === id ? { ...item, is_paid: true } : item,
+          ),
+        })),
+      );
     }
   };
 
-  // 支付单个工价项的平台服务费
+  // 支付单个工价项的平台服务费 - 只更新单条数据状态
   const handleSubPlatformServiceFeePay = async (record: any) => {
     const { id } = record ?? {};
     const { success } = await subPayPlatformServiceFeeService({
@@ -79,7 +116,17 @@ const SubWorkPriceModal = (props: any, ref: any) => {
 
     if (success) {
       message.success('确认完成');
-      subWorkPriceRefresh();
+      // 直接更新状态
+      setSubWorkPriceState((prev: any) =>
+        prev.map((group: any) => ({
+          ...group,
+          sub_work_price_groups: group.sub_work_price_groups.map((item: any) =>
+            item.id === id
+              ? { ...item, total_service_fee_is_paid: true }
+              : item,
+          ),
+        })),
+      );
     }
   };
 
@@ -111,7 +158,7 @@ const SubWorkPriceModal = (props: any, ref: any) => {
       style={{ padding: 0 }}
       loading={subWorkPriceLoading}
     >
-      {(subWorkPriceData?.data || []).map((item: any, index: number) => {
+      {(subWorkPriceState || []).map((item: any, index: number) => {
         const { sub_work_price_groups } = item ?? {};
         return (
           <Card
@@ -174,6 +221,10 @@ const SubWorkPriceModal = (props: any, ref: any) => {
                 onChange: (keys) => {
                   setSelectedRowKeys(keys);
                 },
+                getCheckboxProps: (record: any) => ({
+                  // eslint-disable-next-line
+                  disabled: record?.assigned_craftsman_id != null, // 已分配工匠的行不允许勾选
+                }),
               }}
               toolBarRender={() => [
                 <Button

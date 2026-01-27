@@ -20,7 +20,7 @@ const StyledModalForm = styled(ModalForm)`
 interface BatchAssignCraftsmanModalProps {
   visible: boolean;
   onCancel: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (selectedIds?: any, craftsmanInfo?: any) => void;
   parentOrderId: number;
   selectedWorkPriceIds: number[];
 }
@@ -49,7 +49,12 @@ const BatchAssignCraftsmanModal: React.FC<BatchAssignCraftsmanModalProps> = ({
     if (success) {
       message.success('分配成功');
       onCancel();
-      onSuccess?.();
+      // 获取被分配的工匠信息
+      const assignedCraftsman = (craftsmanUsersData?.data || []).find(
+        (c: any) => c.id === values?.craftsmanUserId,
+      );
+      // 传递工匠信息和已选中的ID给父组件
+      onSuccess?.(selectedWorkPriceIds, assignedCraftsman);
     }
   };
 

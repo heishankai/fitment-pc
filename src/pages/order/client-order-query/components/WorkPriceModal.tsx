@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from 'react';
 import { useBoolean, useRequest } from 'ahooks';
 import styled from 'styled-components';
 import { Drawer, Space, Button, Popconfirm, Divider, message } from 'antd';
@@ -22,6 +27,7 @@ const WorkPriceModal = (props: any, ref: any) => {
   const [visible, { setTrue, setFalse }] = useBoolean(false);
   const [rowData, setRowData] = useState<any>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [workPriceState, setWorkPriceState] = useState<any>(null);
 
   // 分配工匠弹窗
   const [
@@ -33,15 +39,21 @@ const WorkPriceModal = (props: any, ref: any) => {
     data: workPriceData,
     loading: workPriceLoading,
     run: getWorkPriceRun,
-    refresh: workPriceRefresh,
   } = useRequest(getOrderByIdService, { manual: true });
+
+  // 初始化或更新状态
+  useEffect(() => {
+    if (workPriceData?.data) {
+      setWorkPriceState(workPriceData.data);
+    }
+  }, [workPriceData?.data]);
 
   const {
     order_type,
     parent_work_price_groups,
     total_service_fee_is_paid,
     is_assigned,
-  } = workPriceData?.data ?? {};
+  } = workPriceState ?? {};
 
   // 打开弹窗方法
   const handleOpenModal = (rowData: any) => {
@@ -51,33 +63,55 @@ const WorkPriceModal = (props: any, ref: any) => {
     getWorkPriceRun(rowData?.id);
   };
 
-  // 支付单个工价
+  // 支付单个工价 - 只更新单条数据状态
   const handleWorkPricePay = async (record: any) => {
     const { id } = record ?? {};
     const { success } = await payPriceItemService(id);
 
     if (success) {
       message.success('确认完成');
-      workPriceRefresh();
+      // 直接更新状态
+      setWorkPriceState((prev: any) => ({
+        ...prev,
+        parent_work_price_groups: prev.parent_work_price_groups.map(
+          (item: any) => (item.id === id ? { ...item, is_paid: true } : item),
+        ),
+      }));
     }
   };
 
   // 打开分配工匠弹窗
   const handleOpenAssignModal = () => {
     if (!selectedRowKeys?.length) {
-      message.warning('请先选择要分配的行');
+      message.warning('请先选择要分配的工价');
       return;
     }
     setAssignModalTrue();
   };
 
   // 批量分配工匠成功回调
-  const handleAssignSuccess = () => {
+  const handleAssignSuccess = (selectedIds: any, craftsmanInfo: any) => {
     setSelectedRowKeys([]);
-    workPriceRefresh();
+    // 直接更新状态，不刷新
+    setWorkPriceState((prev: any) => ({
+      ...prev,
+      parent_work_price_groups: prev.parent_work_price_groups.map(
+        (item: any) =>
+          selectedIds.includes(item.id)
+            ? {
+                ...item,
+                assigned_craftsman_id: craftsmanInfo?.id,
+                assigned_craftsman: {
+                  nickname: craftsmanInfo?.nickname,
+                  phone: craftsmanInfo?.phone,
+                },
+              }
+            : item,
+      ),
+    }));
   };
 
-  // 支付平台服务费
+  // 支付平台服务费 - 只更新状态
   const handlePlatformServiceFeePay = async (record: any) => {
     const { id } = record ?? {};
 
@@ -85,7 +119,11 @@ const WorkPriceModal = (props: any, ref: any) => {
 
     if (success) {
       message.success('确认完成');
-      workPriceRefresh();
+      // 直接更新状态
+      setWorkPriceState((prev: any) => ({
+        ...prev,
+        total_service_fee_is_paid: true,
+      }));
     }
   };
 
@@ -126,8 +164,8 @@ const WorkPriceModal = (props: any, ref: any) => {
           bordered
           column={3}
           dataSource={{
-            ...workPriceData?.data,
-            calculateFinalTotal: calculateFinalTotal(workPriceData?.data),
+            ...workPriceState,
+            calculateFinalTotal: calculateFinalTotal(workPriceState),
           }}
           columns={[
             {
@@ -215,6 +253,10 @@ const WorkPriceModal = (props: any, ref: any) => {
             onChange: (keys) => {
               setSelectedRowKeys(keys);
             },
+            getCheckboxProps: (record: any) => ({
+              // eslint-disable-next-line
+              disabled: record?.assigned_craftsman_id != null, // 已分配工匠的行不允许勾选
+            }),
           }}
           toolBarRender={() => [
             <Button
@@ -303,7 +345,7 @@ const WorkPriceModal = (props: any, ref: any) => {
               },
             },
             {
-              title: '分配工匠',
+              title: '已分配工匠',
               dataIndex: 'assigned_craftsman_id',
               width: 130,
               fixed: 'right',
