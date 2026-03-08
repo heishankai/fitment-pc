@@ -200,6 +200,21 @@ const OperateModal = (props: any, ref: any) => {
             }}
           />
         </Col>
+        <Col span={8}>
+          <ProFormTextArea
+            label="工价描述"
+            name="description"
+            rules={[{ required: true }]}
+            fieldProps={{
+              maxLength: 50,
+              showCount: true,
+              placeholder:
+                '例如：采用标准施工工艺，确保墙面平整光滑。适用于新房装修或旧房墙面翻新，包含基础的墙面处理和标准的底漆面漆涂刷',
+              rows: 5,
+              style: { resize: 'none' },
+            }}
+          />
+        </Col>
       </Row>
 
       {/* 图片上传 */}
@@ -222,7 +237,7 @@ const OperateModal = (props: any, ref: any) => {
           />
         </Col>
       </Row>
-      <Divider orientation="left">服务详情</Divider>
+      <Divider orientation="left">验收标准</Divider>
       <Row>
         <Col span={24}>
           <ProFormList
@@ -240,20 +255,8 @@ const OperateModal = (props: any, ref: any) => {
           >
             <Row gutter={16}>
               <Col span={8}>
-                <ProFormText
-                  label="服务标题"
-                  name="service_title"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                  fieldProps={{
-                    maxLength: 50,
-                    showCount: true,
-                  }}
-                />
-              </Col>
-              <Col span={8}>
                 <ProFormTextArea
-                  label="服务说明"
+                  label="验收说明"
                   name="service_desc"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
@@ -267,7 +270,7 @@ const OperateModal = (props: any, ref: any) => {
               </Col>
               <Col span={8}>
                 <ProFormUploadButton
-                  label="服务照片"
+                  label="验收照片"
                   name="service_image"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}

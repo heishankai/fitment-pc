@@ -32,7 +32,7 @@ export default defineConfig({
   layout: {
     title: 'hello',
   },
-  favicons: [`/${PROJECT_NAME}/favicon.svg`],
+  favicons: [`/${PROJECT_NAME}/favicon.png`],
   base: `/${PROJECT_NAME}/`,
   outputPath: PROJECT_NAME,
   publicPath: `/${PROJECT_NAME}/`,

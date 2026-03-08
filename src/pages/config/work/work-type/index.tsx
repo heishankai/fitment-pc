@@ -6,7 +6,11 @@ import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 // components
 import OperateModal from './components/OperateModal';
 // service
-import { deleteWorkTypeService, getWorkTypeListService } from './service';
+import {
+  deleteWorkTypeService,
+  getWorkTypeListService,
+  getAllWorkKindService,
+} from './service';
 // utils
 import { getProTableConfig } from '@/utils/proTable';
 
@@ -49,6 +53,19 @@ const WorkType = () => {
         }
         columns={[
           // search字段
+          {
+            title: '工种',
+            dataIndex: 'work_kind_id',
+            hideInTable: true,
+            valueType: 'select',
+            request: async () => {
+              const { data } = await getAllWorkKindService();
+              return (data ?? []).map((item: any) => ({
+                label: item.work_kind_name,
+                value: item.id,
+              }));
+            },
+          },
           {
             title: '工价名称',
             dataIndex: 'work_title',

@@ -3,8 +3,8 @@
   "private": true,
   "author": "",
   "engines": {
-    "node": "20.19.5",
-    "pnpm": "8.15.1"
+    "node": "22.21.1",
+    "pnpm": "10.27.0"
   },
   "scripts": {
     "dev": "max dev",
@@ -41,6 +41,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-packagejson": "^2.5.19",
+    "sharp": "^0.34.5",
     "typescript": "^5.0.3"
   }
 }

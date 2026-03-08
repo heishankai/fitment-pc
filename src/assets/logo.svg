@@ -14,9 +14,12 @@
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 170.08 170.08"
 	 style="enable-background:new 0 0 170.08 170.08;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#333333;}
-	.st1{fill:#00cec9;}
+	/* 智惠装 · 空间美学版 - 参考 uni.scss */
+	.st0{fill:#1e2222;} /* uni-text-color 一级标题 */
+	.st1{fill:#2d635e;} /* uni-color-primary 主品牌色 */
+	.st2{fill:#4f7a67;} /* uni-color-success 辅助色 */
 </style>
+<rect width="170.08" height="170.08" fill="#ffffff"/>
 <switch>
 	<foreignObject requiredExtensions="&ns_ai;" x="0" y="0" width="1" height="1">
 		<i:aipgfRef  xlink:href="#adobe_illustrator_pgf">
@@ -27,7 +30,7 @@
 			<path class="st1" d="M89.01,105.47L61.74,75.32c-2.08-2.62-1.66-6.42,0.93-8.54c2.62-2.14,6.48-1.74,8.61,0.89l26.34,28.41
 				l19.84-36.88h-11.88c-4.85-16.94-20.42-29.35-38.92-29.35c-22.38,0-40.52,18.14-40.52,40.52c0,21.11,16.15,38.44,36.77,40.33
 				v22.96c0,3.58,2.86,6.47,6.42,6.56L89.01,105.47z"/>
-			<path class="st1" d="M95.54,140.23h41.83c3.63,0,6.57-2.94,6.57-6.57V65.77c0-0.73-0.15-1.42-0.37-2.08L95.54,140.23z"/>
+			<path class="st2" d="M95.54,140.23h41.83c3.63,0,6.57-2.94,6.57-6.57V65.77c0-0.73-0.15-1.42-0.37-2.08L95.54,140.23z"/>
 		</g>
 	</g>
 </switch>
