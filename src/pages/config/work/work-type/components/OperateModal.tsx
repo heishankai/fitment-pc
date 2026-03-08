@@ -34,14 +34,13 @@ const OperateModal = (props: any, ref: any) => {
   const { data: workKindOptions, loading: workKindLoading } = useRequest(
     getAllWorkKindService,
   );
+
   const { data: labourCostOptions, loading: labourCostLoading } = useRequest(
     getAllLabourCostsService,
   );
 
   // 打开弹框方法
   const handleOpenModal = (modalTitle: 'add' | 'edit', record?: any) => {
-    console.log(record);
-
     if (modalTitle === 'edit') {
       transformEditData(record, form);
     }
@@ -101,7 +100,7 @@ const OperateModal = (props: any, ref: any) => {
               labelInValue: true,
               showSearch: true,
               loading: workKindLoading,
-              fieldNames: { label: 'work_kind_name', value: 'id' },
+              fieldNames: { label: 'work_kind_name', value: 'work_kind_code' },
             }}
             options={workKindOptions?.data ?? []}
           />

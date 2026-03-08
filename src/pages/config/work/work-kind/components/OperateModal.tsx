@@ -62,6 +62,17 @@ const OperateModal = (props: any, ref: any) => {
           showCount: true,
         }}
       />
+      <ProFormText
+        label="工种编码"
+        name="work_kind_code"
+        rules={[{ required: true }]}
+        fieldProps={{
+          maxLength: 50,
+          showCount: true,
+          disabled: title === 'edit',
+          placeholder: '请输入大写字母',
+        }}
+      />
     </ModalForm>
   );
 };

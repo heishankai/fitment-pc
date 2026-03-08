@@ -5,9 +5,13 @@ import type { FormInstance } from 'antd';
  */
 export const transformAddData = (data: any) => {
   if (!data) return {};
-  const { display_images, service_details, ...rest } = data ?? {};
+  const { display_images, service_details, work_kind, ...rest } = data ?? {};
   return {
     ...rest,
+    work_kind: {
+      work_kind_name: work_kind?.label,
+      work_kind_code: work_kind?.value,
+    },
     display_images: extractImageUrl(display_images),
     service_details: (service_details || []).map((item: any) => {
       const { service_image, ...rest } = item ?? {};
@@ -21,10 +25,15 @@ export const transformAddData = (data: any) => {
  */
 export const transformEditData = (record: any, form: FormInstance) => {
   if (!record) return {};
-  const { display_images, service_details, ...restValues } = record ?? {};
+  const { display_images, service_details, work_kind, ...restValues } =
+    record ?? {};
 
   form.setFieldsValue({
     ...restValues,
+    work_kind: {
+      label: work_kind?.work_kind_name,
+      value: work_kind?.work_kind_code,
+    },
     display_images: handleImageForm(display_images),
     service_details: (service_details || []).map((item: any) => {
       const { service_image, ...rest } = item ?? {};

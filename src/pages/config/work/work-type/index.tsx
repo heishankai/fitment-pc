@@ -55,14 +55,14 @@ const WorkType = () => {
           // search字段
           {
             title: '工种',
-            dataIndex: 'work_kind_id',
+            dataIndex: 'work_kind_code',
             hideInTable: true,
             valueType: 'select',
             request: async () => {
               const { data } = await getAllWorkKindService();
               return (data ?? []).map((item: any) => ({
-                label: item.work_kind_name,
-                value: item.id,
+                label: item?.work_kind_name,
+                value: item?.work_kind_code,
               }));
             },
           },
@@ -72,6 +72,14 @@ const WorkType = () => {
             hideInTable: true,
           },
           // show
+          {
+            title: '工种',
+            dataIndex: 'work_kind_name',
+            hideInSearch: true,
+            width: 120,
+            ellipsis: true,
+            render: (_, record: any) => record?.work_kind?.work_kind_name,
+          },
           {
             title: '工价名称',
             dataIndex: 'work_title',
