@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
-import { Space, Button, Popconfirm, message } from 'antd';
+import { Space, Button, Popconfirm, message, Image } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -23,8 +23,8 @@ const Table = () => {
   const detailModalRef = useRef<any>(null);
 
   // 确认审核通过
-  const handleOk = async (userId: string | number) => {
-    const { success } = await homePageAuditApproveService(userId);
+  const handleOk = async (id: string | number) => {
+    const { success } = await homePageAuditApproveService(id);
     if (success) {
       message.success('审核通过');
       tableFormRef.current?.submit();
@@ -45,7 +45,7 @@ const Table = () => {
         actionRef={actionRef}
         formRef={tableFormRef}
         rowKey="id"
-        scroll={{ x: 1200 }}
+        scroll={{ x: 900 }}
         {...getProTableConfig({
           request: async (params) => {
             const { data, ...rest } = await getHomePageAuditListService(params);
@@ -94,27 +94,25 @@ const Table = () => {
           },
           {
             title: '简介',
-            dataIndex: 'intro',
+            dataIndex: 'publish_text',
             hideInSearch: true,
             width: 200,
             ellipsis: true,
           },
           {
-            title: '获奖情况',
-            dataIndex: 'awards',
-            hideInSearch: true,
-            width: 200,
-            ellipsis: true,
-          },
-          {
-            title: '获奖图片',
-            dataIndex: 'awards_image',
+            title: '图片',
+            dataIndex: 'publish_images',
             hideInSearch: true,
             width: 200,
             valueType: 'image',
             fieldProps: {
               width: 100,
               height: 100,
+            },
+            render: (_, row) => {
+              const src = row?.publish_images?.[0];
+              if (!src) return '-';
+              return <Image src={src} width={50} height={50} />;
             },
           },
           {
@@ -130,28 +128,30 @@ const Table = () => {
           },
           {
             title: '是否通过审核',
-            dataIndex: 'isHomePageVerified',
+            dataIndex: 'status',
             hideInSearch: true,
             width: 110,
             fixed: 'right',
             valueEnum: {
-              true: { text: '是', status: 'Success' },
-              false: { text: '否', status: 'Error' },
+              1: { text: '审核通过', status: 'success' },
+              2: { text: '审核中', status: 'default' },
+              3: { text: '审核失败', status: 'error' },
             },
           },
           {
             title: '操作',
             valueType: 'option',
-            width: 250,
+            width: 260,
             fixed: 'right',
             align: 'center',
             render: (text: any, record: any) => {
-              const { userId } = record ?? {};
+              const { id } = record ?? {};
               return (
                 <Space>
                   <Button
                     type="link"
                     icon={<EyeOutlined />}
+                    style={{ padding: 0 }}
                     onClick={() =>
                       detailModalRef.current?.handleOpenModal(record)
                     }
@@ -161,7 +161,7 @@ const Table = () => {
 
                   <Popconfirm
                     title="确认通过审核吗？"
-                    onConfirm={() => handleOk(userId)}
+                    onConfirm={() => handleOk(id)}
                   >
                     <Button
                       type="link"
@@ -174,7 +174,7 @@ const Table = () => {
 
                   <Popconfirm
                     title="确认不通过审核吗？"
-                    onConfirm={() => handleReject(userId)}
+                    onConfirm={() => handleReject(id)}
                   >
                     <Button
                       type="link"

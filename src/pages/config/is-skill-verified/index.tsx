@@ -105,7 +105,21 @@ const Table = () => {
           },
           {
             title: '认证工种',
-            dataIndex: 'workKindName',
+            dataIndex: 'work_kind_name',
+            hideInSearch: true,
+            width: 120,
+            ellipsis: true,
+          },
+          {
+            title: '工龄（年）',
+            dataIndex: 'work_years',
+            hideInSearch: true,
+            width: 100,
+            ellipsis: true,
+          },
+          {
+            title: '技能介绍',
+            dataIndex: 'skill_intro',
             hideInSearch: true,
             width: 150,
             ellipsis: true,
@@ -114,11 +128,11 @@ const Table = () => {
             title: '承诺图片',
             dataIndex: 'promise_image',
             hideInSearch: true,
-            width: 200,
+            width: 120,
             valueType: 'image',
             fieldProps: {
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
             },
           },
           {

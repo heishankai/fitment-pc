@@ -145,6 +145,15 @@ export const payPlatformServiceFeeService = async (
 };
 
 /**
+ * 支付工长工费
+ */
+export const payGangmasterCostService = async (
+  orderId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/order/${orderId}/gangmaster-cost/pay`);
+};
+
+/**
  * 子工价支付平台服务费
  */
 export const subPayPlatformServiceFeeService = async (data: {

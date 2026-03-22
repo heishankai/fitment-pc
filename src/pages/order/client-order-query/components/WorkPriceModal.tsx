@@ -13,6 +13,7 @@ import {
   getOrderByIdService,
   payPriceItemService,
   payPlatformServiceFeeService,
+  payGangmasterCostService,
 } from '../service';
 import { PayCircleOutlined, UserOutlined } from '@ant-design/icons';
 import BatchAssignCraftsmanModal from './BatchAssignCraftsmanModal';
@@ -52,6 +53,7 @@ const WorkPriceModal = (props: any, ref: any) => {
     order_type,
     parent_work_price_groups,
     total_service_fee_is_paid,
+    gangmaster_cost_is_paid,
     is_assigned,
   } = workPriceState ?? {};
 
@@ -123,6 +125,22 @@ const WorkPriceModal = (props: any, ref: any) => {
       setWorkPriceState((prev: any) => ({
         ...prev,
         total_service_fee_is_paid: true,
+      }));
+    }
+  };
+
+  // 支付工长工费 - 只更新状态
+  const handleGangmasterCostPay = async () => {
+    const orderId = rowData?.id;
+    if (!orderId) return;
+
+    const { success } = await payGangmasterCostService(orderId);
+
+    if (success) {
+      message.success('工长工费支付成功');
+      setWorkPriceState((prev: any) => ({
+        ...prev,
+        gangmaster_cost_is_paid: true,
       }));
     }
   };
@@ -202,6 +220,31 @@ const WorkPriceModal = (props: any, ref: any) => {
               dataIndex: 'gangmaster_cost',
               valueType: 'money',
               hideInDescriptions: order_type !== 'gangmaster',
+            },
+            {
+              title: '工长工费是否支付',
+              dataIndex: 'gangmaster_cost_is_paid',
+              hideInDescriptions: order_type !== 'gangmaster',
+              render: () => {
+                if (gangmaster_cost_is_paid) {
+                  return <span style={{ color: '#52c41a' }}>是</span>;
+                }
+                return (
+                  <Popconfirm
+                    title="确认支付"
+                    description="确定工长工费已收到款项吗？"
+                    onConfirm={handleGangmasterCostPay}
+                  >
+                    <Button
+                      type="primary"
+                      icon={<PayCircleOutlined />}
+                      size="small"
+                    >
+                      支付工长工费
+                    </Button>
+                  </Popconfirm>
+                );
+              },
             },
             {
               title: '平台服务费',

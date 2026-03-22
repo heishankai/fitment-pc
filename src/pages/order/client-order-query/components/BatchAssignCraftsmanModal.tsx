@@ -105,7 +105,7 @@ const BatchAssignCraftsmanModal: React.FC<BatchAssignCraftsmanModalProps> = ({
                     {craftsman?.phone || '未设置手机号'}
                   </div>
                   <div>
-                    {craftsman?.skillInfo?.workKindName || '未进行技能认证'}
+                    {craftsman?.skillInfo?.work_kind_name || '未进行技能认证'}
                   </div>
                 </div>
               </div>

@@ -14,9 +14,9 @@ export const getHomePageAuditListService = async (
  * 确认审核通过
  */
 export const homePageAuditApproveService = async (
-  userId: any,
+  id: any,
 ): Promise<ApiResponse<any>> => {
-  return await request.put(`/home-page-audit/approve/${userId}`);
+  return await request.put(`/home-page-audit/approve/${id}`);
 };
 
 /**

@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { useBoolean } from 'ahooks';
-import { Modal, Tag } from 'antd';
+import { Modal, Image } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 
 const DetailModal = (props: any, ref: any) => {
@@ -45,45 +45,31 @@ const DetailModal = (props: any, ref: any) => {
           },
           {
             title: '是否通过审核',
-            dataIndex: 'isHomePageVerified',
-            render: (_: any, entity: any) => {
-              const value = entity?.isHomePageVerified;
-              return (
-                <Tag color={value ? 'success' : 'error'}>
-                  {value ? '是' : '否'}
-                </Tag>
-              );
-            },
+            dataIndex: 'status_name',
           },
           {
             title: '简介',
-            dataIndex: 'intro',
-            span: 2,
-            ellipsis: true,
-          },
-          {
-            title: '获奖情况',
-            dataIndex: 'awards',
+            dataIndex: 'publish_text',
             span: 2,
             ellipsis: true,
           },
           {
             title: '获奖图片',
-            dataIndex: 'awards_image',
+            dataIndex: 'publish_images',
             span: 2,
             render: (_: any, entity: any) => {
-              const images = entity?.awards_image || [];
+              const images = entity?.publish_images || [];
               if (images.length === 0) return '-';
               return (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {images.map((item: any, index: number) => (
-                    <img
+                    <Image
                       key={index}
-                      src={item?.url}
+                      src={item}
                       alt={`获奖图片${index + 1}`}
                       style={{
-                        width: 100,
-                        height: 100,
+                        width: 80,
+                        height: 80,
                         objectFit: 'cover',
                         borderRadius: 4,
                       }}

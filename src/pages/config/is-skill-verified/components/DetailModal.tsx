@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { useBoolean } from 'ahooks';
-import { Modal, Tag } from 'antd';
+import { Modal, Tag, Tooltip } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 
 const DetailModal = (props: any, ref: any) => {
@@ -51,11 +51,34 @@ const DetailModal = (props: any, ref: any) => {
           },
           {
             title: '工种ID',
-            dataIndex: 'workKindId',
+            dataIndex: 'work_kind_code',
           },
           {
             title: '工种名称',
-            dataIndex: 'workKindName',
+            dataIndex: 'work_kind_name',
+          },
+          {
+            title: '工龄（年）',
+            dataIndex: 'work_years',
+          },
+          {
+            title: '技能介绍',
+            dataIndex: 'skill_intro',
+            valueType: 'textarea',
+            renderText: (text: any) => (
+              <Tooltip title={text}>
+                <div
+                  style={{
+                    width: 100,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {text}
+                </div>
+              </Tooltip>
+            ),
           },
           {
             title: '承诺图片',
@@ -64,8 +87,8 @@ const DetailModal = (props: any, ref: any) => {
             hideInSearch: true,
             valueType: 'image',
             fieldProps: {
-              width: 50,
-              height: 50,
+              width: 100,
+              height: 100,
             },
           },
           {
