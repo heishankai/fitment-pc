@@ -203,7 +203,7 @@ const OperateModal = (props: any, ref: any) => {
           <ProFormTextArea
             label="工价描述"
             name="description"
-            rules={[{ required: true }]}
+            // rules={[{ required: true }]}
             fieldProps={{
               maxLength: 50,
               showCount: true,

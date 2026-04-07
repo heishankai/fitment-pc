@@ -129,22 +129,17 @@ export const routes = [
         component: 'config/case-query',
       },
       {
-        name: '工匠管理',
-        path: 'craftsman-query',
-        component: 'config/craftsman-query',
-      },
-      {
-        name: '工匠实名认证审核',
+        name: '实名认证审核',
         path: 'is-verified',
         component: 'config/is-verified',
       },
       {
-        name: '工匠技能认证审核',
+        name: '技能认证审核',
         path: 'auth-skill-management',
         component: 'config/is-skill-verified',
       },
       {
-        name: '工匠个人主页审核',
+        name: '个人主页审核',
         path: 'home-page-audit',
         component: 'config/home-page-audit',
       },
@@ -152,6 +147,16 @@ export const routes = [
         name: '业主管理',
         path: 'wechat-user',
         component: 'config/wechat-user',
+      },
+      {
+        name: '工匠管理',
+        path: 'craftsman-query',
+        component: 'config/craftsman-query',
+      },
+      {
+        name: '工艺小程序用户',
+        path: 'get-process',
+        component: 'config/get-process',
       },
     ],
   },
