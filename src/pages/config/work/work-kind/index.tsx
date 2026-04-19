@@ -1,19 +1,54 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { useRequest } from 'ahooks';
 import { Space, Button, Popconfirm, message } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { PageContainer, DragSortTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
+// service
+import {
+  deleteWorkKindService,
+  getWorkKindListService,
+  sortWorkKindService,
+} from './service';
+
 // components
 import OperateModal from './components/OperateModal';
-// service
-import { deleteWorkKindService, getWorkKindListService } from './service';
-// utils
-import { getProTableConfig } from '@/utils/proTable';
 
 const WorkKind = () => {
   const operateModalRef = useRef<any>(null);
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
+  const [dataSource, setDataSource] = useState<any>([]);
+
+  // 分页
+  const { loading, refresh: pageRefresh } = useRequest(getWorkKindListService, {
+    onSuccess: ({ success, data }) => {
+      if (!success) return;
+      setDataSource([...data]);
+    },
+  });
+
+  // 排序
+  const { loading: sortLoaing, run: sortRun } = useRequest(
+    sortWorkKindService,
+    {
+      manual: true,
+      onSuccess: ({ success }) => {
+        if (!success) return;
+        pageRefresh();
+        message.success('修改排序成功');
+      },
+    },
+  );
+
+  const handleDragSortEnd = (
+    beforeIndex: number,
+    afterIndex: number,
+    newDataSource: any,
+  ) => {
+    const ids = (newDataSource || [])?.map((item: any) => item?.id);
+    sortRun({ ids });
+  };
 
   // 删除类目
   const handleDelete = async (id: string | number) => {
@@ -26,16 +61,17 @@ const WorkKind = () => {
 
   return (
     <PageContainer>
-      <ProTable
+      <DragSortTable
         actionRef={actionRef}
         formRef={tableFormRef}
-        {...getProTableConfig({
-          request: async (params) => {
-            return await getWorkKindListService(params);
-          },
-        })}
+        loading={loading || sortLoaing}
+        search={false}
+        pagination={false}
+        dataSource={dataSource}
         rowKey="id"
         scroll={{ x: 900 }}
+        dragSortKey="sort"
+        onDragSortEnd={handleDragSortEnd}
         headerTitle={
           <Space>
             <Button
@@ -48,13 +84,12 @@ const WorkKind = () => {
           </Space>
         }
         columns={[
-          // search字段
           {
-            title: '工种名称',
-            dataIndex: 'work_kind_name',
-            hideInTable: true,
+            title: '排序',
+            dataIndex: 'sort',
+            width: 60,
+            className: 'drag-visible',
           },
-          // show
           {
             title: '工种名称',
             dataIndex: 'work_kind_name',

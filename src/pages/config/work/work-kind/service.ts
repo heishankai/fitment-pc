@@ -14,10 +14,8 @@ export const createWorkKindService = async (
 /**
  * 获取工种列表
  */
-export const getWorkKindListService = async (
-  data: any,
-): Promise<ApiResponse<any>> => {
-  return await request.post('/work-kind/page', data);
+export const getWorkKindListService = async (): Promise<ApiResponse<any>> => {
+  return await request.get('/work-kind');
 };
 
 /**
@@ -37,4 +35,13 @@ export const deleteWorkKindService = async (
   id: string | number,
 ): Promise<ApiResponse<any>> => {
   return await request.delete(`/work-kind/${id}`);
+};
+
+/**
+ * 拖拽排序
+ */
+export const sortWorkKindService = async (
+  data: any,
+): Promise<ApiResponse<any>> => {
+  return await request.put(`/work-kind/sort`, data);
 };
