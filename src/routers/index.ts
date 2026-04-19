@@ -158,6 +158,11 @@ export const routes = [
         path: 'get-process',
         component: 'config/get-process',
       },
+      {
+        name: '短信通知号码配置',
+        path: 'sms-notify-config',
+        component: 'config/sms-notify-config',
+      },
     ],
   },
   {
