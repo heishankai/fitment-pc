@@ -1,15 +1,15 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { useBoolean } from 'ahooks';
-import { Modal, Image } from 'antd';
+import { Modal, Image, Tooltip } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 
 const DetailModal = (props: any, ref: any) => {
   const [visible, { setTrue, setFalse }] = useBoolean(false);
-  const [record, setRecord] = useState<any>(null);
+  const [record, setRecord] = useState<any>({});
 
   // 打开弹窗方法
   const handleOpenModal = (record: any) => {
-    setRecord(record);
+    setRecord({ ...record });
     setTrue();
   };
 
@@ -51,7 +51,7 @@ const DetailModal = (props: any, ref: any) => {
             title: '简介',
             dataIndex: 'publish_text',
             span: 2,
-            ellipsis: true,
+            renderText: (text: any) => <Tooltip title={text}>{text}</Tooltip>,
           },
           {
             title: '获奖图片',

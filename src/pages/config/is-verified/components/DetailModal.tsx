@@ -58,14 +58,14 @@ const DetailModal = (props: any, ref: any) => {
             dataIndex: 'card_address',
             span: 2,
           },
-          {
-            title: '有效期开始日期',
-            dataIndex: 'card_start_date',
-          },
-          {
-            title: '有效期结束日期',
-            dataIndex: 'card_end_date',
-          },
+          // {
+          //   title: '有效期开始日期',
+          //   dataIndex: 'card_start_date',
+          // },
+          // {
+          //   title: '有效期结束日期',
+          //   dataIndex: 'card_end_date',
+          // },
           {
             title: '证件正面图片',
             dataIndex: 'card_front_image',
