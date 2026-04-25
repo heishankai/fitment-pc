@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react';
 import { useBoolean } from 'ahooks';
-import { Modal, Tag, Tooltip } from 'antd';
+import { Modal, Tag, Tooltip, Image } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 
 const DetailModal = (props: any, ref: any) => {
@@ -33,13 +33,7 @@ const DetailModal = (props: any, ref: any) => {
       <ProDescriptions
         column={2}
         bordered
-        dataSource={{
-          ...record,
-          // 使用原始数据
-          promise_image: record?._originalPromiseImage || record?.promise_image,
-          operation_video:
-            record?._originalOperationVideo || record?.operation_video,
-        }}
+        dataSource={record}
         columns={[
           {
             title: '用户昵称',
@@ -85,10 +79,25 @@ const DetailModal = (props: any, ref: any) => {
             dataIndex: 'promise_image',
             span: 2,
             hideInSearch: true,
-            valueType: 'image',
-            fieldProps: {
-              width: 100,
-              height: 100,
+            render: (_: any, entity: any) => {
+              const images = entity?.promise_image;
+
+              if (images?.length === 0) return '-';
+              return (
+                <Image.PreviewGroup>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {(images || []).map((item: any, index: number) => (
+                      <Image
+                        key={index}
+                        src={item?.url}
+                        width={100}
+                        height={100}
+                        style={{ objectFit: 'cover', borderRadius: 4 }}
+                      />
+                    ))}
+                  </div>
+                </Image.PreviewGroup>
+              );
             },
           },
           {
@@ -96,16 +105,25 @@ const DetailModal = (props: any, ref: any) => {
             dataIndex: 'operation_video',
             span: 2,
             render: (_: any, entity: any) => {
+              const list = entity?.operation_video;
+              const videos: { url?: string }[] = Array.isArray(list)
+                ? list
+                : list
+                  ? [{ url: String(list) }]
+                  : [];
+              if (videos.length === 0) return '-';
               return (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  <video
-                    key={entity?.operation_video}
-                    src={entity?.operation_video}
-                    controls
-                    style={{ width: 200, height: 150, borderRadius: 4 }}
-                  >
-                    您的浏览器不支持视频播放
-                  </video>
+                  {videos.map((item, index) => (
+                    <video
+                      key={index}
+                      src={item?.url}
+                      controls
+                      style={{ width: 200, height: 150, borderRadius: 4 }}
+                    >
+                      您的浏览器不支持视频播放
+                    </video>
+                  ))}
                 </div>
               );
             },

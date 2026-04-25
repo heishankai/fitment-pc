@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance, ActionType } from '@ant-design/pro-components';
 import { getProTableConfig } from '@/utils/proTable';
-import { Space, Button, Popconfirm, message } from 'antd';
+import { Space, Button, Popconfirm, message, Image } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -56,15 +56,7 @@ const Table = () => {
 
             return {
               ...rest,
-              data: (data || []).map((item: any) => {
-                const { promise_image, operation_video } = item ?? {};
-                return {
-                  ...item,
-                  // 表格显示用：只显示第一张图片/第一个视频
-                  promise_image: promise_image?.[0]?.url,
-                  operation_video: operation_video?.[0]?.url,
-                };
-              }),
+              data: data || [],
             };
           },
         })}
@@ -129,10 +121,17 @@ const Table = () => {
             dataIndex: 'promise_image',
             hideInSearch: true,
             width: 120,
-            valueType: 'image',
-            fieldProps: {
-              width: 80,
-              height: 80,
+            render: (_: any, record: any) => {
+              const firstUrl = record?.promise_image?.[0]?.url;
+              if (!firstUrl) return '-';
+              return (
+                <Image
+                  src={firstUrl}
+                  width={80}
+                  height={80}
+                  style={{ objectFit: 'cover' }}
+                />
+              );
             },
           },
           {
@@ -141,7 +140,7 @@ const Table = () => {
             hideInSearch: true,
             width: 200,
             render: (_: any, record: any) => {
-              const videoUrl = record?.operation_video;
+              const videoUrl = record?.operation_video?.[0]?.url;
               if (!videoUrl) return '-';
               return (
                 <video
