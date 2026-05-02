@@ -55,7 +55,7 @@ const WorkKind = () => {
     const { success } = await deleteWorkKindService(id);
     if (success) {
       message.success('删除成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 
@@ -152,7 +152,7 @@ const WorkKind = () => {
           },
         ]}
       />
-      <OperateModal ref={operateModalRef} tableFormRef={tableFormRef} />
+      <OperateModal ref={operateModalRef} actionRef={actionRef} />
     </PageContainer>
   );
 };

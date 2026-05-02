@@ -24,7 +24,7 @@ const CategoryConfig = () => {
     const { success } = await deleteCategoryService(id);
     if (success) {
       message.success('删除成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 
@@ -133,7 +133,7 @@ const CategoryConfig = () => {
           },
         ]}
       />
-      <OperateModal ref={operateModalRef} tableFormRef={tableFormRef} />
+      <OperateModal ref={operateModalRef} actionRef={actionRef} />
     </PageContainer>
   );
 };

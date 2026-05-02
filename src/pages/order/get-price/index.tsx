@@ -17,7 +17,7 @@ const GetPrice = () => {
     const { success } = await deleteGetPriceService(id);
     if (success) {
       message.success('删除成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 

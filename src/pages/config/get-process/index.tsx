@@ -16,7 +16,7 @@ const GetProcess = () => {
     const { success } = await getProcessContactService(id);
     if (success) {
       message.success('已联系成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 

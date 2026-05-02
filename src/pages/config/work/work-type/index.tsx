@@ -24,7 +24,7 @@ const WorkType = () => {
     const { success } = await deleteWorkTypeService(id);
     if (success) {
       message.success('删除成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 
@@ -205,7 +205,7 @@ const WorkType = () => {
           },
         ]}
       />
-      <OperateModal ref={operateModalRef} tableFormRef={tableFormRef} />
+      <OperateModal ref={operateModalRef} actionRef={actionRef} />
     </PageContainer>
   );
 };

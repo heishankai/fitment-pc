@@ -24,7 +24,7 @@ import { CitySelect } from '@/components';
 const { useWatch } = Form;
 
 const OperateModal = (props: any, ref: any) => {
-  const { tableFormRef } = props ?? {};
+  const { actionRef } = props ?? {};
 
   const [form] = Form.useForm();
   const [visble, { setTrue, setFalse }] = useBoolean(false);
@@ -56,7 +56,7 @@ const OperateModal = (props: any, ref: any) => {
 
     message.success('操作成功');
     setFalse();
-    tableFormRef?.current?.submit();
+    actionRef?.current?.reload();
   };
 
   // 房屋总费用

@@ -338,19 +338,13 @@ const ClientOrderQuery = () => {
         ]}
       />
       {/* 工价弹窗 */}
-      <WorkPriceModal ref={workPriceModalRef} tableFormRef={tableFormRef} />
+      <WorkPriceModal ref={workPriceModalRef} />
 
       {/* 子工价弹窗 */}
-      <SubWorkPriceModal
-        ref={subWorkPriceModalRef}
-        tableFormRef={tableFormRef}
-      />
+      <SubWorkPriceModal ref={subWorkPriceModalRef} />
 
       {/* 辅材弹窗 */}
-      <MaterialsListModal
-        ref={materialsListModalRef}
-        tableFormRef={tableFormRef}
-      />
+      <MaterialsListModal ref={materialsListModalRef} />
 
       {/* 施工进度弹窗 */}
       <ConstructionProgressModal ref={constructionProgressModalRef} />
@@ -362,7 +356,7 @@ const ClientOrderQuery = () => {
       <CraftsmanUserModal ref={craftsmanUserModalRef} />
 
       {/* 新增订单弹窗 */}
-      <AddOrderModal ref={addOrderModalRef} tableFormRef={tableFormRef} />
+      <AddOrderModal ref={addOrderModalRef} actionRef={actionRef} />
     </PageContainer>
   );
 };

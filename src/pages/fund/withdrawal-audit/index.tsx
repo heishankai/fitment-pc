@@ -39,7 +39,7 @@ const WithdrawalAudit = () => {
 
     if (success) {
       message.success('操作成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 

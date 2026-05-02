@@ -49,7 +49,7 @@ const AddOrderModal = (props: any, ref: any) => {
     if (success) {
       message.success('创建订单成功');
       setFalse();
-      props?.tableFormRef?.current?.submit();
+      props?.actionRef?.current?.reload();
     }
   };
 

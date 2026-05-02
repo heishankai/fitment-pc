@@ -27,7 +27,7 @@ const Table = () => {
     const { success } = await homePageAuditApproveService(id);
     if (success) {
       message.success('审核通过');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 
@@ -36,7 +36,7 @@ const Table = () => {
     const { success } = await homePageAuditRejectService(userId);
     if (success) {
       message.success('审核不通过');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
   return (

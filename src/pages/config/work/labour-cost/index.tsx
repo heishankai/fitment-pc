@@ -20,7 +20,7 @@ const LabourCost = () => {
     const { success } = await deleteLabourCostService(id);
     if (success) {
       message.success('删除成功');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 
@@ -117,7 +117,7 @@ const LabourCost = () => {
           },
         ]}
       />
-      <OperateModal ref={operateModalRef} tableFormRef={tableFormRef} />
+      <OperateModal ref={operateModalRef} actionRef={actionRef} />
     </PageContainer>
   );
 };

@@ -27,7 +27,7 @@ const Table = () => {
     const { success } = await isVerifiedApproveService(userId);
     if (success) {
       message.success('认证通过');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 
@@ -36,7 +36,7 @@ const Table = () => {
     const { success } = await isVerifiedRejectService(userId);
     if (success) {
       message.success('认证不通过');
-      tableFormRef.current?.submit();
+      actionRef.current?.reload();
     }
   };
 

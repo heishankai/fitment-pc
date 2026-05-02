@@ -28,7 +28,7 @@ const Table = () => {
     const { success } = await isSkillVerifiedApproveService(userId);
     if (!success) return;
     message.success('操作成功');
-    tableFormRef.current?.submit();
+    actionRef.current?.reload();
   };
 
   // 确认认证不通过
@@ -36,7 +36,7 @@ const Table = () => {
     const { success } = await isSkillVerifiedRejectService(userId);
     if (!success) return;
     message.success('操作成功');
-    tableFormRef.current?.submit();
+    actionRef.current?.reload();
   };
   return (
     <PageContainer>
