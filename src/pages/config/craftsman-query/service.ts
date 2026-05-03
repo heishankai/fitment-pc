@@ -36,3 +36,10 @@ export const getIsSkillVerifiedInfoService = async (
 ): Promise<ApiResponse<any>> => {
   return await request.get(`/is-skill-verified/user/${id}`);
 };
+
+/**
+ * 获取所有工种
+ */
+export const getAllWorkKindService = async (): Promise<ApiResponse<any>> => {
+  return await request.get('/work-kind');
+};

@@ -7,7 +7,7 @@ import { EyeOutlined } from '@ant-design/icons';
 import IsVerifiedModal from './components/IsVerifiedModal';
 import IsSkillVerifiedModal from './components/IsSkillVerifiedModal';
 // service
-import { getCraftsmanListService } from './service';
+import { getCraftsmanListService, getAllWorkKindService } from './service';
 
 const Table = () => {
   const actionRef = useRef<ActionType>();
@@ -30,6 +30,19 @@ const Table = () => {
         })}
         columns={[
           // search字段
+          {
+            title: '工种',
+            dataIndex: 'work_kind_code',
+            hideInTable: true,
+            valueType: 'select',
+            request: async () => {
+              const { data } = await getAllWorkKindService();
+              return (data ?? []).map((item: any) => ({
+                label: item?.work_kind_name,
+                value: item?.work_kind_code,
+              }));
+            },
+          },
           {
             title: '工匠名称',
             dataIndex: 'craftsman_name',
