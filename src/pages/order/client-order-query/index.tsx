@@ -16,7 +16,6 @@ import { getProTableConfig } from '@/utils/proTable';
 import { getOrderListService, getAllWorkTypeService } from './service';
 import {
   WorkPriceModal,
-  SubWorkPriceModal,
   ConstructionProgressModal,
   WechatUserModal,
   CraftsmanUserModal,
@@ -28,7 +27,6 @@ const ClientOrderQuery = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
   const workPriceModalRef = useRef<any>();
-  const subWorkPriceModalRef = useRef<any>();
   const addOrderModalRef = useRef<any>();
   const constructionProgressModalRef = useRef<any>();
   const wechatUserModalRef = useRef<any>();
@@ -292,18 +290,6 @@ const ClientOrderQuery = () => {
                   >
                     工价
                   </Button>
-                  <Button
-                    type="link"
-                    key="workPrice"
-                    icon={<DollarOutlined />}
-                    style={{ padding: 0 }}
-                    size="small"
-                    onClick={() => {
-                      subWorkPriceModalRef.current?.handleOpenModal(record);
-                    }}
-                  >
-                    子工价
-                  </Button>
 
                   <Button
                     type="link"
@@ -339,9 +325,6 @@ const ClientOrderQuery = () => {
       />
       {/* 工价弹窗 */}
       <WorkPriceModal ref={workPriceModalRef} />
-
-      {/* 子工价弹窗 */}
-      <SubWorkPriceModal ref={subWorkPriceModalRef} />
 
       {/* 辅材弹窗 */}
       <MaterialsListModal ref={materialsListModalRef} />

@@ -79,6 +79,11 @@ export const routes = [
         path: 'accounts-reconciliation',
         component: 'fund/accounts-reconciliation',
       },
+      {
+        name: '业主付款明细',
+        path: 'payment-record',
+        component: 'fund/payment-record',
+      },
     ],
   },
   {
