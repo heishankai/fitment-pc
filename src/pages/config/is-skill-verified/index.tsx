@@ -16,12 +16,14 @@ import {
 } from './service';
 // components
 import DetailModal from './components/DetailModal';
+import RelationModal from './components/RelationModal';
 import { WorkKindSelect } from '@/components';
 
 const Table = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
   const detailModalRef = useRef<any>(null);
+  const relationModalRef = useRef<any>(null);
 
   // 确认认证通过
   const handleOk = async (userId: string | number) => {
@@ -178,7 +180,7 @@ const Table = () => {
           {
             title: '操作',
             valueType: 'option',
-            width: 250,
+            width: 350,
             fixed: 'right',
             align: 'center',
             render: (text: any, record: any) => {
@@ -194,6 +196,17 @@ const Table = () => {
                     }
                   >
                     查看详情
+                  </Button>
+
+                  <Button
+                    type="link"
+                    icon={<EyeOutlined />}
+                    style={{ padding: 0 }}
+                    onClick={() =>
+                      relationModalRef.current?.handleOpenModal(record)
+                    }
+                  >
+                    查看从属关系
                   </Button>
 
                   <Popconfirm
@@ -228,6 +241,7 @@ const Table = () => {
         ]}
       />
       <DetailModal ref={detailModalRef} />
+      <RelationModal ref={relationModalRef} />
     </PageContainer>
   );
 };

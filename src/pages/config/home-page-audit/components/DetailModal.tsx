@@ -3,6 +3,10 @@ import { useBoolean } from 'ahooks';
 import { Modal, Image, Tooltip } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
 
+const getVideoUrl = (item: string | { url?: string }) => {
+  return typeof item === 'string' ? item : item?.url;
+};
+
 const DetailModal = (props: any, ref: any) => {
   const [visible, { setTrue, setFalse }] = useBoolean(false);
   const [record, setRecord] = useState<any>({});
@@ -76,6 +80,31 @@ const DetailModal = (props: any, ref: any) => {
                     />
                   ))}
                 </div>
+              );
+            },
+          },
+          {
+            title: '视频',
+            dataIndex: 'publish_video',
+            span: 2,
+            render: (_: any, entity: any) => {
+              const videos = Array.isArray(entity?.publish_video)
+                ? entity.publish_video
+                : [];
+              const videoUrl = getVideoUrl(videos[0]);
+              if (!videoUrl) return '-';
+              return (
+                <video
+                  src={videoUrl}
+                  controls
+                  style={{
+                    width: 240,
+                    height: 140,
+                    objectFit: 'cover',
+                    borderRadius: 4,
+                    background: '#000',
+                  }}
+                />
               );
             },
           },

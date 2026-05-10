@@ -17,6 +17,10 @@ import {
 // components
 import DetailModal from './components/DetailModal';
 
+const getVideoUrl = (item: string | { url?: string }) => {
+  return typeof item === 'string' ? item : item?.url;
+};
+
 const Table = () => {
   const actionRef = useRef<ActionType>();
   const tableFormRef = useRef<ProFormInstance>();
@@ -45,7 +49,7 @@ const Table = () => {
         actionRef={actionRef}
         formRef={tableFormRef}
         rowKey="id"
-        scroll={{ x: 900 }}
+        scroll={{ x: 1200 }}
         {...getProTableConfig({
           request: async (params) => {
             const { data, ...rest } = await getHomePageAuditListService(params);
@@ -113,6 +117,29 @@ const Table = () => {
               const src = row?.publish_images?.[0];
               if (!src) return '-';
               return <Image src={src} width={50} height={50} />;
+            },
+          },
+          {
+            title: '视频',
+            dataIndex: 'publish_video',
+            hideInSearch: true,
+            width: 180,
+            render: (_, row) => {
+              const videoUrl = getVideoUrl(row?.publish_video?.[0]);
+              if (!videoUrl) return '-';
+              return (
+                <video
+                  src={videoUrl}
+                  controls
+                  style={{
+                    width: 120,
+                    height: 80,
+                    objectFit: 'cover',
+                    borderRadius: 4,
+                    background: '#000',
+                  }}
+                />
+              );
             },
           },
           {
