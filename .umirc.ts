@@ -36,6 +36,7 @@ export default defineConfig({
   base: `/${PROJECT_NAME}/`,
   outputPath: PROJECT_NAME,
   publicPath: `/${PROJECT_NAME}/`,
+  hash: true,
   extraBabelPlugins: [
     [
       'babel-plugin-styled-components',

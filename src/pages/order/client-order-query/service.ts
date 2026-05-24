@@ -125,6 +125,33 @@ export const payPriceItemService = async (
 };
 
 /**
+ * 批量确认工价项支付
+ */
+export const batchPayPriceItemsService = async (data: {
+  work_price_item_ids: number[];
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/work-price-item/batch-pay', data);
+};
+
+/**
+ * 确认单个工价项验收
+ */
+export const acceptSingleWorkPriceService = async (data: {
+  work_price_item_id: number;
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/order/accept-single-work-price', data);
+};
+
+/**
+ * 批量确认工价项验收
+ */
+export const batchAcceptWorkPriceItemsService = async (data: {
+  work_price_item_ids: number[];
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/work-price-item/batch-accept', data);
+};
+
+/**
  * 批量分配工匠给工价项
  */
 export const batchAssignCraftsmanService = async (data: {

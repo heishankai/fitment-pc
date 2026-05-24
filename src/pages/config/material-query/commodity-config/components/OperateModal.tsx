@@ -78,7 +78,7 @@ const OperateModal = (props: any, ref: any) => {
         maskClosable: false,
       }}
       onFinish={handleFinish}
-      initialValues={{}}
+      initialValues={{ sort: 0 }}
     >
       <Row>
         <Col span={12}>
@@ -121,6 +121,17 @@ const OperateModal = (props: any, ref: any) => {
             fieldProps={{
               maxLength: 10,
               showCount: true,
+            }}
+          />
+        </Col>
+        <Col span={12}>
+          <ProFormDigit
+            label="排序"
+            name="sort"
+            fieldProps={{
+              min: 0,
+              precision: 0,
+              placeholder: '值越大越靠前，不填默认为0',
             }}
           />
         </Col>

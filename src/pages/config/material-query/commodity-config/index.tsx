@@ -95,6 +95,13 @@ const CommodityConfig = () => {
             ellipsis: true,
           },
           {
+            title: '排序',
+            dataIndex: 'sort',
+            hideInSearch: true,
+            width: 100,
+            render: (_, record: any) => record?.sort ?? 0,
+          },
+          {
             title: '商品描述',
             dataIndex: 'commodity_description',
             hideInSearch: true,

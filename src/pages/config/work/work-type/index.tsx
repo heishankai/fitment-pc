@@ -95,6 +95,13 @@ const WorkType = () => {
             ellipsis: true,
           },
           {
+            title: '排序',
+            dataIndex: 'sort',
+            hideInSearch: true,
+            width: 100,
+            render: (_, record: any) => record?.sort ?? 0,
+          },
+          {
             title: '计价说明',
             dataIndex: 'pricing_description',
             hideInSearch: true,
