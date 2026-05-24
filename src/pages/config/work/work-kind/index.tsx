@@ -55,7 +55,7 @@ const WorkKind = () => {
     const { success } = await deleteWorkKindService(id);
     if (success) {
       message.success('删除成功');
-      actionRef.current?.reload();
+      pageRefresh();
     }
   };
 
@@ -152,7 +152,7 @@ const WorkKind = () => {
           },
         ]}
       />
-      <OperateModal ref={operateModalRef} actionRef={actionRef} />
+      <OperateModal ref={operateModalRef} onSuccess={pageRefresh} />
     </PageContainer>
   );
 };

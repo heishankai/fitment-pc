@@ -307,7 +307,7 @@ const AssignOrderModal = (props: any, ref: any) => {
                           {craftsman.phone || '未设置手机号'}
                         </div>
                         <div style={{ marginTop: 4 }}>
-                          {craftsman.skillInfo?.workKindName ||
+                          {craftsman.skillInfo?.work_kind_name ||
                             '未进行技能认证'}
                         </div>
                       </div>

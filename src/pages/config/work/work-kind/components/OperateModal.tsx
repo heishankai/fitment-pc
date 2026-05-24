@@ -6,7 +6,7 @@ import { ProFormText, ModalForm } from '@ant-design/pro-components';
 import { createWorkKindService, editWorkKindService } from '../service';
 
 const OperateModal = (props: any, ref: any) => {
-  const { actionRef } = props ?? {};
+  const { onSuccess } = props ?? {};
 
   const [form] = Form.useForm();
   const [visble, { setTrue, setFalse }] = useBoolean(false);
@@ -32,7 +32,7 @@ const OperateModal = (props: any, ref: any) => {
 
     message.success('操作成功');
     setFalse();
-    actionRef?.current?.reload();
+    onSuccess?.();
   };
 
   // 暴露子组件方法 和数据
