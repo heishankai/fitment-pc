@@ -176,6 +176,11 @@ export const routes = [
     icon: 'CustomerServiceOutlined',
     routes: [
       {
+        name: '客服配置',
+        path: 'customer-service-config',
+        component: 'customer-service/customer-service-config',
+      },
+      {
         name: '业主消息',
         path: 'client-chat-page',
         component: 'customer-service/client-chat',
