@@ -88,6 +88,13 @@ const WorkType = () => {
             ellipsis: true,
           },
           {
+            title: '编码',
+            dataIndex: 'code',
+            hideInSearch: true,
+            width: 120,
+            ellipsis: true,
+          },
+          {
             title: '工价价格',
             dataIndex: 'work_price',
             hideInSearch: true,

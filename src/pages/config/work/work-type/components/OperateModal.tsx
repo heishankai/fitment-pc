@@ -155,6 +155,17 @@ const OperateModal = (props: any, ref: any) => {
           />
         </Col>
         <Col span={8}>
+          <ProFormText
+            label="编码"
+            name="code"
+            fieldProps={{
+              maxLength: 20,
+              showCount: true,
+              placeholder: '唯一标识，不可重复',
+            }}
+          />
+        </Col>
+        <Col span={8}>
           <ProFormRadio.Group
             label="是否设置最低价"
             name="is_set_minimum_price"
