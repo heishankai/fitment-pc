@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useBoolean, useRequest } from 'ahooks';
 import styled from 'styled-components';
-import { Drawer, Space, Button, Popconfirm, Divider, message } from 'antd';
+import { Drawer, Space, Button, Popconfirm, Divider, message, Tag } from 'antd';
 import {
   ProTable,
   ProDescriptions,
@@ -389,10 +389,10 @@ const WorkPriceModal = (props: any, ref: any) => {
         if (!record?.assigned_craftsman_id) return '否';
         const { nickname, phone } = record?.assigned_craftsman ?? {};
         return (
-          <div>
-            <p>{nickname}</p>
-            <p>{phone}</p>
-          </div>
+          <Space direction="vertical">
+            <Tag color="processing">{nickname}</Tag>
+            <Tag color="processing">{phone}</Tag>
+          </Space>
         );
       },
     },
