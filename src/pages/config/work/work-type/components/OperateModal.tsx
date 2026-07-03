@@ -30,6 +30,7 @@ const OperateModal = (props: any, ref: any) => {
   const [title, setTitle] = useState<'add' | 'edit'>('add');
   const [record, setRecord] = useState<any>(null);
   const is_set_minimum_price = Form.useWatch('is_set_minimum_price', form);
+  const is_show_price = Form.useWatch('is_show_price', form);
 
   const { data: workKindOptions, loading: workKindLoading } = useRequest(
     getAllWorkKindService,
@@ -88,7 +89,7 @@ const OperateModal = (props: any, ref: any) => {
         maskClosable: false,
       }}
       onFinish={handleFinish}
-      initialValues={{ sort: 0 }}
+      initialValues={{ sort: 0, is_show_price: true }}
     >
       <Row gutter={16}>
         <Col span={8}>
@@ -132,17 +133,33 @@ const OperateModal = (props: any, ref: any) => {
           />
         </Col>
         <Col span={8}>
-          <ProFormDigit
-            label="价格"
-            name="work_price"
+          <ProFormRadio.Group
+            label="是否展示价格"
+            name="is_show_price"
             rules={[{ required: true }]}
             fieldProps={{
-              addonAfter: '元',
-              precision: 2,
-              min: 0,
+              options: [
+                { label: '是', value: true },
+                { label: '否', value: false },
+              ],
             }}
           />
         </Col>
+        {is_show_price && (
+          <Col span={8}>
+            <ProFormDigit
+              label="价格"
+              name="work_price"
+              rules={[{ required: true }]}
+              fieldProps={{
+                addonAfter: '元',
+                precision: 2,
+                min: 0,
+              }}
+            />
+          </Col>
+        )}
+
         <Col span={8}>
           <ProFormDigit
             label="排序"
