@@ -67,6 +67,15 @@ export const confirmMaterialPaymentService = async (
 };
 
 /**
+ * 确认单个辅材验收（更新验收状态）
+ */
+export const acceptMaterialService = async (
+  materialId: number,
+): Promise<ApiResponse<any>> => {
+  return await request.post('/materials/accept', { materialsId: materialId });
+};
+
+/**
  * 根据订单ID获取施工进度
  */
 export const getConstructionProgressByOrderId = async (
@@ -205,6 +214,15 @@ export const allConfirmMaterialAcceptService = async (
   orderId: number,
 ): Promise<ApiResponse<any>> => {
   return await request.post(`/materials/batch-accept-by-order/${orderId}`);
+};
+
+/**
+ * 按辅材ID列表一键验收辅材
+ */
+export const batchAcceptMaterialsService = async (data: {
+  materialsIds: number[];
+}): Promise<ApiResponse<any>> => {
+  return await request.post('/materials/batch-accept', data);
 };
 
 /**

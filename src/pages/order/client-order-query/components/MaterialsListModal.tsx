@@ -21,8 +21,9 @@ import { PayCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import {
   getMaterialsByOrderId,
   confirmMaterialPaymentService,
+  acceptMaterialService,
   allConfirmMaterialPaymentService,
-  allConfirmMaterialAcceptService,
+  batchAcceptMaterialsService,
 } from '../service';
 
 const DrawerBody = styled(Drawer)`
@@ -76,6 +77,22 @@ const MaterialsListModal = (props: any, ref: any) => {
     }
   };
 
+  // 验收单个辅材 - 只更新单条数据状态
+  const handleMaterialAccept = async (record: any) => {
+    const { id } = record ?? {};
+    const { success } = await acceptMaterialService(id);
+
+    if (success) {
+      message.success('验收完成');
+      setMaterialsState((prev: any) => ({
+        ...prev,
+        commodity_list: prev.commodity_list.map((item: any) =>
+          item.id === id ? { ...item, is_accepted: true } : item,
+        ),
+      }));
+    }
+  };
+
   // 一键支付 - 刷新所有数据
   const handleCheckAllMaterials = async () => {
     const { success } = await allConfirmMaterialPaymentService({
@@ -91,7 +108,17 @@ const MaterialsListModal = (props: any, ref: any) => {
 
   // 一键验收 - 刷新所有数据
   const handleCheckAllMaterialsAccept = async () => {
-    const { success } = await allConfirmMaterialAcceptService(rowData?.id);
+    const materialsIds = commodity_list
+      .filter((item: any) => !item?.is_accepted)
+      .map((item: any) => Number(item?.id))
+      .filter((id: number) => Number.isInteger(id) && id > 0);
+
+    if (!materialsIds.length) {
+      message.info('没有可以验收的辅材');
+      return;
+    }
+
+    const { success } = await batchAcceptMaterialsService({ materialsIds });
     if (success) {
       message.success('验收完成');
       materialsRefresh();
@@ -223,7 +250,6 @@ const MaterialsListModal = (props: any, ref: any) => {
             title: '是否支付',
             dataIndex: 'is_paid',
             width: 100,
-            fixed: 'right',
             valueEnum: {
               true: { text: '已支付', status: 'Success' },
               false: { text: '未支付', status: 'Processing' },
@@ -232,7 +258,7 @@ const MaterialsListModal = (props: any, ref: any) => {
           {
             title: '操作',
             valueType: 'option',
-            width: 150,
+            width: 220,
             fixed: 'right',
             align: 'left',
             render: (_: any, record: any) => {
@@ -250,6 +276,20 @@ const MaterialsListModal = (props: any, ref: any) => {
                       disabled={record?.is_paid}
                     >
                       支付
+                    </Button>
+                  </Popconfirm>
+                  <Popconfirm
+                    title="确认验收"
+                    description={`确定要验收该辅材吗？`}
+                    onConfirm={() => handleMaterialAccept(record)}
+                  >
+                    <Button
+                      type="primary"
+                      icon={<CheckCircleOutlined />}
+                      size="small"
+                      disabled={!record?.is_paid || record?.is_accepted}
+                    >
+                      验收
                     </Button>
                   </Popconfirm>
                 </Space>
